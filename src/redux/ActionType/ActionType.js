@@ -1,0 +1,8 @@
+export const SAVE_USER = 'SAVE_USER'
+export const ADD_EXPENSE = 'ADD_EXPENSE'
+export const EDIT_EXPENSE = 'EDIT_EXPENSE'
+export const DELETE_EXPENSE = 'DELETE_EXPENSE'
+export const ADD_GOAL = 'ADD_GOAL'
+export const DELETE_GOAL = 'DELETE_GOAL'
+
+export const TOTAL_INCOME = 'TOTAL_INCOME'

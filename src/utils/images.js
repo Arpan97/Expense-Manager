@@ -1,0 +1,42 @@
+const Images = {
+    back_black: require('../assets/Images/back.png'),
+    add_black: require('../assets/Images/add_1.png'),
+    close: require('../assets/Images/close.png'),
+    user: require('../assets/Images/user.png'),
+    edit: require('../assets/Images/edit.png'),
+    increase: require('../assets/Images/increase.png'),
+    decrease: require('../assets/Images/decrease.png'),
+    circle: require('../assets/Images/circle.png'),
+    name: require('../assets/Images/name.png'),
+    mobile: require('../assets/Images/mobile.png'),
+    email: require('../assets/Images/email.png'),
+    goal: require('../assets/Images/goal.png'),
+    account: require('../assets/Images/account.png'),
+    privacy: require('../assets/Images/privacy.png'),
+    delete: require('../assets/Images/delete.png'),
+    dummy: require('../assets/Images/dummy.png'),
+    //goal icon
+    car: require('../assets/Images/car.png'),
+    home: require('../assets/Images/home.png'),
+    laptop: require('../assets/Images/laptop.png'),
+    saving: require('../assets/Images/saving.png'),
+    expense: require('../assets/Images/expense.png'),
+    complete: require('../assets/Images/complete.png'),
+    serach: require('../assets/Images/search.png'),
+    minus_black: require('../assets/Images/subtract.png'),
+    camera: require('../assets/Images/camera.png'),
+    gallery: require('../assets/Images/gallery.png'),
+    call: require('../assets/Images/call.png'),
+    mail: require('../assets/Images/mail.png'),
+    linkedin: require('../assets/Images/linkedin.png'),
+    youtube: require('../assets/Images/youtube.png'),
+    facebook: require('../assets/Images/facebook.png'),
+    pdf: require('../assets/Images/pdf.png'),
+    save_pdf: require('../assets/Images/save_pdf.png'),
+    calendar: require('../assets/Images/calendar.png'),
+    history: require('../assets/Images/history.png'),
+    logo: require('../assets/Images/logo.png')
+
+}
+
+export default Images
