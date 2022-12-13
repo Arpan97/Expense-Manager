@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
+import { account_reducer } from "./accountReducer";
 import { expenseReducer } from "./expenseReducer";
 import { goalReducer } from "./goalReducer";
+import { premiumReducer } from "./premiumReducer";
 import { totalAmtReducer } from "./totalAmtReducer";
 import { userReducer } from "./userReducer";
 
@@ -8,5 +10,7 @@ export default combineReducers({
     userData: userReducer,
     goalData: goalReducer,
     expenseData: expenseReducer,
-    totalAmt: totalAmtReducer
+    totalAmt: totalAmtReducer,
+    account:account_reducer,
+    premium: premiumReducer
 })

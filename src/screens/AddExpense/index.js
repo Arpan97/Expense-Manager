@@ -19,6 +19,8 @@ import CustomLoader from '../../components/CustomLoader';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CustomButton from '../../components/CustomButton';
+import ALertBox from '../../utils/AlertBox';
+import Notify from '../../utils/Dialog';
 
 const AddExpense = props => {
   const navigation = useNavigation();
@@ -27,10 +29,11 @@ const AddExpense = props => {
   const [selectCat, setSelectCat] = useState('');
   const [amount, setAmount] = useState(0); //coming from modal
   const [desc, setDesc] = useState(''); //coming from modal
-  const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [calendarDate, setCalendarDate] = useState('');
+  const [selectAcc, setSelectAcc] = useState('');
+  const [isBankModal, setIsbankModal] = useState(false);
 
   const onStartChange = async (event, selectedDate) => {
     const currentDate = selectedDate || calendarDate;
@@ -42,49 +45,47 @@ const AddExpense = props => {
   };
 
   const save_expense = () => {
-    setIsLoading(true);
-    if (selectCat !== '') {
-      if (typeExpense == 'Income') {
-        let obj = {
-          id: Math.random().toString(16).slice(2),
-          expenseType: typeExpense,
-          category: selectCat,
-          incomeAmount: parseInt(amount),
-          expenseAmount: 0,
-          description: desc,
-          expenseDate: calendarDate
-            ? calendarDate
-            : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
-        };
-        setTimeout(() => {
-          setIsLoading(false);
+    if(selectCat !== ''){
+      if(selectAcc !== ''){
+        if (typeExpense == 'Income') {
+          let obj = {
+            id: Math.random().toString(16).slice(2),
+            expenseType: typeExpense,
+            account:selectAcc,
+            category: selectCat,
+            incomeAmount: parseInt(amount),
+            expenseAmount: 0,
+            description: desc,
+            expenseDate: calendarDate
+              ? calendarDate
+              : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+          };
           props?.add_expense(obj);
-          Snack('Income added successfully');
+          Notify('success', 'Income', 'Income added successfully')
           navigation.goBack();
-        }, 1500);
-      } else if (typeExpense == 'Expense') {
-        let obj = {
-          id: Math.random().toString(16).slice(2),
-          expenseType: typeExpense,
-          category: selectCat,
-          incomeAmount: 0,
-          expenseAmount: parseInt(amount),
-          description: desc,
-          expenseDate: calendarDate
-            ? calendarDate
-            : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
-        };
-
-        setTimeout(() => {
-          setIsLoading(false);
+        } else if (typeExpense == 'Expense') {
+          let obj = {
+            id: Math.random().toString(16).slice(2),
+            expenseType: typeExpense,
+            account:selectAcc,
+            category: selectCat,
+            incomeAmount: 0,
+            expenseAmount: parseInt(amount),
+            description: desc,
+            expenseDate: calendarDate
+              ? calendarDate
+              : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+          };
+  
           props?.add_expense(obj);
-          Snack('Expense added successfully');
+          Notify('success', 'Expense', 'Expense added successfully')
           navigation.goBack();
-        }, 1500);
+        }
+      }else{
+        Notify('warning', 'Account', 'Please select account first before submitting')
       }
-    } else {
-      Snack('Please choose category');
-      setIsLoading(false);
+    }else{
+      Notify('warning', 'Category', 'Please select category first before submitting')
     }
   };
 
@@ -97,6 +98,9 @@ const AddExpense = props => {
 
   useEffect(() => {
     getCategory();
+    if(props?.accountData == ''){
+        Notify('error', 'Account Error', 'Please add account before add any transaction')
+    }
   }, [typeExpense]);
 
   return (
@@ -110,242 +114,308 @@ const AddExpense = props => {
         borderRadius: 6,
         elevation: 3,
       }}>
-      {isLoading ? (
-        <View style={{marginTop: vh(35)}}>
-          <CustomLoader />
-        </View>
-      ) : (
-        <>
+      <>
+        <View>
+          {/* header  */}
+          <View style={{flexDirection: 'row', width: '100%'}}>
+            <TouchableOpacity
+              onPress={() => setTypeExpense('Income')}
+              style={{
+                alignItems: 'center',
+                backgroundColor:
+                  typeExpense == 'Income'
+                    ? Colors.themeColor
+                    : Colors.backgroundColor,
+                width: '50%',
+                // borderWidth: 1,
+                padding: vh(1.2),
+                borderColor: Colors.borderColor,
+              }}>
+              <CustomText
+                title={'Income'}
+                style={{
+                  color: typeExpense == 'Income' ? Colors.white : Colors.black,
+                }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setTypeExpense('Expense')}
+              style={{
+                alignItems: 'center',
+                backgroundColor:
+                  typeExpense == 'Expense'
+                    ? Colors.red
+                    : Colors.backgroundColor,
+                width: '50%',
+                // borderWidth: 1,
+                padding: vh(1.2),
+                borderColor: Colors.borderColor,
+              }}>
+              <CustomText
+                title={'Expense'}
+                style={{
+                  color: typeExpense == 'Expense' ? Colors.white : Colors.black,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
           <View>
-            {/* header  */}
-            <View style={{flexDirection: 'row', width: '100%'}}>
-              <TouchableOpacity
-                onPress={() => setTypeExpense('Income')}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor:
-                    typeExpense == 'Income'
-                      ? Colors.green
-                      : Colors.backgroundColor,
-                  width: '50%',
-                  borderWidth: 1,
-                  padding: vh(1.2),
-                  borderColor: Colors.borderColor,
-                }}>
-                <CustomText title={'Income'} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setTypeExpense('Expense')}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor:
-                    typeExpense == 'Expense'
-                      ? Colors.red
-                      : Colors.backgroundColor,
-                  width: '50%',
-                  borderWidth: 1,
-                  padding: vh(1.2),
-                  borderColor: Colors.borderColor,
-                }}>
-                <CustomText title={'Expense'} />
-              </TouchableOpacity>
+            <View
+              style={{
+                marginTop: vh(2),
+                width: '95%',
+                alignSelf: 'center',
+                marginBottom: vh(1),
+              }}>
+              <CustomText title={'Choose category'} />
             </View>
-            <View>
-              <View
-                style={{
-                  marginTop: vh(2),
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginBottom: vh(1),
-                }}>
-                <CustomText title={'Choose category'} />
-              </View>
-              <View
-                style={{
-                  backgroundColor: Colors.white,
-                  elevation: 3,
-                  width: '95%',
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                  paddingHorizontal: vh(1),
-                  paddingTop: vh(1.2),
-                  paddingBottom: vh(0.5),
-                }}>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => setIsCatModal(!isCatModal)}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    borderBottomWidth: isCatModal ? 1 : 0,
-                    borderColor: Colors.borderColor,
-                    paddingBottom: vh(1),
-                  }}>
-                  <CustomText
-                    title={selectCat ? selectCat : 'Choose Category'}
-                  />
-                  <Image
-                    source={Images.back_black}
-                    style={{
-                      height: 20,
-                      width: 20,
-                      transform: [{rotate: isCatModal ? '90deg' : '270deg'}],
-                    }}
-                  />
-                </TouchableOpacity>
-                {isCatModal && (
-                  <ScrollView>
-                    {categories?.map((item, index) => {
-                      return (
-                        <View
-                          style={{
-                            backgroundColor: Colors.white,
-                            borderBottomWidth: 1,
-                            borderColor: Colors.borderColor,
-                            padding: vh(1),
-                          }}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setIsCatModal(false),
-                                setSelectCat(item?.category);
-                            }}>
-                            <CustomText title={item?.category} />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
-                )}
-              </View>
-            </View>
-            {/* start  */}
-            <View>
-              <View
-                style={{
-                  marginTop: vh(2),
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginBottom: vh(1),
-                }}>
-                <CustomText title={`Select date`} />
-              </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                elevation: 3,
+                width: '95%',
+                borderRadius: 10,
+                alignSelf: 'center',
+                paddingHorizontal: vh(1),
+                paddingTop: vh(1.2),
+                paddingBottom: vh(0.5),
+              }}>
               <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={() => setCalendarVisible(true)}
+                onPress={() => setIsCatModal(!isCatModal)}
                 style={{
-                  backgroundColor: Colors.white,
-                  elevation: 3,
-                  width: '95%',
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                  paddingHorizontal: vh(1),
-                  paddingTop: vh(0.1),
-                  paddingBottom: vh(0.1),
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: isCatModal ? 1 : 0,
+                  borderColor: Colors.borderColor,
+                  paddingBottom: vh(1),
                 }}>
-                <TextInput
-                  placeholder="Select date"
-                  value={calendarDate}
-                  keyboardType="number-pad"
-                  placeholderTextColor={Colors.textColor}
-                  editable={false}
+                <CustomText title={selectCat ? selectCat : 'Choose Category'} />
+                <Image
+                  source={Images.back_black}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    transform: [{rotate: isCatModal ? '90deg' : '270deg'}],
+                  }}
                 />
               </TouchableOpacity>
-            </View>
-            {/* end  */}
-            <View>
-              <View
-                style={{
-                  marginTop: vh(2),
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginBottom: vh(1),
-                }}>
-                <CustomText
-                  title={
-                    typeExpense ? `Enter ${typeExpense} amount` : `Enter amount`
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  backgroundColor: Colors.white,
-                  elevation: 3,
-                  width: '95%',
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                  paddingHorizontal: vh(1),
-                  paddingTop: vh(0.1),
-                  paddingBottom: vh(0.1),
-                }}>
-                <TextInput
-                  placeholder="Enter amount"
-                  value={amount}
-                  onChangeText={amt => setAmount(amt)}
-                  keyboardType="number-pad"
-                  placeholderTextColor={Colors.textColor}
-                />
-              </View>
-            </View>
-            <View>
-              <View
-                style={{
-                  marginTop: vh(2),
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginBottom: vh(1),
-                }}>
-                <CustomText title={'Enter Description'} />
-              </View>
-              <View
-                style={{
-                  backgroundColor: Colors.white,
-                  elevation: 3,
-                  width: '95%',
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                  paddingHorizontal: vh(1),
-                  paddingTop: vh(0.1),
-                  paddingBottom: vh(0.1),
-                }}>
-                <TextInput
-                  placeholder="Enter Description..."
-                  value={desc}
-                  onChangeText={txt => setDesc(txt)}
-                  multiline
-                  numberOfLines={5}
-                  style={{textAlignVertical: 'top'}}
-                  placeholderTextColor={Colors.textColor}
-                />
-              </View>
+              {isCatModal && (
+                <ScrollView>
+                  {categories?.map((item, index) => {
+                    return (
+                      <View
+                        style={{
+                          backgroundColor: Colors.white,
+                          borderBottomWidth: 1,
+                          borderColor: Colors.borderColor,
+                          padding: vh(1),
+                        }}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setIsCatModal(false), setSelectCat(item?.category);
+                          }}>
+                          <CustomText title={item?.category} />
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              )}
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginTop: vh(4),
-            }}>
-            <CustomButton
-              onPress={() => navigation.goBack()}
-              btnStyle={{backgroundColor: Colors.transparent}}
-              title={'Cancel'}
-            />
-            <CustomButton
-              onPress={() => save_expense()}
-              title={'Save'}
-              btnStyle={{
-                backgroundColor: Colors.themeColor,
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 50,
-                borderBottomLeftRadius: 50,
-                borderBottomRightRadius: 10,
+          {/* start  */}
+          <View>
+            <View
+              style={{
+                marginTop: vh(2),
+                width: '95%',
+                alignSelf: 'center',
+                marginBottom: vh(1),
+              }}>
+              <CustomText title={`Select date`} />
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => setCalendarVisible(true)}
+              style={{
+                backgroundColor: Colors.white,
                 elevation: 3,
-              }}
-              txtStyle={{color: Colors.white}}
-            />
+                width: '95%',
+                borderRadius: 10,
+                alignSelf: 'center',
+                paddingHorizontal: vh(1),
+                paddingTop: vh(0.1),
+                paddingBottom: vh(0.1),
+              }}>
+              <TextInput
+                placeholder="Select date"
+                value={calendarDate}
+                keyboardType="number-pad"
+                placeholderTextColor={Colors.textColor}
+                editable={false}
+              />
+            </TouchableOpacity>
           </View>
-        </>
-      )}
+          {/* end  */}
+          <View>
+            <View
+              style={{
+                marginTop: vh(2),
+                width: '95%',
+                alignSelf: 'center',
+                marginBottom: vh(1),
+              }}>
+              <CustomText
+                title={
+                  typeExpense ? `Enter ${typeExpense} amount` : `Enter amount`
+                }
+              />
+            </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                elevation: 3,
+                width: '95%',
+                borderRadius: 10,
+                alignSelf: 'center',
+                paddingHorizontal: vh(1),
+                paddingTop: vh(0.1),
+                paddingBottom: vh(0.1),
+              }}>
+              <TextInput
+                placeholder="Enter amount"
+                value={amount}
+                onChangeText={amt => setAmount(amt)}
+                keyboardType="number-pad"
+                placeholderTextColor={Colors.textColor}
+              />
+            </View>
+          </View>
+          {/* pending work  */}
+          <View>
+            <View
+              style={{
+                marginTop: vh(2),
+                width: '95%',
+                alignSelf: 'center',
+                marginBottom: vh(1),
+              }}>
+              <CustomText title={'Choose Account'} />
+            </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                elevation: 3,
+                width: '95%',
+                borderRadius: 10,
+                alignSelf: 'center',
+                paddingHorizontal: vh(1),
+                paddingTop: vh(1.2),
+                paddingBottom: vh(0.5),
+              }}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setIsbankModal(!isBankModal)}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  borderBottomWidth: isCatModal ? 1 : 0,
+                  borderColor: Colors.borderColor,
+                  paddingBottom: vh(1),
+                }}>
+                <CustomText title={selectAcc ? selectAcc : 'Choose Account'} />
+                <Image
+                  source={Images.back_black}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    transform: [{rotate: isBankModal ? '90deg' : '270deg'}],
+                  }}
+                />
+              </TouchableOpacity>
+              {isBankModal && (
+                <ScrollView>
+                  {props?.accountData?.map((item, index) => {
+                    return (
+                      <View
+                        style={{
+                          backgroundColor: Colors.white,
+                          borderBottomWidth: 1,
+                          borderColor: Colors.borderColor,
+                          padding: vh(1),
+                        }}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setIsbankModal(false), setSelectAcc(item?.title);
+                          }}>
+                          <CustomText title={item?.title} />
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              )}
+            </View>
+          </View>
+
+          <View>
+            <View
+              style={{
+                marginTop: vh(2),
+                width: '95%',
+                alignSelf: 'center',
+                marginBottom: vh(1),
+              }}>
+              <CustomText title={'Enter Description'} />
+            </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                elevation: 3,
+                width: '95%',
+                borderRadius: 10,
+                alignSelf: 'center',
+                paddingHorizontal: vh(1),
+                paddingTop: vh(0.1),
+                paddingBottom: vh(0.1),
+              }}>
+              <TextInput
+                placeholder="Enter Description..."
+                value={desc}
+                onChangeText={txt => setDesc(txt)}
+                multiline
+                numberOfLines={5}
+                style={{textAlignVertical: 'top'}}
+                placeholderTextColor={Colors.textColor}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: vh(4),
+          }}>
+          <CustomButton
+            onPress={() => navigation.goBack()}
+            btnStyle={{backgroundColor: Colors.transparent}}
+            title={'Cancel'}
+          />
+          <CustomButton
+            onPress={() => save_expense()}
+            title={'Save'}
+            btnStyle={{
+              backgroundColor:
+                typeExpense == 'Income' ? Colors.themeColor : Colors.red,
+              borderRadius: 10,
+              elevation: 3,
+            }}
+            txtStyle={{color: Colors.white}}
+          />
+        </View>
+      </>
       {calendarVisible && (
         <DateTimePicker
           style={{
@@ -365,6 +435,7 @@ const AddExpense = props => {
 
 const mapStateToProps = state => ({
   expense: state.expenseData,
+  accountData: state.account,
 });
 
 const mapDispatchToProps = dispatch => {

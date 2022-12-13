@@ -50,7 +50,7 @@ const Onboarding = () => {
   const _onDone = () => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('StepOne')}
+        onPress={() => navigation.navigate('Detail')}
         style={Style.btn_view}>
         <CustomText title={'Done'} style={Style.text} />
       </TouchableOpacity>

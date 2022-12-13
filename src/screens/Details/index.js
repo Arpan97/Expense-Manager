@@ -60,7 +60,6 @@ const Details = props => {
   };
 
   const onSaveBtn = () => {
-    setIsLoading(true);
     let body = {
       id: Math.random().toString(16).slice(2),
       name: name,
@@ -68,11 +67,8 @@ const Details = props => {
       mail: mail,
       image: image,
     };
-    setTimeout(() => {
       props?.save_user(body);
-      navigation.replace('Dashboard');
-      setIsLoading(false);
-    }, 1500);
+      navigation.replace('Drawer');
   };
 
   return (

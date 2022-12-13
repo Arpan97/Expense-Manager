@@ -29,7 +29,7 @@ const CustomHeader = props => {
       {props?.isBack && (
       <View style={{justifyContent:'space-between', flexDirection:'row'}}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{justifyContent:'center'}}>
-          <Image source={Images.close} style={{height: 20, width: 20}} />
+          <Image source={Images.back_3d} style={{height: 20, width: 20}} />
         </TouchableOpacity>
         {props?.isProfile &&(
         <TouchableOpacity onPress={()=>navigation.navigate('Profile')} activeOpacity={0.6} style={{backgroundColor:Colors.white, width:50, height:50, borderRadius:10, borderWidth:1, borderColor:Colors.borderColor, elevation:3}}>

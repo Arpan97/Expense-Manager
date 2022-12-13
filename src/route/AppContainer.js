@@ -14,10 +14,18 @@ import EditProfile from '../screens/EditProfile';
 import Privacy from '../screens/Privacy';
 import CustomBill from '../components/CustomBill';
 import ShowHistory from '../screens/ShowHistory';
-import StepOne from '../screens/SignUp/StepOne';
-import StepTwo from '../screens/SignUp/StepTwo';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import DrawerContainer from '../components/DrawerContainer';
+import { Dimensions } from 'react-native';
+import CategorySection from '../screens/Category';
+import BankAccount from '../screens/BankAccount';
+import AddCard from '../screens/AddCard';
+import BankDetail from '../screens/BankDetail';
+import Premium from '../screens/Premium';
 
 const Stack = createNativeStackNavigator()
+const Drawer = createDrawerNavigator()
+const width = Dimensions.get('window').width
 
 const AppContainer = () => {
   return (
@@ -26,20 +34,42 @@ const AppContainer = () => {
             <Stack.Screen name='Splash' component={Splash} />
             <Stack.Screen name='Onboarding' component={Onboarding} />
             <Stack.Screen name='Detail' component={Details} />
-            <Stack.Screen name='Dashboard' component={Dashboard} />
-            <Stack.Screen name='Profile' component={Profile} />
+            {/* <Stack.Screen name='Dashboard' component={Dashboard} /> */}
+            <Stack.Screen name='Drawer' component={DrawerNavigator} />
+            {/* <Stack.Screen name='Profile' component={Profile} /> */}
             <Stack.Screen name='AddGoal' component={AddGoal} />
-            <Stack.Screen name='ViewGoal' component={ViewGoal} />
+            {/* <Stack.Screen name='ViewGoal' component={ViewGoal} /> */}
             <Stack.Screen name='AddExpense' component={AddExpense} />
-            <Stack.Screen name='CategoryWise' component={CategoryWise} />
-            <Stack.Screen name='EditProfile' component={EditProfile} />
-            <Stack.Screen name='Privacy' component={Privacy} />
+            <Stack.Screen name='BankDetails' component={BankDetail} />
+            <Stack.Screen name='Premium' component={Premium} />
+            {/* <Stack.Screen name='CategoryWise' component={CategoryWise} /> */}
+            {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
+            {/* <Stack.Screen name='Privacy' component={Privacy} />
             <Stack.Screen name='CustomBill' component={CustomBill} />
-            <Stack.Screen name='ShowHistory' component={ShowHistory} />
-            <Stack.Screen name='StepOne' component={StepOne} />
-            <Stack.Screen name='StepTwo' component={StepTwo} />
+            <Stack.Screen name='ShowHistory' component={ShowHistory} /> */}
         </Stack.Navigator>
     </NavigationContainer>
+  )
+}
+
+const DrawerNavigator = () =>{
+  return(
+    <Drawer.Navigator
+      drawerPosition="left"
+      drawerContent={(props) => <DrawerContainer {...props} />}
+      screenOptions={{headerShown:false,  drawerPosition: 'left', drawerStyle:{backgroundColor: 'transparent', width:width/1.3}}}>
+        <Drawer.Screen name='Dashboard' component={Dashboard} />
+        <Drawer.Screen name='EditProfile' component={EditProfile} />
+        <Drawer.Screen name='CategoryWise' component={CategoryWise} />
+        <Drawer.Screen name='Privacy' component={Privacy} />
+        <Drawer.Screen name='CustomBill' component={CustomBill} />
+        <Drawer.Screen name='ShowHistory' component={ShowHistory} />
+        <Drawer.Screen name='ViewGoal' component={ViewGoal} />
+        <Drawer.Screen name='Category' component={CategorySection} />
+        <Drawer.Screen name='Bank' component={BankAccount} />
+        <Drawer.Screen name='AddCard' component={AddCard} />
+      </Drawer.Navigator>
+
   )
 }
 

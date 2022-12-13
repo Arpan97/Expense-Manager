@@ -11,7 +11,7 @@ const Splash = (props) => {
   useEffect(() => {
     setTimeout(() => {
       if(props?.user?.id){
-        navigation.replace('Dashboard')
+        navigation.replace('Drawer')
       }else{
         navigation.replace('Onboarding')
       }

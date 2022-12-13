@@ -20,12 +20,15 @@ import {connect} from 'react-redux';
 import {delete_goal} from '../../redux/Action/Action';
 import CustomLoader from '../../components/CustomLoader';
 import Snack from '../../utils/snackbar';
+import {useNavigation} from '@react-navigation/native';
+import CustomFav from '../../components/CustomFav';
 
 const ViewGoal = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [goalList, setGoalList] = useState([]);
-  const [totalInc, setTotalInc] = useState()
+  const [totalInc, setTotalInc] = useState();
+  const navigation = useNavigation();
 
   const renderItem = ({item, index}) => {
     return (
@@ -90,20 +93,12 @@ const ViewGoal = props => {
   };
 
   const getAllGoal = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setGoalList(props?.goal);
-      setIsLoading(false);
-    }, 1500);
+    setGoalList(props?.goal);
   };
 
   const delete_goal = id => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      props?.delete_goal(id);
-      Snack('Goal deleted successfully');
-    }, 1500);
+    props?.delete_goal(id);
+    Snack('Goal deleted successfully');
   };
 
   const search_functionality = text => {
@@ -112,47 +107,57 @@ const ViewGoal = props => {
 
   useEffect(() => {
     getAllGoal();
-    setTotalInc(props?.total)
+    setTotalInc(props?.total);
   }, [props?.goal, props?.total]);
 
   return (
     <View style={styles.container}>
       {/* header  */}
-      <View>
-        <CustomHeader isBack />
-      </View>
-      {/* search bar  */}
-      <View style={styles.search_container}>
-        <TextInput
-          value={search}
-          onChangeText={txt => search_functionality(txt)}
-          placeholder="Search Goals..."
-          style={styles.search_input}
-        />
-        <View style={styles.search_icon_view}>
-          <Image source={Images.serach} style={styles.icon} />
-        </View>
-      </View>
-      {/* goal list  */}
-      {isLoading ? (
-        <CustomLoader />
-      ) : (
-        <View>
-          <FlatList
-            data={goalList}
-            renderItem={renderItem}
-            ListEmptyComponent={emptyComponent}
+      <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center'}}>
+        <TouchableOpacity
+          onPress={() => navigation.openDrawer()}
+          style={{
+            width: '10%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: vw(4),
+          }}>
+          <Image source={Images.menu} style={{height: 30, width: 30}} />
+        </TouchableOpacity>
+        <View
+          style={{
+            width: '85%',
+            backgroundColor: Colors.white,
+            borderRadius: 10,
+            paddingLeft: vh(1),
+            elevation: 2,
+          }}>
+          <TextInput
+            placeholder="Search goals..."
+            value={search}
+            onChangeText={txt => search_functionality(txt)}
           />
         </View>
-      )}
+      </View>
+      <View>
+        <FlatList
+          data={goalList}
+          renderItem={renderItem}
+          ListEmptyComponent={emptyComponent}
+        />
+      </View>
+      <CustomFav />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: Colors.backgroundColor,
+    flex: 1,
+    width: '100%',
+    alignSelf: 'center',
+    marginTop: vh(2),
   },
   search_container: {
     marginVertical: vh(2),
@@ -224,7 +229,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   goal: state.goalData,
-  total: state.totalAmt
+  total: state.totalAmt,
 });
 
 const mapDispatchToProps = dispatch => {

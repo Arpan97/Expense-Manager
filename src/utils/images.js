@@ -35,7 +35,16 @@ const Images = {
     save_pdf: require('../assets/Images/save_pdf.png'),
     calendar: require('../assets/Images/calendar.png'),
     history: require('../assets/Images/history.png'),
-    logo: require('../assets/Images/logo.png')
+    menu: require('../assets/Images/menu.png'),
+    bank: require('../assets/Images/bank.png'),
+    category: require('../assets/Images/category.png'),
+    back_3d: require('../assets/Images/back_3d.png'),
+    warning: require('../assets/Images/warning.png'),
+    totalMoney: require('../assets/Images/totalMoney.png'),
+    show: require('../assets/Images/show.png'),
+    buy: require('../assets/Images/buy.png'),
+    lock: require('../assets/Images/lock.png'),
+    premium: require('../assets/Images/premium.png')
 
 }
 

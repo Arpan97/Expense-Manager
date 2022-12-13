@@ -65,7 +65,6 @@ const EditProfile = props => {
   };
 
   const updateProfile = () => {
-    setIsLoading(true);
     let body = {
       id: data?.id,
       name: name,
@@ -74,11 +73,8 @@ const EditProfile = props => {
       image: profileDp,
     };
     props?.save_user(body);
-    setTimeout(() => {
-      setIsLoading(false);
       Snack('Profile updated successfully');
       navigation.goBack();
-    }, 1500);
   };
 
   useEffect(() => {
@@ -88,14 +84,16 @@ const EditProfile = props => {
   return (
     <View style={{flex: 1}}>
       {/* header */}
-      <View>
-        <CustomHeader isBack />
+      <View style={{flexDirection:'row', marginTop:vh(2)}}>
+        {/* <CustomHeader isBack /> */}
+        <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{ width:'15%', justifyContent:'center', alignItems:'center'}}>
+          <Image source={Images.menu} style={{height:25, width:25}} />
+        </TouchableOpacity>
+        <View style={{width:'70%', alignSelf:'center', alignItems:'center', justifyContent:'center'}}>
+          <CustomText title={'Edit Profile'} isBold style={{fontSize:18, color:Colors.themeColor}}  />
+        </View>
       </View>
       {/* img view  */}
-      {isLoading ? (
-        <CustomLoader />
-      ) : (
-        <>
           <>
             <TouchableOpacity
               onPress={() => setIsVisible(true)}
@@ -192,6 +190,7 @@ const EditProfile = props => {
                   value={mobile}
                   onChangeText={txt => setMobile(txt)}
                   keyboardType="number-pad"
+                  maxLength={10}
                 />
               </View>
               <CustomButton
@@ -201,10 +200,7 @@ const EditProfile = props => {
                 btnStyle={{
                   marginTop: vh(4),
                   backgroundColor: Colors.themeColor,
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 50,
-                  borderBottomLeftRadius: 50,
-                  borderBottomRightRadius: 10,
+                  borderRadius: 10,
                   elevation: 3,
                   marginBottom: vh(2),
                   alignSelf: 'center',
@@ -212,8 +208,6 @@ const EditProfile = props => {
               />
             </KeyboardAwareScrollView>
           </>
-        </>
-      )}
       {/* modal view  */}
       <View>
         <Modal

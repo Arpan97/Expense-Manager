@@ -95,6 +95,12 @@ const Add_Goals = (props) => {
             <CustomText title={`${'\u20B9'}${item?.amount}`} />
           </View>
         </View>
+        {totalInc < 0 && (
+          <View style={{flexDirection:'row', marginTop:vh(0.5), justifyContent:'center', alignItems:'center', borderTopWidth:0.6, borderStyle:'dotted', paddingTop:vh(1)}}>
+            <Image source={Images.warning} style={{height:20,width:20}} />
+            <CustomText title={'Alert: You are going backward to your goal'} style={{fontSize:12, color:Colors.red, marginLeft:vw(2)}} />
+          </View>
+        )}
         {totalInc >= item?.amount && (
         <View style={{flexDirection:'row', marginTop:vh(0.5), justifyContent:'center', alignItems:'center', borderTopWidth:0.6, borderStyle:'dotted', paddingTop:vh(1)}}>
           <Image source={Images.complete} style={{height:20,width:20}} />
@@ -104,6 +110,14 @@ const Add_Goals = (props) => {
       </View>
     );
   };
+
+  const renderEmpty = () => {
+    return(
+      <View style={{marginTop:vh(1.5)}}>
+          <CustomText title={'No goals available'} style={{fontSize:13}} />
+      </View>
+  )
+  }
 
   useEffect(() => {
     getAllGoal();
@@ -116,9 +130,9 @@ const Add_Goals = (props) => {
       {goals && (
         <>
           <View style={{}}>
-            <CustomText title={'Add Goals'} isBold style={{fontSize: 16}} />
+            <CustomText title={'My Goal'} isBold style={{fontSize: 16}} />
           </View>
-          <FlatList data={goals} renderItem={renderItem} />
+          <FlatList data={goals} renderItem={renderItem} ListEmptyComponent={renderEmpty} />
         </>
       )}
     </View>

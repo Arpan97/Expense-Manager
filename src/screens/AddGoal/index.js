@@ -48,11 +48,7 @@ const AddGoal = props => {
   };
 
   const getAllGoal = () => {
-    setIsLoading(true);
-    setTimeout(() => {
       setGoals(props?.goal);
-      setIsLoading(false);
-    }, 1500);
   };
 
   const addNewGoal = () => {
@@ -66,19 +62,16 @@ const AddGoal = props => {
             imgSet: imgSet,
           };
           props?.add_new_goal(obj);
-          navigation.replace('ViewGoal');
+          navigation.replace('Drawer',{screen:'ViewGoal'});
         }
       }
     }
   };
 
   const deleteExistGoal = id => {
-    setIsModal(false);
-    setIsLoading(true);
-    setTimeout(() => {
+      setIsModal(false);
       props?.delete_goal(id);
       Snack('Goal deleted successfully');
-    }, 1500);
   };
 
   useEffect(() => {
@@ -87,16 +80,13 @@ const AddGoal = props => {
   }, [props?.goal]);
 
   return (
-    <View style={{backgroundColor: Colors.backgroundColor, flex: 1}}>
-      <View style={{backgroundColor: Colors.backgroundColor, flex: 0.25}}>
-        <View>
-          <CustomHeader isBack />
-        </View>
+    <View style={{backgroundColor: Colors.themeColor, flex: 1}}>
+      <View style={{backgroundColor: Colors.themeColor, flex: 0.25}}>
         <View style={{top: vh(8), marginLeft: vw(4)}}>
           <CustomText
             title={`Create your new ${'\n'}saving goal!`}
             isBold
-            style={{fontSize: 25}}
+            style={{fontSize: 25, color:Colors.white}}
           />
         </View>
       </View>
@@ -190,18 +180,18 @@ const AddGoal = props => {
             onPress={() => addNewGoal()}
             btnStyle={{
               backgroundColor: Colors.themeColor,
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 50,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 10,
+              borderRadius: 10,
               elevation: 3,
               marginBottom: vh(1),
-              paddingVertical: vh(2),
+              paddingVertical: vh(1.4),
             }}
             title={'Save Goal'}
             txtStyle={{color: Colors.white}}
           />
         </View>
+        <TouchableOpacity onPress={()=>navigation.goBack()} style={{justifyContent:'center', alignItems:'center'}}>
+          <CustomText title={'Cancel'} isBold style={{fontSize:14}} />
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

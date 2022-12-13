@@ -47,177 +47,169 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      checkExpense();
-    }, 1500);
+    checkExpense();
   }, [props?.expense]);
 
   const searchFunctionality = async txt => {};
+
 
   return (
     <View
       style={{
         backgroundColor: Colors.backgroundColor,
         flex: 1,
-        width: '90%',
+        width: '100%',
         alignSelf: 'center',
         marginTop: vh(2),
       }}>
       {/* header section  */}
-      <View>
-        <CustomHeader isHome />
+      <View style={{flexDirection:'row', width:'90%', alignSelf:'center'}}>
+        <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
+          <Image source={Images.menu} style={{height:30, width:30}} />
+        </TouchableOpacity>
+        <View style={{width:'85%', backgroundColor:Colors.white, borderRadius:10, paddingLeft:vh(1), elevation:2}}>
+          <TextInput placeholder='Search here...' value={search} onChangeText={(txt)=>searchFunctionality(txt)} />
+        </View>
       </View>
-      {isLoading ? (
-        <CustomLoader />
-      ) : (
-        <>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {/* search bar  */}
-            <View
+      {/* <View style={{width:'90%', alignSelf:'center'}}>
+        <CustomHeader isHome />
+      </View> */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* search bar  */}
+        {/* <View
+          style={{
+            width:'90%',
+            alignSelf:'center',
+            backgroundColor: Colors.white,
+            borderRadius: 10,
+            paddingLeft: vh(1),
+            elevation: 2,
+            marginTop: vh(2),
+          }}>
+          <TextInput
+            placeholder="Search here..."
+            value={search}
+            onPress={txt => searchFunctionality(txt)}
+          />
+        </View> */}
+        {/* total amount section  */}
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: Colors.white,
+            marginTop: vh(2),
+            width: '90%',
+            elevation: 3,
+            borderWidth: 0.5,
+            borderColor: Colors.borderColor,
+            borderRadius: 10,
+            alignSelf: 'center',
+          }}>
+          <View
+            style={{
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: vh(1),
+              paddingBottom: vh(1),
+            }}>
+            <CustomText title={'Income'} isBold style={{fontSize: 16}} />
+            <Image source={Images.increase} style={{height: 40, width: 40}} />
+            <CustomText title={`${'\u20B9'}${income}`} />
+          </View>
+          <View
+            style={{borderLeftWidth: 1, borderLeftColor: Colors.black + 18}}
+          />
+          <View
+            style={{
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: vh(1),
+              paddingBottom: vh(1),
+            }}>
+            <CustomText title={'Expenses'} isBold style={{fontSize: 16}} />
+            <Image
+              source={Images.decrease}
               style={{
-                backgroundColor: Colors.white,
-                borderRadius: 50,
-                paddingLeft: vh(1),
-                elevation: 2,
-                marginTop: vh(2),
-              }}>
-              <TextInput
-                placeholder="Search here..."
-                value={search}
-                onPress={txt => searchFunctionality(txt)}
-              />
-            </View>
-            {/* total amount section  */}
-            <View
-              style={{
-                flexDirection: 'row',
-                backgroundColor: Colors.white,
-                marginTop: vh(2),
-                width: '100%',
-                elevation: 3,
-                borderWidth: 0.5,
-                borderColor: Colors.borderColor,
-                borderRadius: 10,
-              }}>
-              <View
-                style={{
-                  width: '50%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingTop: vh(1),
-                  paddingBottom: vh(1),
-                }}>
-                <CustomText
-                  title={'Total Income'}
-                  isBold
-                  style={{fontSize: 16}}
-                />
-                <Image
-                  source={Images.increase}
-                  style={{height: 40, width: 40}}
-                />
-                <CustomText title={`${'\u20B9'}${income}`} />
-              </View>
-              <View
-                style={{borderLeftWidth: 1, borderLeftColor: Colors.black + 18}}
-              />
-              <View
-                style={{
-                  width: '50%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  paddingTop: vh(1),
-                  paddingBottom: vh(1),
-                }}>
-                <CustomText
-                  title={'Total Expense'}
-                  isBold
-                  style={{fontSize: 16}}
-                />
-                <Image
-                  source={Images.decrease}
+                height: 40,
+                width: 40,
+                transform: [{rotate: '180deg'}],
+              }}
+            />
+            <CustomText title={`${'\u20B9'}${expense}`} />
+          </View>
+        </View>
+        {/* category section  */}
+        {/* <View style={{marginTop: vh(2)}}>
+          <View style={{width:'90%', alignSelf:'center'}}>
+            <CustomText title={'Category'} isBold style={{fontSize: 16}} />
+          </View>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            style={{marginTop: vh(2)}}
+            horizontal>
+            {category?.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('CategoryWise', {data: item})
+                  }
+                  activeOpacity={0.6}
                   style={{
-                    height: 40,
-                    width: 40,
-                    transform: [{rotate: '180deg'}],
-                  }}
-                />
-                <CustomText title={`${'\u20B9'}${expense}`} />
-              </View>
-            </View>
-            {/* category section  */}
-            <View style={{marginTop: vh(2)}}>
-              <View>
-                <CustomText title={'Category'} isBold style={{fontSize: 16}} />
-              </View>
-              <ScrollView
-                showsHorizontalScrollIndicator={false}
-                style={{marginTop: vh(2)}}
-                horizontal>
-                {category?.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('CategoryWise', {data: item})
-                      }
-                      activeOpacity={0.6}
+                    height: vh(25),
+                    width: vw(38),
+                    backgroundColor: item?.color,
+                    marginLeft: vh(2),
+                    elevation: 5,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom:vh(1)
+                  }}>
+                  <View style={{height: 50, width: 50}}>
+                    <Image
+                      source={item?.img}
+                      style={{height: '100%', width: '100%'}}
+                    />
+                  </View>
+                  <View style={{marginBottom: vh(1)}}>
+                    <CustomText
+                      title={item?.category}
                       style={{
-                        height: vh(25),
-                        width: vw(38),
-                        backgroundColor: item?.color,
-                        marginLeft: vh(2),
-                        elevation: 5,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <View style={{height: 50, width: 50}}>
-                        <Image
-                          source={item?.img}
-                          style={{height: '100%', width: '100%'}}
-                        />
-                      </View>
-                      <View style={{marginBottom: vh(1)}}>
-                        <CustomText
-                          title={item?.category}
-                          style={{
-                            color: Colors.white,
-                            textAlign: 'center',
-                            fontSize: 16,
-                          }}
-                        />
-                      </View>
-                      <View>
-                        <CustomText
-                          title={`Click to view${'\n'}expenses`}
-                          style={{color: Colors.white, textAlign: 'center'}}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </View>
-            {/* add goals */}
-            <View style={{marginTop: vh(2)}}>
-              <Add_Goals />
-            </View>
-            {/* history  */}
-            <View style={{marginTop: vh(2)}}>
-              <View style={{marginBottom: vh(2)}}>
-                <CustomText title={'History'} isBold style={{fontSize: 16}} />
-              </View>
-              <View>
-                <History />
-              </View>
-            </View>
+                        color: Colors.white,
+                        textAlign: 'center',
+                        fontSize: 16,
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <CustomText
+                      title={`Click to view${'\n'}expenses`}
+                      style={{color: Colors.white, textAlign: 'center'}}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
-          {/* fav button  */}
-          <CustomFav />
-        </>
-      )}
+        </View> */}
+        {/* add goals */}
+        <View style={{marginTop: vh(2), width:'90%', alignSelf:'center'}}>
+          <Add_Goals />
+        </View>
+        {/* history  */}
+        <View style={{marginTop: vh(2), width:'90%', alignSelf:'center'}}>
+          <View style={{marginBottom: vh(2)}}>
+            <CustomText title={'History'} isBold style={{fontSize: 16}} />
+          </View>
+          <View>
+            <History />
+          </View>
+        </View>
+      </ScrollView>
+      {/* fav button  */}
+      <CustomFav />
     </View>
   );
 };

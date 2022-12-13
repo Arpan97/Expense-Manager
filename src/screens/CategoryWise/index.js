@@ -27,11 +27,7 @@ const CategoryWise = props => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
       getExpense();
-    }, 1500);
   }, [props?.expense]);
 
   useEffect(() => {

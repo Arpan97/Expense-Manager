@@ -1,4 +1,4 @@
-import { ADD_INCOME, ADD_EXPENSE, SAVE_USER, ADD_GOAL, DELETE_GOAL, DELETE_EXPENSE, TOTAL_INCOME } from "../ActionType/ActionType";
+import { ADD_INCOME, ADD_EXPENSE, SAVE_USER, ADD_GOAL, DELETE_GOAL, DELETE_EXPENSE, TOTAL_INCOME, ACCOUNTS, DELETE_ACCOUNT, CHECK_PREMIUM } from "../ActionType/ActionType";
 
 export const save_user_data = data => ({
     type:SAVE_USER,
@@ -27,5 +27,20 @@ export const delete_goal = id => ({
 
 export const total_income = data => ({
     type:TOTAL_INCOME,
+    payload:data
+})
+
+export const account_data = data => ({
+    type:ACCOUNTS,
+    payload: data
+})
+
+export const delete_account = id => ({
+    type:DELETE_ACCOUNT,
+    payload:id
+})
+
+export const add_premium = data => ({
+    type:CHECK_PREMIUM,
     payload:data
 })

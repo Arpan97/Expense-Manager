@@ -4,18 +4,20 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  TextInput
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../utils/color';
 import CustomText from '../../components/CustomText';
-import {heightPercentageToDP as vh} from 'react-native-responsive-screen';
 import Images from '../../utils/images';
 import {allMonth} from '../../utils/constants';
 import CustomButton from '../../components/CustomButton';
 import moment from 'moment';
 import CustomLoader from '../../components/CustomLoader';
+import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
 
 const ShowHistory = props => {
   const [income, setIncome] = useState(0);
@@ -30,6 +32,7 @@ const ShowHistory = props => {
   const [totalIncome, setTotalIncome] = useState(0);
   const styles = getStyles(isMonthModal);
   const [btnPress, setBtnPress] = useState(false);
+  const navigation = useNavigation()
 
   const checkExpense = () => {
     var total = 0,
@@ -58,7 +61,6 @@ const ShowHistory = props => {
   };
 
   const submitMonth = () => {
-    setIsLoading(true);
     let data = props?.expense?.filter((item, index) => {
       let a = item?.expenseDate;
       let b = moment(a).format('M');
@@ -66,12 +68,10 @@ const ShowHistory = props => {
       let selectedMonth = selectMonthKey;
       return month == selectedMonth;
     });
-    setTimeout(() => {
-      setIsLoading(false);
       setMonthHistory(data);
       setBtnPress(true);
-    }, 1500);
   };
+  console.log('the month history is ====>', monthHistory)
 
   const NumToWords = number => {
     let num = ~~number;
@@ -155,15 +155,16 @@ const ShowHistory = props => {
   return (
     <View>
       {/* header  */}
-      <View>
-        <CustomHeader isBack />
+      <View style={{flexDirection:'row', width:'90%', alignSelf:'center', marginTop:vh(2)}}>
+        <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
+          <Image source={Images.menu} style={{height:30, width:30}} />
+        </TouchableOpacity>
+        <View style={{width:'80%', alignItems:'center'}}>
+          <CustomText title={'Monthly Report'} isBold style={{fontSize:16}} />
+        </View>
       </View>
       {/* header component */}
-      <View>
-        {/* heading */}
-        <View style={styles.month_view}>
-          <CustomText title={'Select Month'} style={{textAlign: 'center'}} />
-        </View>
+      <View style={{marginTop:vh(2)}}>
         {/* dropdown & input */}
         <View style={styles.input_container}>
           <TouchableOpacity
@@ -211,7 +212,7 @@ const ShowHistory = props => {
         </View>
       ) : (
         <>
-          {monthHistory != '' && (
+          {monthHistory != '' ? (
             <View style={styles.history_container}>
               {/* personal detail */}
               <View>
@@ -530,6 +531,21 @@ const ShowHistory = props => {
                 />
               </View>
             </View>
+          ):(
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: vh(35),
+              }}>
+              <Image
+                source={{
+                  uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/no-results-found-5732789-4812665.png',
+                }}
+                style={{height: 200, width: 200}}
+              />
+            </View>
           )}
         </>
       )}
@@ -588,10 +604,7 @@ const getStyles = isMonthModal =>
     },
     btn_style: {
       backgroundColor: Colors.themeColor,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 50,
-      borderBottomLeftRadius: 50,
-      borderBottomRightRadius: 10,
+      borderRadius: 10,
       elevation: 3,
     },
     txt_style: {
