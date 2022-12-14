@@ -44,7 +44,9 @@ const Images = {
     show: require('../assets/Images/show.png'),
     buy: require('../assets/Images/buy.png'),
     lock: require('../assets/Images/lock.png'),
-    premium: require('../assets/Images/premium.png')
+    premium: require('../assets/Images/premium.png'),
+    investment: require('../assets/Images/investment.png'),
+    card: require('../assets/Images/card.jpg')
 
 }
 

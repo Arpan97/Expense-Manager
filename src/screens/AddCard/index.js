@@ -13,6 +13,10 @@ const AddCard = (props) => {
     const navigation = useNavigation()
     const [name, setName] = useState('')
     const [openingAmt, setOpeningAmt] = useState(0)
+    const [cardNo, setCardNo] = useState('')
+    const [userName, setUserName] = useState('')
+    const [expiry, setExpiry] = useState('')
+    const [cvv, setCvv] = useState('')
 
     const addNewCard = () => {
         let body = {
@@ -22,7 +26,11 @@ const AddCard = (props) => {
             img: Images.bank,
             totalIncome:0,
             totalExpense:0,
-            totalBal:0
+            totalBal:0,
+            accHolder:userName,
+            cardNum:cardNo,
+            expiryDate:expiry,
+            cvv:cvv
         }
 
         props?.save_account(body)
@@ -39,7 +47,39 @@ const AddCard = (props) => {
         </View>
       </View>
       <ScrollView style={{marginTop:vh(3)}}>
-        <View style={{width:'90%', alignSelf:'center'}}>
+      <View style={{width:'90%', alignSelf:'center'}}>
+            <View>
+                <CustomText title={'Card Holder Name'} style={{fontSize:12}} isBold />
+            </View>
+            <View>
+                <TextInput placeholder='Enter card holder name...' value={userName} onChangeText={(txt)=>setUserName(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} />
+            </View>
+        </View>
+        <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
+            <View>
+                <CustomText title={'Card Number (optional)'} style={{fontSize:12}} isBold />
+            </View>
+            <View>
+                <TextInput placeholder='Enter account number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
+            </View>
+        </View>
+        <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
+            <View>
+                <CustomText title={'Expiry Date (optional)'} style={{fontSize:12}} isBold />
+            </View>
+            <View>
+                <TextInput placeholder='Enter expiry date (Enter without special characters)' value={expiry} onChangeText={(txt)=>setExpiry(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} maxLength={4} />
+            </View>
+        </View>
+        <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
+            <View>
+                <CustomText title={'CVV (optional)'} style={{fontSize:12}} isBold />
+            </View>
+            <View>
+                <TextInput placeholder='Enter cvv number...' value={cvv} onChangeText={(txt)=>setCvv(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={3} />
+            </View>
+        </View>
+        <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
                 <CustomText title={'Bank Name'} style={{fontSize:12}} isBold />
             </View>

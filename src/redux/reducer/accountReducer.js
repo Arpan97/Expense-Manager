@@ -7,8 +7,8 @@ export const account_reducer = (state = initialState, action) => {
         case ACCOUNTS:
             return [...state,action.payload]
         case DELETE_ACCOUNT:
-            data = state;
-            i = data.findIndex(item => item.id == action.payload);
+            let data = state;
+            let i = data.findIndex(item => item.id == action.payload);
             if(i >= 0){
                 data.splice(i,1)
             }

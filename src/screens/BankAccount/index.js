@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Colors from '../../utils/color';
@@ -26,6 +27,7 @@ const BankAccount = props => {
   const [accBackup, setAccBackup] = useState('');
 
   const renderAcc = ({item, index}) => {
+    console.log('the item is ===>', item)
     let allData = props?.expense?.filter((i, j) => {
       return i?.account == item?.title;
     });
@@ -38,53 +40,99 @@ const BankAccount = props => {
       total = item?.openingAmt + income - expense;
     });
     return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('BankDetails', {data: item})}
-        style={{
-          backgroundColor: Colors.themeColor,
-          width: '41%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginLeft: vw(6),
-          marginTop: vh(2),
-          paddingVertical: vh(3),
-          borderRadius: 10,
-          elevation: 5,
-          marginBottom: vh(0.6),
-        }}>
-        <TouchableOpacity
-          onPress={() => delete_account(item?.id)}
-          style={{
-            height: 20,
-            width: 20,
-            position: 'absolute',
-            right: 10,
-            top: 10,
-          }}>
-          <Image
-            source={Images.delete}
-            style={{height: '100%', width: '100%'}}
-          />
-        </TouchableOpacity>
-        <View style={{height: 30, width: 30}}>
-          <Image source={Images.bank} style={{height: '100%', width: '100%'}} />
-        </View>
-        <View>
+      <TouchableOpacity onPress={() => navigation.navigate('BankDetails', {data: item})} style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden', backgroundColor:Colors.white, elevation:3}}>
+        <ImageBackground source={Images.card} style={{height:200, width:'100%'}}>
+          <TouchableOpacity
+            onPress={() => delete_account(item?.id)}
+            style={{
+              height: 20,
+              width: 20,
+              position: 'absolute',
+              right: 10,
+              top: 10,
+            }}>
+            <Image
+              source={Images.delete}
+              style={{height: '100%', width: '100%'}}
+            />
+          </TouchableOpacity>
+          <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
+            <CustomText
+              title={(item?.title).toUpperCase()}
+              isBold
+              style={{color: Colors.white}}
+            />
+          </View>
+          <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(20)}}>
+            <CustomText title={item?.cardNum == undefined ? '' : `${item?.cardNum?.substring(0,4)} ${item?.cardNum?.substring(4,8)} ${item?.cardNum?.substring(8,12)} ${item?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
+          </View>
+          <View style={{flexDirection:'row'}}>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
+              <CustomText title={item?.expiryDate == undefined ? '' : `Valid To : ${item?.expiryDate?.substring(0,2)}/${item?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+            </View>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
+            <CustomText title={item?.cvv == undefined ? '' : `CVV : ${item?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+            </View>
+          </View>
+          <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
+            <CustomText title={item?.accHolder == undefined ? '' : `${item?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
+          </View>
+          <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
           <CustomText
-            title={item?.title}
-            isBold
-            style={{color: Colors.white}}
-          />
-        </View>
-        {console.log('the total balance is ===>', total)}
-        <View>
-          <CustomText
-            title={`${'\u20B9'} ${total}`}
+            title={`Available Bal : ${'\u20B9'} ${total}`}
             isBold
             style={{fontSize: 14, color: Colors.white}}
           />
         </View>
+        </ImageBackground>
       </TouchableOpacity>
+      // <TouchableOpacity
+      //   onPress={() => navigation.navigate('BankDetails', {data: item})}
+      //   style={{
+      //     backgroundColor: Colors.themeColor,
+      //     width: '41%',
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+      //     marginLeft: vw(6),
+      //     marginTop: vh(2),
+      //     paddingVertical: vh(3),
+      //     borderRadius: 10,
+      //     elevation: 5,
+      //     marginBottom: vh(0.6),
+      //   }}>
+        // <TouchableOpacity
+        //   onPress={() => delete_account(item?.id)}
+        //   style={{
+        //     height: 20,
+        //     width: 20,
+        //     position: 'absolute',
+        //     right: 10,
+        //     top: 10,
+        //   }}>
+        //   <Image
+        //     source={Images.delete}
+        //     style={{height: '100%', width: '100%'}}
+        //   />
+        // </TouchableOpacity>
+      //   <View style={{height: 30, width: 30}}>
+      //     <Image source={Images.bank} style={{height: '100%', width: '100%'}} />
+      //   </View>
+        // <View>
+        //   <CustomText
+        //     title={item?.title}
+        //     isBold
+        //     style={{color: Colors.white}}
+        //   />
+        // </View>
+      //   {console.log('the total balance is ===>', total)}
+        // <View>
+        //   <CustomText
+        //     title={`${'\u20B9'} ${total}`}
+        //     isBold
+        //     style={{fontSize: 14, color: Colors.white}}
+        //   />
+        // </View>
+      // </TouchableOpacity>
     );
   };
   const searchFunctionality = async txt => {
@@ -167,11 +215,11 @@ const BankAccount = props => {
           />
         </View>
       </View>
-      <View>
+      <View style={{marginBottom:vh(6)}}>
         <FlatList
           data={accBackup}
           renderItem={renderAcc}
-          numColumns={2}
+          // numColumns={2}
           ListEmptyComponent={renderEmpty}
         />
       </View>

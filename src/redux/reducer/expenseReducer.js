@@ -7,8 +7,8 @@ export const expenseReducer = (state = initialState, action) => {
     case ADD_EXPENSE:
         return [...state, action.payload]
     case DELETE_EXPENSE:
-        data = state
-        i = data.findIndex(item => item.id == action.payload)
+        let data = state
+        let i = data.findIndex(item => item.id == action.payload)
         if( i >= 0){
             data.splice(i,1)
         }

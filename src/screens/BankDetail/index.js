@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Images from '../../utils/images'
@@ -114,7 +114,53 @@ const BankDetail = (props) => {
       <TouchableOpacity onPress={goBack} style={{height:25, width:25, marginTop:vh(2), marginLeft:vw(2)}}>
         <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
       </TouchableOpacity>
-      <View>
+      <View style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden', backgroundColor:Colors.white, elevation:3}}>
+        <ImageBackground source={Images.card} style={{height:200, width:'100%'}}>
+            <TouchableOpacity
+              onPress={()=>checkBal()}
+              style={{
+                height: 20,
+                width: 20,
+                position: 'absolute',
+                right: 10,
+                top: 10,
+              }}>
+              <Image
+                source={Images.show}
+                style={{height: '100%', width: '100%'}}
+              />
+            </TouchableOpacity>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
+              <CustomText
+                title={(data?.title).toUpperCase()}
+                isBold
+                style={{color: Colors.white}}
+              />
+            </View>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(20)}}>
+              <CustomText title={data?.cardNum == undefined ? '' : `${data?.cardNum?.substring(0,4)} ${data?.cardNum?.substring(4,8)} ${data?.cardNum?.substring(8,12)} ${data?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
+            </View>
+            <View style={{flexDirection:'row'}}>
+              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
+                <CustomText title={data?.expiryDate == undefined ? '' : `Valid To : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+              </View>
+              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
+              <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+              </View>
+            </View>
+            <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
+              <CustomText title={data?.accHolder == undefined ? '' : `${data?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
+            </View>
+            <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
+            <CustomText
+              title={`Total Bal : ${'\u20B9'} ${total}`}
+              isBold
+              style={{fontSize: 14, color: Colors.white}}
+            />
+          </View>
+        </ImageBackground>
+      </View>
+      {/* <View>
         <View style={{justifyContent:'center', alignItems:'center'}}>
           <CustomText title={(data?.title).toUpperCase()} isBold style={{fontSize:16}} />
         </View>
@@ -198,13 +244,13 @@ const BankDetail = (props) => {
             <CustomText title={`${'\u20B9'}${expense}`} />
           </View>
         </View>
-      </View>
+      </View> */}
       <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
         <View>
           <CustomText title={'Transaction History'} isBold />
         </View>
         <View style={{marginTop:vh(1)}}>
-          <FlatList style={{paddingTop:vh(1), marginBottom:vh(41)}} data={expenseData} renderItem={renderExpense} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
+          <FlatList style={{paddingTop:vh(1), marginBottom:vh(37.3)}} data={expenseData} renderItem={renderExpense} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
         </View>
       </View>
     </View>

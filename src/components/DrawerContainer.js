@@ -26,37 +26,42 @@ const DrawerContainer = (props) => {
     navigation.navigate('Premium')
   }
 
-  const checkPremium = () => {
+  const checkPremium = (txt) => {
     if(isPremium){
-        navigation.navigate('Drawer',{screen:'Bank'})
+        if(txt == 'Bank'){
+            navigation.navigate('Drawer',{screen:'Bank'})
+        }else if(txt == 'Invest'){
+            navigation.navigate('Drawer',{screen:'Invest'})
+        }
     }else{
         AlertBox('warning','Warning','Please subscribe to use this feature')
     }
   }
 
   useEffect(()=>{
-    // if(props?.premium)
+    if(props?.premiumData == ''){
+        setIsPremium(false)
+    }else{
+        getTimeRemaining(props?.premiumData?.expiry_time)
+        setIsPremium(true)
+    }
   },[props?.premiumData])
 
-  const calculateTime = () => {
+  useEffect(()=>{
+    setInterval(() => {
+        getTimeRemaining(props?.premiumData?.expiry_time)
+    }, 60000);
+  },[])
+
     function getTimeRemaining(endtime){
         const total = Date.parse(endtime) - Date.parse(new Date());
         const seconds = Math.floor( (total/1000) % 60 );
         const minutes = Math.floor( (total/1000/60) % 60 );
         const hours = Math.floor( (total/(1000*60*60)) % 24 );
         const days = Math.floor( total/(1000*60*60*24) );
-      
-        console.log('the total===>', total, 'the second', seconds, 'minutes', minutes, 'hours', hours, 'days', days)
-        // return {
-        //   total,
-        //   days,
-        //   hours,
-        //   minutes,
-        //   seconds
-        // };
+        
+        setPremiumTime(`${days}D ${hours}H ${minutes} Min`)
     }
-    // const result_data = getTimeRemaining(moment(result).format('YYYY-MM-DD'))
-  }
 
   useEffect(()=>{
     getUserData()
@@ -67,7 +72,7 @@ const DrawerContainer = (props) => {
             <View style={{backgroundColor:Colors.white, width:90, height:90, overflow:'hidden', borderRadius:60, borderWidth:1, borderColor:Colors.borderColor, elevation:3, marginLeft:vw(2), marginTop:vh(2)}}>
                 <Image source={img ? {uri:img} : Images.user} style={{height: '100%', width: '100%', overflow:'hidden'}} />
             </View>
-            {!isPremium && (
+            {!isPremium ? (
                 <TouchableOpacity onPress={()=>buyPremium()} style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
                     <View style={{width:20, height:20, marginRight:vw(2)}}>
                         <Image source={Images.premium} style={{height:'100%', width:'100%'}} />
@@ -76,6 +81,10 @@ const DrawerContainer = (props) => {
                         <CustomText title={'Buy premium'} isBold style={{fontSize:12, color:Colors.themeColor}} />
                     </View>
                 </TouchableOpacity>
+            ) : (
+                <View style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
+                    <CustomText title={premiumTime} isBold />
+                </View>
             )}
         </View>
         <View style={{marginLeft:vw(4), marginVertical:vh(1)}}>
@@ -134,12 +143,27 @@ const DrawerContainer = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>checkPremium()} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                <TouchableOpacity onPress={()=>checkPremium('Bank')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.bank} style={{height:25, width:25}} />
                     </View>
                     <View style={{width:'60%', justifyContent:'center'}}>
                         <CustomText title={'Bank Account'} isBold />
+                    </View>
+                    {!isPremium && (
+                        <View style={{width:'20%', alignItems:'center'}}>
+                            <Image source={Images.lock} style={{height:25,width:25}} />
+                        </View>
+                    )}
+                </TouchableOpacity>
+            </View>
+            <View style={{paddingVertical:vh(0.6)}}>
+                <TouchableOpacity onPress={()=>checkPremium('Invest')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                    <View style={{width:'20%', alignItems:'center'}}>
+                        <Image source={Images.investment} style={{height:25, width:25}} />
+                    </View>
+                    <View style={{width:'60%', justifyContent:'center'}}>
+                        <CustomText title={'Invest Account'} isBold />
                     </View>
                     {!isPremium && (
                         <View style={{width:'20%', alignItems:'center'}}>
