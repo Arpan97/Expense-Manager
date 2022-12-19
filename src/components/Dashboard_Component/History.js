@@ -9,6 +9,7 @@ import { delete_expense } from '../../redux/Action/Action'
 
 const History = (props) => {
     const [history, setHistory] = useState([])
+
     const delete_expense = (id) => {
         props?.delete_expense(id)
     }
@@ -49,17 +50,36 @@ const History = (props) => {
 
     const emptyComponent = () => {
         return(
-            <View>
-                <CustomText title={'No history found...'} style={{fontSize:13}} />
-            </View>
+            <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: vh(5),
+          }}>
+          <Image
+            source={{
+              uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/no-results-found-5732789-4812665.png',
+            }}
+            style={{height: 200, width: 200}}
+          />
+        </View>
         )
     }
+
+    const checkDateExpense = () => {
+        let x = props?.expense?.sort(function (a, b){
+            return new Date(b.expenseDate) - new Date(a.expenseDate)
+        })
+        setHistory(x)
+    }
+    useEffect(() => {
+        checkDateExpense()
+      }, [props?.expense]);
 
     useEffect(()=>{
         setHistory(props?.expense)
     },[props?.expense])
-
-    // console.log('the props', props?.expense)
 
   return (
     <View>

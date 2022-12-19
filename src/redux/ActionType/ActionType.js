@@ -4,6 +4,7 @@ export const EDIT_EXPENSE = 'EDIT_EXPENSE'
 export const DELETE_EXPENSE = 'DELETE_EXPENSE'
 export const ADD_GOAL = 'ADD_GOAL'
 export const DELETE_GOAL = 'DELETE_GOAL'
+export const UPDATE_GOAL = 'UPDATE_GOAL'
 
 export const TOTAL_INCOME = 'TOTAL_INCOME'
 export const ACCOUNTS = 'ACCOUNTS'
@@ -11,3 +12,5 @@ export const DELETE_ACCOUNT = 'DELETE_ACCOUNT'
 export const CHECK_PREMIUM = 'CHECK_PREMIUM'
 export const INVESTMENT = 'INVESTMENT'
 export const DELETE_INVESTMENT = 'DELETE_INVESTMENT'
+
+export const GOAL_DEPOSIT = 'GOAL_DEPOSIT'

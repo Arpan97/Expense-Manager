@@ -5,6 +5,8 @@ import {
   FlatList,
   Image,
   TextInput,
+  ImageBackground,
+  Text,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Images from '../../utils/images';
@@ -15,53 +17,77 @@ import {
 } from 'react-native-responsive-screen';
 import Colors from '../../utils/color';
 import CustomInvestFav from '../../components/Fav/InvestCatFav';
-import { investmentCat } from '../../utils/constants';
+import {investmentCat} from '../../utils/constants';
 import CustomText from '../../components/CustomText';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-const Investment = (props) => {
+const Investment = props => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
-  const [totalInvest, setTotalInvest] = useState(0)
-  const [allInvest, setAllInvest] = useState(0)
+  const [totalInvest, setTotalInvest] = useState(0);
+  const [allInvest, setAllInvest] = useState(0);
+  const [category, setCategory] = useState('')
 
-  const searchFunctionality = txt => {};
+  const searchFunctionality = txt => {
+    setSearch(txt);
+    let masterDataSource = investmentCat;
+    if (txt) {
+      const newData = masterDataSource.filter(function (item) {
+        const itemData = item.category
+          ? item.category.toUpperCase()
+          : ''.toUpperCase();
+        const textData = txt.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setCategory(newData);
+    } else {
+      setCategory(masterDataSource);
+    }
+  };
   const calculateTotal = () => {
-    var allTotal = 0
-    props?.investment?.map((a,b)=>{
-      allTotal = allTotal + a?.investment_amount
-    })
-    setAllInvest(allTotal)
-  }
+    var allTotal = 0;
+    props?.investment?.map((a, b) => {
+      allTotal = allTotal + a?.investment_amount;
+    });
+    setAllInvest(allTotal);
+  };
 
   useEffect(()=>{
-    calculateTotal()
-  },[props?.investment])
-  const renderCat = ({item,index}) => {
-    
-    let a = props?.investment?.filter((i,j)=>{
-      return i?.investment_type == item?.category
-    })
+    setCategory(investmentCat);
+  },[investmentCat])
+
+  useEffect(() => {
+    calculateTotal();
+  }, [props?.investment]);
+
+  const renderCat = ({item, index}) => {
+    let a = props?.investment?.filter((i, j) => {
+      return i?.investment_type == item?.category;
+    });
     var totalAmt = 0;
-    a?.map((l,m)=>{
-      totalAmt = totalAmt + l?.investment_amount
-    })
-    return(
-      <TouchableOpacity onPress={()=>navigation.navigate('InvestDetail',{data:item})} style={{width:'90%', alignSelf:'center', backgroundColor:Colors.white, elevation:3, borderRadius:10, borderColor:Colors.borderColor, marginBottom:vh(1), marginTop:vh(1)}}>
-        <View style={{width:'100%', flexDirection:'row', padding:vh(1)}}>
-          <View style={{width:'20%', overflow:'hidden', borderRadius:10, justifyContent:'center', alignItems:'center', backgroundColor:Colors.white}}>
-            <Image source={item?.image} style={{height:60, width:60}} />
+    a?.map((l, m) => {
+      totalAmt = totalAmt + l?.investment_amount;
+    });
+    return (
+        <ImageBackground source={Images.cat_white} style={{width:'100%', height:150, borderRadius:10, overflow:'hidden', alignSelf:'center', marginTop:vh(2), justifyContent:'center'}}>
+          <View style={{flexDirection:'row'}}>
+            <View style={{width:'50%', justifyContent:'center', alignItems:'center'}}>
+              <Image source={item?.image} style={{height:62,width:62, borderTopLeftRadius:10}} />
+            </View>
+            <View style={{width:'50%', justifyContent:'center', alignItems:'center'}}>
+              <CustomText title={item?.category} isBold />
+              <CustomText title={`${'\u20B9'}${totalAmt}`} style={{color: totalInvest > 0 ? Colors.green : Colors.textColor}} />
+              <TouchableOpacity
+                activeOpacity={0.4}
+                onPress={()=>navigation.navigate('InvestDetail',{data:item})}
+                style={{backgroundColor:'#131313', borderRadius:5, elevation:3, width:vw(25), height:vh(4), justifyContent:'center', marginTop:vh(2)}}>
+                  <CustomText style={styles.explore_txt} title={'Explore'} />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={{width:'50%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={item?.category} isBold />
-          </View>
-          <View style={{width:'30%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={`${'\u20B9'}${totalAmt}`} style={{color: totalInvest > 0 ? Colors.green : Colors.textColor}} />
-          </View>
-        </View>
-      </TouchableOpacity>
-    )
-  }
+        </ImageBackground>
+    );
+  };
   const renderEmpty = () => {
     return (
       <View
@@ -79,9 +105,9 @@ const Investment = (props) => {
         />
       </View>
     );
-  }
+  };
   return (
-    <View style={styles.container}>
+    <ImageBackground source={Images.back_1} style={styles.container}>
       <View style={styles.header_view}>
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
@@ -97,60 +123,76 @@ const Investment = (props) => {
         </View>
       </View>
       <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: Colors.white,
-            marginTop: vh(2),
-            width: '50%',
-            elevation: 3,
-            borderWidth: 0.5,
-            borderColor: Colors.borderColor,
-            borderRadius: 10,
-            alignSelf: 'center',
-            justifyContent:'center',
-            alignItems:'center'
-          }}>
-        <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 20,
+          overflow: 'hidden',
+          marginTop: vh(2),
+        }}>
+        <ImageBackground
+          source={Images.invest_background}
+          style={{height: 210, width: '100%'}}>
+          <View style={{position: 'absolute', bottom: vh(11.5), left: vw(8)}}>
+            <Image source={Images.investment} style={{height: 60, width: 60}} />
+          </View>
+          <View
             style={{
-              width: '100%',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingTop: vh(1),
-              paddingBottom: vh(1),
+              marginTop: vh(8),
+              marginLeft: vw(15),
             }}>
-            
-            <View style={{}}>
-              <CustomText title={'Total Investment'} isBold style={{fontSize: 16, marginLeft:vw(5)}} />
-            </View>
-            <Image source={Images.totalMoney} style={{height: 40, width: 40}} />
-            <CustomText title={`${'\u20B9'}${allInvest}`} />
-        </View>
+            <CustomText
+              title={'Total Investment'}
+              isBold
+              style={{fontSize: 16, color: Colors.white}}
+            />
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: vh(2),
+              marginLeft: vw(15),
+            }}>
+            <CustomText
+              title={`${'\u20B9'}${allInvest}`}
+              style={{fontSize: 16, color: Colors.white}}
+            />
+          </View>
+        </ImageBackground>
       </View>
-      <View style={{marginTop:vh(2), marginBottom:vh(20)}}>
-        <FlatList renderItem={renderCat} ListEmptyComponent={renderEmpty} data={investmentCat} />
+      <View style={{marginBottom: vh(36), width:'95%', alignSelf:'center'}}>
+        <FlatList
+          renderItem={renderCat}
+          ListEmptyComponent={renderEmpty}
+          data={category}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
-    </View>
+      <CustomInvestFav />
+    </ImageBackground>
   );
 };
 
 const mapStateToProps = state => ({
-  investment: state.invest
-})
+  investment: state.invest,
+});
 
-export default connect (mapStateToProps, null) (Investment);
+export default connect(mapStateToProps, null)(Investment);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.backgroundColor,
     flex: 1,
     width: '100%',
     alignSelf: 'center',
-    marginTop: vh(2),
   },
   header_view: {
     flexDirection: 'row',
     width: '90%',
     alignSelf: 'center',
+    marginTop: vh(2),
   },
   back_btn_view: {
     width: '10%',
@@ -164,9 +206,56 @@ const styles = StyleSheet.create({
   },
   input_view: {
     width: '85%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.inputColor,
     borderRadius: 10,
     paddingLeft: vh(1),
     elevation: 2,
+  },
+
+  category_view: {
+    flexDirection: 'row',
+  },
+  category_first_half_img: {
+    // width: vw(40),
+    borderTopLeftRadius: 10,
+    // height: '100%',
+    overflow: 'hidden',
+  },
+  category_img: {
+    width: '95%',
+    height: '95%',
+    resizeMode: 'stretch',
+    borderTopLeftRadius: 10,
+  },
+  category_second_half_img: {
+    paddingLeft: 8,
+    // width: vw(160),
+    borderBottomRightRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  category_second_txt: {
+    fontSize: 23,
+    color: Colors.black,
+    textAlign: 'center',
+    // borderBottomRightRadius: 10,
+  },
+  category_product_length: {
+    color: Colors.black + 60,
+  },
+  explore_btn: {
+    backgroundColor: '#131313',
+    borderRadius: 5,
+    // width: vw(116),
+    // height: vw(33),
+    // marginTop: vh(10),
+    // paddingVertical: vh(8),
+    elevation: 2,
+  },
+  explore_txt: {
+    color: Colors.white,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

@@ -34,7 +34,7 @@ const DrawerContainer = (props) => {
             navigation.navigate('Drawer',{screen:'Invest'})
         }
     }else{
-        AlertBox('warning','Warning','Please subscribe to use this feature')
+        AlertBox('warning','Warning','Please subscribe to use this feature. You can choose trial version for 1 Month')
     }
   }
 
@@ -82,8 +82,14 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             ) : (
-                <View style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
-                    <CustomText title={premiumTime} isBold />
+                <View>
+                    <View style={{flexDirection:'row', position:'absolute', top:vh(3), left:vw(8), justifyContent:'center', alignItems:'center'}}>
+                        <Image source={Images.premium} style={{height:20, width:20, marginRight:vw(1)}} />
+                        <CustomText title={'Premium'} isBold style={{fontSize:12, color:Colors.white}} />
+                    </View>
+                    <View style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
+                        <CustomText title={premiumTime} isBold />
+                    </View>
                 </View>
             )}
         </View>
@@ -172,6 +178,18 @@ const DrawerContainer = (props) => {
                     )}
                 </TouchableOpacity>
             </View>
+            {isPremium && (
+                <View style={{paddingVertical:vh(0.6)}}>
+                    <TouchableOpacity onPress={()=>navigation.navigate('Premium')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                        <View style={{width:'20%', alignItems:'center'}}>
+                            <Image source={Images.premium} style={{height:25, width:25}} />
+                        </View>
+                        <View style={{width:'60%', justifyContent:'center'}}>
+                            <CustomText title={'Premium'} isBold />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )}
             {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity onPress={()=>navigation.navigate('CustomBill')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
@@ -193,8 +211,9 @@ const DrawerContainer = (props) => {
                 </TouchableOpacity>
             </View>
         </View>
-        <View style={{flexDirection:'row', marginTop:vh(1), justifyContent:'space-around'}}>
-            <TouchableOpacity onPress={()=>Linking.openURL('https://in.linkedin.com/in/arpan-govila-b865031a4')}>
+        <View style={{flexDirection:'row', marginTop:vh(3), justifyContent:'center', alignItems:'center'}}>
+            <CustomText title={`${'\u00A9'}2022 Expense Inc. All rights reserved`} isBold style={{fontSize:12, color:Colors.white}} />
+            {/* <TouchableOpacity onPress={()=>Linking.openURL('https://in.linkedin.com/in/arpan-govila-b865031a4')}>
                 <Image source={Images.linkedin} style={{height:40,width:40}} />
             </TouchableOpacity>
             <TouchableOpacity>
@@ -202,7 +221,7 @@ const DrawerContainer = (props) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>Linking.openURL('https://www.facebook.com/arpan.govila.7/')}>
                 <Image source={Images.facebook} style={{height:40,width:40}} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
       </View>
     </DrawerContentScrollView>
   );

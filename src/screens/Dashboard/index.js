@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CustomHeader from '../../components/CustomHeader';
@@ -22,6 +23,7 @@ import History from '../../components/Dashboard_Component/History';
 import {total_income} from '../../redux/Action/Action';
 import CustomLoader from '../../components/CustomLoader';
 import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Dashboard = props => {
   const navigation = useNavigation();
@@ -30,6 +32,7 @@ const Dashboard = props => {
   const [expense, setExpense] = useState(0);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [greet, setGreet] = useState('')
 
   const checkExpense = () => {
     var total = 0,
@@ -48,55 +51,50 @@ const Dashboard = props => {
 
   useEffect(() => {
     checkExpense();
+    findGreet()
   }, [props?.expense]);
 
   const searchFunctionality = async txt => {};
 
+  const findGreet = () => {
+    const hrs = new Date().getHours();
+    if (hrs === 0 || hrs < 12) return setGreet('Morning');
+    if (hrs === 1 || hrs < 17) return setGreet('Afternoon');
+    setGreet('Evening');
+  };
 
   return (
-    <View
+    <ImageBackground
+    source={Images.back_1}
       style={{
-        backgroundColor: Colors.backgroundColor,
+        // backgroundColor: Colors.backgroundColor,
         flex: 1,
         width: '100%',
         alignSelf: 'center',
-        marginTop: vh(2),
+        // marginTop: vh(2),
       }}>
       {/* header section  */}
-      <View style={{flexDirection:'row', width:'90%', alignSelf:'center'}}>
+      <View style={{flexDirection:'row', width:'90%', alignSelf:'center', marginTop:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
           <Image source={Images.menu} style={{height:30, width:30}} />
         </TouchableOpacity>
-        <View style={{width:'85%', backgroundColor:Colors.white, borderRadius:10, paddingLeft:vh(1), elevation:2}}>
-          <TextInput placeholder='Search here...' value={search} onChangeText={(txt)=>searchFunctionality(txt)} />
+        <View style={{justifyContent:'center', width:'74%'}}>
+          <CustomText title={`Good ${greet}, ${props?.user?.name}`} isBold style={{fontSize:15}} />
         </View>
+        {/* <TouchableOpacity style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
+          <Image source={Images.show_account} style={{height:25, width:25}} />
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={()=>navigation.navigate('Report')} style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
+          <Image source={Images.calendar} style={{height:25, width:25}} />
+        </TouchableOpacity>
       </View>
-      {/* <View style={{width:'90%', alignSelf:'center'}}>
-        <CustomHeader isHome />
-      </View> */}
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* search bar  */}
-        {/* <View
-          style={{
-            width:'90%',
-            alignSelf:'center',
-            backgroundColor: Colors.white,
-            borderRadius: 10,
-            paddingLeft: vh(1),
-            elevation: 2,
-            marginTop: vh(2),
-          }}>
-          <TextInput
-            placeholder="Search here..."
-            value={search}
-            onPress={txt => searchFunctionality(txt)}
-          />
-        </View> */}
         {/* total amount section  */}
-        <View
+        <LinearGradient
+        colors={['#E7F5FF', '#BDDDFF']}
           style={{
             flexDirection: 'row',
-            backgroundColor: Colors.white,
+            // backgroundColor: Colors.white,
             marginTop: vh(2),
             width: '90%',
             elevation: 3,
@@ -134,74 +132,22 @@ const Dashboard = props => {
               style={{
                 height: 40,
                 width: 40,
-                transform: [{rotate: '180deg'}],
+                // transform: [{rotate: '180deg'}],
               }}
             />
             <CustomText title={`${'\u20B9'}${expense}`} />
           </View>
-        </View>
-        {/* category section  */}
-        {/* <View style={{marginTop: vh(2)}}>
-          <View style={{width:'90%', alignSelf:'center'}}>
-            <CustomText title={'Category'} isBold style={{fontSize: 16}} />
-          </View>
-          <ScrollView
-            showsHorizontalScrollIndicator={false}
-            style={{marginTop: vh(2)}}
-            horizontal>
-            {category?.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('CategoryWise', {data: item})
-                  }
-                  activeOpacity={0.6}
-                  style={{
-                    height: vh(25),
-                    width: vw(38),
-                    backgroundColor: item?.color,
-                    marginLeft: vh(2),
-                    elevation: 5,
-                    borderRadius: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom:vh(1)
-                  }}>
-                  <View style={{height: 50, width: 50}}>
-                    <Image
-                      source={item?.img}
-                      style={{height: '100%', width: '100%'}}
-                    />
-                  </View>
-                  <View style={{marginBottom: vh(1)}}>
-                    <CustomText
-                      title={item?.category}
-                      style={{
-                        color: Colors.white,
-                        textAlign: 'center',
-                        fontSize: 16,
-                      }}
-                    />
-                  </View>
-                  <View>
-                    <CustomText
-                      title={`Click to view${'\n'}expenses`}
-                      style={{color: Colors.white, textAlign: 'center'}}
-                    />
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View> */}
+        </LinearGradient>
         {/* add goals */}
+        {props?.goal != '' && (
         <View style={{marginTop: vh(2), width:'90%', alignSelf:'center'}}>
           <Add_Goals />
         </View>
+        )}
         {/* history  */}
         <View style={{marginTop: vh(2), width:'90%', alignSelf:'center'}}>
           <View style={{marginBottom: vh(2)}}>
-            <CustomText title={'History'} isBold style={{fontSize: 16}} />
+            <CustomText title={'Transaction History'} isBold style={{fontSize: 14}} />
           </View>
           <View>
             <History />
@@ -210,7 +156,7 @@ const Dashboard = props => {
       </ScrollView>
       {/* fav button  */}
       <CustomFav />
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -218,6 +164,7 @@ const mapStateToProps = state => ({
   user: state.userData,
   expense: state.expenseData,
   total: state.totalAmt,
+  goal: state.goalData,
 });
 
 const mapDispatchToProps = dispatch => {

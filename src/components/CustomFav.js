@@ -26,12 +26,20 @@ const CustomFav = () => {
             icon: Images.saving,
             label: 'Add Expense',
             onPress: () => navigation.navigate('AddExpense'),
+            color:Colors.red
           },
           {
             icon: Images.goal,
             label: 'Add Goals',
             onPress: () => navigation.navigate('AddGoal'),
+            color:Colors.orange
           },
+          // {
+          //   icon: Images.investment,
+          //   label: 'Add Investment',
+          //   onPress: () => navigation.navigate('AddInvestCat'),
+          //   color:Colors.themeColor
+          // },
         ]}
         onStateChange={onStateChange}
         onPress={() => {

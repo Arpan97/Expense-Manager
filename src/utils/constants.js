@@ -38,13 +38,12 @@ export const allMonth = [
 ]
 
 export const investmentCat = [
-    {id:1, category:'Mutual Fund', image:Images.bank, type:'Mutual'},
-    {id:2, category:'Stocks', image:Images.bank, type:'Stock'},
-    {id:1, category:'Fixed Deposit', image:Images.bank, type:'FD'},
-    {id:1, category:'Recurring Deposit', image:Images.bank, type:'RD'},
-    {id:1, category:'Insurance', image:Images.bank, type:'Insurance'},
-    {id:1, category:'Gold', image:Images.bank, type:'Gold'},
-    {id:1, category:'Silver', image:Images.bank, type:'Silver'},
+    {id:1, category:'Mutual Fund', image:Images.mutual, type:'Mutual'},
+    {id:2, category:'Stocks', image:Images.stock, type:'Stock'},
+    {id:3, category:'Fixed Deposit', image:Images.fd, type:'FD'},
+    {id:4, category:'Recurring Deposit', image:Images.saving, type:'RD'},
+    {id:5, category:'Insurance', image:Images.insurance, type:'Insurance'},
+    {id:6, category:'Gold', image:Images.gold, type:'Gold'},
 ]
 
 export const investCatType = [

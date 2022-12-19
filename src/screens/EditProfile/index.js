@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Modal,
+  ImageBackground,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomHeader from '../../components/CustomHeader';
@@ -82,7 +83,7 @@ const EditProfile = props => {
   }, [data]);
 
   return (
-    <View style={{flex: 1}}>
+    <ImageBackground source={Images.back_1} style={{flex: 1}}>
       {/* header */}
       <View style={{flexDirection:'row', marginTop:vh(2)}}>
         {/* <CustomHeader isBack /> */}
@@ -292,7 +293,7 @@ const EditProfile = props => {
           </View>
         </Modal>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 

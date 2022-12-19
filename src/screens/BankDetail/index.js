@@ -9,6 +9,7 @@ import Colors from '../../utils/color'
 import { total_income } from '../../redux/Action/Action'
 import Notify from '../../utils/Dialog'
 import ALertBox from '../../utils/AlertBox'
+import LinearGradient from 'react-native-linear-gradient'
 
 const BankDetail = (props) => {
   let data = props?.route?.params?.data
@@ -26,7 +27,10 @@ const BankDetail = (props) => {
     let allData = props?.expense?.filter((item,index)=>{
       return item?.account == data?.title
     })
-    setExpenseData(allData)
+    let x = allData?.sort(function (a, b){
+      return new Date(b.expenseDate) - new Date(a.expenseDate)
+    })
+    setExpenseData(x)
     var total = 0,
       income = 0,
       expense = 0;
@@ -53,25 +57,25 @@ const BankDetail = (props) => {
   const checkBal = () => {
     ALertBox('success', 'Account Information',
     `
-    Opening balance - ${data?.openingAmt}
-    Total Income - ${income}
-    Total Expense - ${expense}
-    Amount Left - ${total}
+    Opening balance - ${'\u20B9'}${data?.openingAmt}
+    Total Income - ${'\u20B9'}${income}
+    Total Expense - ${'\u20B9'}${expense}
+    Amount Left - ${'\u20B9'}${total}
     `)
   }
 
   const renderExpense =({item,index}) => {
     return(
-      <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:2, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
+      <LinearGradient colors={['#E7F5FF', '#BDDDFF']} style={{ padding:vh(1), elevation:2, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
       <View style={{flexDirection:'row'}}>
-          <View style={{width:40, height:40, borderRadius:25, backgroundColor:Colors.white, elevation:3, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
-              <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
+          <View style={{width:45, height:45, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
+              <Image source={Images.expense} style={{height:'100%', width:'100%'}} />
           </View>
-          <View style={{width:'40%', marginLeft:vh(3)}}>
-              <CustomText title={item?.category} />
-              <CustomText title={item?.description} />
+          <View style={{width:'50%', marginLeft:vh(3)}}>
+              <CustomText title={item?.category} isBold />
+              <CustomText title={item?.description?.length > 60 ? `${(item?.description).substring(0,60)}...` : item?.description} style={{fontSize:12}} />
           </View>
-          <View style={{width:'50%', justifyContent:'center', alignItems:'center'}}>
+          <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
               <View>
                   {item?.expenseType == 'Expense' ? (
                       <Image source={Images.decrease} style={{height:20,width:20}} />
@@ -86,9 +90,9 @@ const BankDetail = (props) => {
           </View>
       </View>
       <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-          <CustomText title={`Created at: ${item?.expenseDate}`} style={{fontSize:11}} />
+          <CustomText title={`${item?.expenseDate}`} style={{fontSize:11}} />
       </View>
-      </View>
+      </LinearGradient>
   )
   }
   const renderEmpty = () => {
@@ -110,7 +114,7 @@ const BankDetail = (props) => {
     );
   }
   return (
-    <View style={{flex:1}}>
+    <ImageBackground source={Images.back_1} style={{flex:1}}>
       <TouchableOpacity onPress={goBack} style={{height:25, width:25, marginTop:vh(2), marginLeft:vw(2)}}>
         <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
       </TouchableOpacity>
@@ -148,103 +152,18 @@ const BankDetail = (props) => {
               <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
               </View>
             </View>
-            <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
-              <CustomText title={data?.accHolder == undefined ? '' : `${data?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
+            <View style={{flexDirection:'row', width:'100%', marginTop:vh(4)}}>
+              <View style={{flexDirection:'row', width:'50%', justifyContent:'center', alignItems:'center'}}>
+                <Image source={Images.increase} style={{width:40, height:40}} />
+                <CustomText title={`${'\u20B9'}${income}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+              </View>
+              <View style={{flexDirection:'row', width:'50%', justifyContent:'center', alignItems:'center'}}>
+                <Image source={Images.decrease} style={{width:40, height:40}} />
+                <CustomText title={`${'\u20B9'}${expense}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+              </View>
             </View>
-            <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
-            <CustomText
-              title={`Total Bal : ${'\u20B9'} ${total}`}
-              isBold
-              style={{fontSize: 14, color: Colors.white}}
-            />
-          </View>
         </ImageBackground>
       </View>
-      {/* <View>
-        <View style={{justifyContent:'center', alignItems:'center'}}>
-          <CustomText title={(data?.title).toUpperCase()} isBold style={{fontSize:16}} />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: Colors.white,
-            marginTop: vh(2),
-            width: '50%',
-            elevation: 3,
-            borderWidth: 0.5,
-            borderColor: Colors.borderColor,
-            borderRadius: 10,
-            alignSelf: 'center',
-            justifyContent:'center',
-            alignItems:'center'
-          }}>
-        <View
-            style={{
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: vh(1),
-              paddingBottom: vh(1),
-            }}>
-            
-            <View style={{flexDirection:'row'}}>
-              <CustomText title={'Balance'} isBold style={{fontSize: 16, marginLeft:vw(5)}} />
-              <TouchableOpacity onPress={()=>checkBal()} style={{left:vw(10)}}>
-                <Image source={Images.show} style={{height:20, width:20}} />
-              </TouchableOpacity>
-            </View>
-            <Image source={Images.totalMoney} style={{height: 40, width: 40}} />
-            <CustomText title={`${'\u20B9'}${total}`} />
-        </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: Colors.white,
-            marginTop: vh(2),
-            width: '90%',
-            elevation: 3,
-            borderWidth: 0.5,
-            borderColor: Colors.borderColor,
-            borderRadius: 10,
-            alignSelf: 'center',
-          }}>
-          <View
-            style={{
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: vh(1),
-              paddingBottom: vh(1),
-            }}>
-            <CustomText title={'Income'} isBold style={{fontSize: 16}} />
-            <Image source={Images.increase} style={{height: 40, width: 40}} />
-            <CustomText title={`${'\u20B9'}${income}`} />
-          </View>
-          <View
-            style={{borderLeftWidth: 1, borderLeftColor: Colors.black + 18}}
-          />
-          <View
-            style={{
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: vh(1),
-              paddingBottom: vh(1),
-            }}>
-            <CustomText title={'Expenses'} isBold style={{fontSize: 16}} />
-            <Image
-              source={Images.decrease}
-              style={{
-                height: 40,
-                width: 40,
-                transform: [{rotate: '180deg'}],
-              }}
-            />
-            <CustomText title={`${'\u20B9'}${expense}`} />
-          </View>
-        </View>
-      </View> */}
       <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
         <View>
           <CustomText title={'Transaction History'} isBold />
@@ -253,7 +172,7 @@ const BankDetail = (props) => {
           <FlatList style={{paddingTop:vh(1), marginBottom:vh(37.3)}} data={expenseData} renderItem={renderExpense} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
         </View>
       </View>
-    </View>
+    </ImageBackground>
   )
 }
 

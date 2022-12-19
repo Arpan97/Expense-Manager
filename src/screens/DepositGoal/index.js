@@ -1,0 +1,198 @@
+import {View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import CustomText from '../../components/CustomText';
+import {connect} from 'react-redux';
+import {goal_deposit, update_goal} from '../../redux/Action/Action';
+import {useNavigation} from '@react-navigation/native';
+import Colors from '../../utils/color';
+import {
+  widthPercentageToDP as vw,
+  heightPercentageToDP as vh,
+} from 'react-native-responsive-screen';
+import Textstyles from '../../utils/text';
+import CustomButton from '../../components/CustomButton';
+import Notify from '../../utils/Dialog';
+import moment from 'moment';
+
+const DepositGoal = props => {
+  const navigation = useNavigation();
+  const [goalCat, setGoalCat] = useState(props?.route?.params?.data?.title);
+  const [depositAmt, setDepositAmt] = useState(0);
+  const [totalInc, setTotalInc] = useState(0)
+
+  const addNewDeposit = () => {
+    if(depositAmt != ''){
+        if(depositAmt != 0){
+            if(depositAmt <= totalInc){
+                let body = {
+                    id:Math.random().toString(16).slice(2),
+                    goalId: props?.route?.params?.data?.id,
+                    goalTitle: props?.route?.params?.data?.title,
+                    depositAmt: parseInt(depositAmt),
+                    depositDate: moment().format('DD/MM/YYYY')
+                }
+                let obj = {
+                    id:props?.route?.params?.data?.id,
+                    imgSet:props?.route?.params?.data?.imgSet,
+                    amount:props?.route?.params?.data?.amount,
+                    title:props?.route?.params?.data?.title,
+                    status: depositAmt == totalInc ? 'Complete' : 'Pending'
+                }
+                if(depositAmt == totalInc){
+                    props?.update_goal(obj)
+                    props?.save_deposit(body)
+                    navigation.goBack()
+                    Notify('success', 'Congratulations', `You successfully deposit ${'\u20B9'}${parseInt(depositAmt)}`)
+                }else{
+                    props?.save_deposit(body)
+                    navigation.goBack()
+                    Notify('success', 'Congratulations', `You successfully deposit ${'\u20B9'}${parseInt(depositAmt)}`)
+                }
+            }else{
+                Notify('error', "Alert", `You can add ${'\u20B9'}${totalInc} or less than ${'\u20B9'}${totalInc}`)
+            }
+        }else{
+            Notify('error', "Alert", "Deposit amount should not be zero")
+        }
+    }else{
+        Notify('error', "Alert", "Deposit amount should not be blank")
+    }
+  };
+
+  const calculateAmt = () => {
+    var save = 0;
+    let d = props?.deposit?.filter((i,j)=>{
+        return i?.goalId == props?.route?.params?.data?.id
+      })
+    d?.map((a,c) => {
+      save = save + a?.depositAmt
+    })
+    let left = props?.route?.params?.data?.amount - save
+    setTotalInc(left)
+  };
+
+  useEffect(()=>{
+    calculateAmt()
+  },[])
+  return (
+    <View style={{backgroundColor: Colors.themeColor, flex: 1}}>
+      <View style={{backgroundColor: Colors.themeColor, flex: 0.25}}>
+        <View style={{top: vh(8), marginLeft: vw(4), width:'90%', alignSelf:'center'}}>
+          <CustomText
+            title={`Deposit amount to save for ${props?.route?.params?.data?.title}`}
+            isBold
+            style={{fontSize: 25, color: Colors.white}}
+          />
+        </View>
+      </View>
+      <ScrollView
+        style={{
+          flex: 0.7,
+          backgroundColor: Colors.white,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          elevation: 3,
+          marginTop: vh(12),
+        }}>
+        <View>
+          <View
+            style={{
+              marginTop: vh(2),
+              width: '92%',
+              alignSelf: 'center',
+            }}>
+            <View>
+              <CustomText title={'Goal title'} isBold style={{fontSize: 13}} />
+            </View>
+            <View>
+              <TextInput
+                value={goalCat}
+                editable={false}
+                style={[
+                  Textstyles.bold,
+                  {
+                    borderBottomWidth: 1,
+                    borderColor: Colors.black + 50,
+                  },
+                ]}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              marginTop: vh(2),
+              width: '92%',
+              alignSelf: 'center',
+            }}>
+            <View>
+              <CustomText
+                title={'Deposit Amount'}
+                isBold
+                style={{fontSize: 13}}
+              />
+            </View>
+            <View>
+              <TextInput
+                placeholder="Enter amount to save"
+                value={depositAmt}
+                onChangeText={amt => setDepositAmt(amt)}
+                keyboardType="number-pad"
+                style={[
+                  Textstyles.bold,
+                  {
+                    borderBottomWidth: 1,
+                    borderColor: Colors.black + 50,
+                  },
+                ]}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{marginTop:vh(1)}}>
+            <CustomText title={`*You have ${'\u20B9'}${totalInc} left to complete your ${props?.route?.params?.data?.title} Goal`} style={{fontSize:12, color:Colors.red, textAlign:'center'}} isBold  />
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: vh(5),
+          }}>
+          <CustomButton
+            onPress={() => addNewDeposit()}
+            btnStyle={{
+              backgroundColor: Colors.themeColor,
+              borderRadius: 10,
+              elevation: 3,
+              marginBottom: vh(1),
+              paddingVertical: vh(1.4),
+            }}
+            title={'Deposit'}
+            txtStyle={{color: Colors.white}}
+          />
+        </View>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{justifyContent: 'center', alignItems: 'center'}}>
+          <CustomText title={'Cancel'} isBold style={{fontSize: 14}} />
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+};
+
+const mapStateToProps = state => ({
+    deposit: state.goalDeposit
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    save_deposit: data => {
+      dispatch(goal_deposit(data));
+    },
+    update_goal: data => {
+        dispatch(update_goal(data))
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DepositGoal);

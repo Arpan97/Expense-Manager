@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  ImageBackground,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomText from '../../components/CustomText';
@@ -100,98 +101,37 @@ const Premium = props => {
 
   const renderPlans = ({item,index}) => {
     return(
-      <TouchableOpacity onPress={()=>buyPremium(item)} style={{backgroundColor:Colors.themeColor, width:'45%', marginLeft:vw(3.5), marginVertical:vh(1), borderRadius:10, elevation:5, paddingVertical:vh(1.2)}}>
-        <View style={{justifyContent:'center', alignItems:'center'}}>
-          <CustomText title={item?.plan_name} isBold style={{fontSize:16, color:Colors.white}} />
+      <ImageBackground source={Images.cat_white} style={{height:200, width:'100%', alignSelf:'center', marginBottom:vh(1), borderRadius:4, elevation:3, overflow:'hidden'}}>
+        <View style={{flexDirection:'row', alignItems:'center'}}>
+          <View style={{width:'17%'}}>
+            <Image source={Images.premium} style={{height:60, width:60}} />
+          </View>
+          <View style={{flexDirection:'row', alignItems:'center', width:'55%'}}>
+            <View>
+              <CustomText title={'Plan Type : '} isBold />
+              <CustomText title={'Plan Duration : '} isBold />
+            </View>
+            <View>
+              <CustomText title={item?.plan_name} style={{fontSize:13}} />
+              <CustomText title={`${item?.plan_time} Month`} style={{fontSize:13}} />
+            </View>
+          </View>
+          <TouchableOpacity onPress={()=>buyPremium(item)} style={{width:'20%', backgroundColor:Colors.black, paddingVertical:vh(1), borderRadius:4, elevation:5, justifyContent:'center', alignItems:'center'}}>
+            <CustomText title={`${'\u20B9'}${item?.plan_price}`} style={{color:Colors.white}} isBold />
+          </TouchableOpacity>
         </View>
-        <View style={{flexDirection:'row', width:'100%'}}>
-          <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={'Amount : '} style={{fontSize:14, color:Colors.white}} isMedium />
-          </View>
-          <View style={{width:'60%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={`${'\u20B9'}${item?.plan_price}`} style={{fontSize:12, color:Colors.white}} isRegular />
-          </View>
+        <View style={{marginLeft:vw(3)}}>
+          <CustomText title={'Plan Description : '} isBold />
+          <CustomText title={item?.inPlan} style={{fontSize:13}} />
         </View>
-        <View style={{flexDirection:'row', width:'100%'}}>
-          <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={'Duration : '} style={{fontSize:14, color:Colors.white}} isMedium />
-          </View>
-          <View style={{width:'60%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={`${item?.plan_time} Months`} style={{fontSize:12, color:Colors.white}} isRegular />
-          </View>
-        </View>
-        <View style={{flexDirection:'row', width:'100%'}}>
-          <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={'Plan Details : '} style={{fontSize:14, color:Colors.white}} isMedium />
-          </View>
-          <View style={{width:'60%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={`${item?.inPlan}`} style={{fontSize:12, color:Colors.white}} isRegular />
-          </View>
-        </View>
-      </TouchableOpacity>
+      </ImageBackground>
     )
   }
 
+  console.log('the premium', props?.premiumData)
+
   return (
-    // <View style={styles.container}>
-    // <View style={{flexDirection: 'row', marginTop: vh(2)}}>
-    //   <TouchableOpacity
-    //     onPress={() => handleBack()}
-    //     style={{height: 25, width: 25}}>
-    //     <Image
-    //       source={Images.back_3d}
-    //       style={{height: '100%', width: '100%'}}
-    //     />
-    //   </TouchableOpacity>
-    //   <View
-    //     style={{
-    //       width: '85%',
-    //       justifyContent: 'center',
-    //       alignItems: 'center',
-    //     }}>
-    //     <CustomText title={'Buy Premium'} isBold />
-    //   </View>
-    // </View>
-    //   <View style={styles.sub_Container}>
-    //     <View style={styles.second_sub_container}>
-    //       <FlatList
-    //         numColumns={2}
-    //         data={plans}
-    //         renderItem={({item, index}) => {
-    //           return (
-    //             <LinearGradient
-    //               colors={[Colors.white, Colors.themeColor]}
-    //               style={styles.flatlist_container}>
-    //               <TouchableOpacity onPress={() => buyPremium(item)}>
-    //                 <CustomText
-    //                   style={styles.subscribe_text}
-    //                   title={item?.plan_name}
-    //                   isBold
-    //                 />
-    //                 <View style={{flexDirection: 'row', marginTop: 5}}>
-    //                   <CustomText title={'Amount : '} isBold />
-    //                   <CustomText title={`${'\u20B9'}${item?.plan_price}`} />
-    //                 </View>
-    //                 <View style={{flexDirection: 'row', marginVertical: 5}}>
-    //                   <CustomText title={'Duration : '} isBold />
-    //                   <CustomText title={`${item?.plan_time} Month`} />
-    //                 </View>
-    //                 {/* {item?.plan_discount != '' ? (
-    //                 <View style={{flexDirection: 'row', marginVertical: 5}}>
-    //                     <CustomText title={'Discount : '} isBold />
-    //                     <CustomText title={item?.plan_discount} />
-    //                 </View>
-    //               ) : null} */}
-    //                 <CustomText title={item?.plan_desc} />
-    //               </TouchableOpacity>
-    //             </LinearGradient>
-    //           );
-    //         }}
-    //       />
-    //     </View>
-    //   </View>
-    // </View>
-    <View>
+    <ImageBackground style={{flex:1}} source={Images.back_1}>
       <View style={{flexDirection: 'row', marginTop: vh(2), marginLeft: vw(4)}}>
         <TouchableOpacity
           onPress={() => handleBack()}
@@ -214,12 +154,47 @@ const Premium = props => {
           />
         </View>
       </View>
-      <View style={{marginTop:vh(3)}}>
-        <FlatList data={plans} renderItem={renderPlans} numColumns={2} />
+      {props?.premiumData != '' && (
+      <>
+        <View style={{width:'95%', alignSelf:'center', borderRadius:20, overflow:'hidden', marginTop:vh(2), elevation:3}}>
+          <ImageBackground source={Images.goal_card} style={{height:210, width:'100%'}}>
+              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
+                  <CustomText title={(props?.premiumData?.plan_name).toUpperCase()} isBold style={{fontSize:16}} />
+              </View>
+              <View style={{marginLeft:vw(2)}}>
+              <View style={{}}>
+                  <CustomText title={'Plan Price'} isBold style={{fontSize:12}} />
+              </View>
+              <View style={{paddingLeft:vw(1), marginBottom:vh(0.2)}}>
+                  <CustomText title={`${'\u20B9'}${props?.premiumData?.plan_price}`} style={{fontSize:12, color:Colors.white}} />
+              </View>
+              </View>
+              <View style={{marginTop:vh(0.4),marginLeft:vw(2)}}>
+              <View style={{}}>
+                  <CustomText title={'Plan Time'} isBold style={{fontSize:12}} />
+              </View>
+              <View style={{paddingLeft:vw(1), marginTop:vh(0.5)}}>
+                  <CustomText title={`${(props?.premiumData?.plan_time)} Month`} style={{fontSize:12, color:Colors.white}} />
+              </View>
+              </View>
+              <View style={{position:'absolute', bottom:vh(7.5), right:vw(28)}}>
+                  <Image source={Images.premium} style={{height:60, width:60}} />
+              </View>
+          </ImageBackground>
+        </View>
+      </>
+      )}
+      <View style={{marginTop:vh(3), width:'95%', alignSelf:'center'}}>
+        <FlatList data={plans} renderItem={renderPlans} style={{marginBottom: props?.premiumData != '' ? vh(33) : vh(5)}} showsVerticalScrollIndicator={false} />
       </View>
-    </View>
+      
+    </ImageBackground>
   );
 };
+
+const mapStateToProps = state => ({
+  premiumData: state.premium
+})
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -229,7 +204,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Premium);
+export default connect(mapStateToProps, mapDispatchToProps)(Premium);
 
 const styles = StyleSheet.create({
   container: {

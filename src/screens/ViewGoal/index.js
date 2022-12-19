@@ -4,9 +4,9 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../utils/color';
 import {
   widthPercentageToDP as vw,
@@ -17,20 +17,57 @@ import {FlatList} from 'react-native';
 import CustomText from '../../components/CustomText';
 import Slider from '@react-native-community/slider';
 import {connect} from 'react-redux';
-import {delete_goal} from '../../redux/Action/Action';
-import CustomLoader from '../../components/CustomLoader';
+import {delete_goal, update_goal} from '../../redux/Action/Action';
 import Snack from '../../utils/snackbar';
 import {useNavigation} from '@react-navigation/native';
 import CustomFav from '../../components/CustomFav';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ViewGoal = props => {
-  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [goalList, setGoalList] = useState([]);
-  const [totalInc, setTotalInc] = useState();
+  const [totalInc, setTotalInc] = useState(0);
+  const [targetAmt, setTargetAmt] = useState(0);
   const navigation = useNavigation();
+  const [completed, setCompleted] = useState(0);
+  const [pending, setPending] = useState(0);
+
+  const checkGoalComplete = () => {
+    let g = props?.goal?.map((item, index) => {
+      let d = props?.deposit?.filter((i, j) => {
+        return i?.goalId == item?.id;
+      });
+      var depositAmount = 0;
+      d?.map((c, e) => {
+        depositAmount = depositAmount + c?.depositAmt;
+      });
+      let body = {
+        id: item?.id,
+        imgSet: item?.imgSet,
+        amount: item?.amount,
+        title: item?.title,
+        status:
+          parseInt(item?.amount) == depositAmount ? 'Complete' : 'Pending',
+      };
+      return body;
+    });
+    props?.update_goal(g);
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      checkGoalComplete();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const renderItem = ({item, index}) => {
+    var totalAmount = 0;
+    let a = props?.deposit?.filter((i, j) => {
+      return i?.goalId == item?.id;
+    });
+    a?.map((c, d) => {
+      totalAmount = totalAmount + c?.depositAmt;
+    });
     return (
       <View style={styles.flatlist_container}>
         <View style={styles.header_view}>
@@ -40,21 +77,20 @@ const ViewGoal = props => {
           <View style={styles.title_view}>
             <CustomText title={item?.title} />
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               delete_goal(item?.id);
             }}
             style={styles.delete_btn}>
             <Image source={Images.delete} style={styles.delete_icn} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View>
           <Slider
             style={styles.slider}
             maximumValue={parseInt(item?.amount)}
-            value={totalInc}
+            value={totalAmount}
             maximumTrackTintColor="blue"
-            // minimumTrackTintColor="blue"
             thumbTintColor={Colors.themeColor}
             thumbImage={Images.circle}
             disabled={true}
@@ -62,38 +98,79 @@ const ViewGoal = props => {
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View>
-            {/* here show amount of total income  */}
-            <CustomText title={`${'\u20B9'}${totalInc}`} />
+            <CustomText title={`${'\u20B9'}${totalAmount}`} />
           </View>
           <View>
             <CustomText title={`${'\u20B9'}${item?.amount}`} />
           </View>
         </View>
-      </View>
-    );
-  };
+        <View style={{flexDirection: 'row', width: '100%', marginTop: vh(1)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ViewDeposit', {data: item})}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              width: totalAmount != item?.amount ? '50%' : '100%',
+            }}>
+            <Image
+              source={Images.show_account}
+              style={{height: 30, width: 30, marginRight: vw(2)}}
+            />
+            <CustomText title={'View Deposit'} />
+          </TouchableOpacity>
 
-  const emptyComponent = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: vh(20),
-        }}>
-        <Image
-          source={{
-            uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/no-results-found-5732789-4812665.png',
-          }}
-          style={{height: 200, width: 200}}
-        />
+          {totalAmount != item?.amount && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('DepositGoal', {data: item})}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                width: '50%',
+              }}>
+              <Image
+                source={Images.deposit}
+                style={{height: 30, width: 30, marginRight: vw(2)}}
+              />
+              <CustomText title={'Deposit'} />
+            </TouchableOpacity>
+          )}
+        </View>
+        {totalAmount == item?.amount && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: vh(1),
+            }}>
+            <View style={{marginLeft: vw(2)}}>
+              <Image source={Images.gift} style={{height: 20, width: 20}} />
+            </View>
+            <View>
+              <CustomText
+                title={`Congratulations! You have completed your goal`}
+                isBold
+                style={{fontSize: 12, color: Colors.themeColor}}
+              />
+            </View>
+          </View>
+        )}
       </View>
     );
   };
 
   const getAllGoal = () => {
     setGoalList(props?.goal);
+    let comp = props?.goal?.filter((i, j) => {
+      return i?.status == 'Complete';
+    });
+    let pend = props?.goal?.filter((i, j) => {
+      return i?.status == 'Pending';
+    });
+    setCompleted(comp?.length);
+    setPending(pend?.length);
   };
 
   const delete_goal = id => {
@@ -105,15 +182,29 @@ const ViewGoal = props => {
     setSearch(text);
   };
 
+  const calculateAmt = () => {
+    var target = 0,
+      save = 0;
+    props?.goal?.map((i, j) => {
+      target = target + parseInt(i?.amount);
+    });
+    setTargetAmt(target);
+
+    props?.deposit?.map((a, c) => {
+      save = save + a?.depositAmt;
+    });
+    setTotalInc(save);
+  };
+
   useEffect(() => {
+    calculateAmt();
     getAllGoal();
-    setTotalInc(props?.total);
-  }, [props?.goal, props?.total]);
+  }, [props?.goal]);
 
   return (
-    <View style={styles.container}>
+    <ImageBackground source={Images.back_1} style={styles.container}>
       {/* header  */}
-      <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center'}}>
+      <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop:vh(1)}}>
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
           style={{
@@ -127,10 +218,10 @@ const ViewGoal = props => {
         <View
           style={{
             width: '85%',
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.inputColor,
             borderRadius: 10,
             paddingLeft: vh(1),
-            elevation: 2,
+            elevation: 3,
           }}>
           <TextInput
             placeholder="Search goals..."
@@ -139,25 +230,105 @@ const ViewGoal = props => {
           />
         </View>
       </View>
-      <View>
-        <FlatList
-          data={goalList}
-          renderItem={renderItem}
-          ListEmptyComponent={emptyComponent}
-        />
-      </View>
+      {props?.goal == '' ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: vh(20),
+          }}>
+          <Image
+            source={{
+              uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/no-results-found-5732789-4812665.png',
+            }}
+            style={{height: 200, width: 200}}
+          />
+        </View>
+      ) : (
+        <>
+          <LinearGradient
+            colors={['#E7F5FF', '#BDDDFF']}
+            style={{paddingVertical: vh(4), marginTop: vh(2)}}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+              }}>
+              <CustomText title={'Total Goals'} isBold style={{fontSize: 16}} />
+              <CustomText title={props?.goal?.length} isMedium />
+            </View>
+            <View style={{width: '100%', flexDirection: 'row'}}>
+              <View
+                style={{
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText title={'Completed'} isBold style={{fontSize: 16}} />
+                <CustomText title={completed} isMedium />
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText title={'Pending'} isBold style={{fontSize: 16}} />
+                <CustomText title={pending} isMedium />
+              </View>
+            </View>
+            <View style={{width: '100%', flexDirection: 'row'}}>
+              <View
+                style={{
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText
+                  title={'Target Amount'}
+                  isBold
+                  style={{fontSize: 16}}
+                />
+                <CustomText title={`${'\u20B9'}${targetAmt}`} isMedium />
+              </View>
+              <View
+                style={{
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText
+                  title={'Amount Saved'}
+                  isBold
+                  style={{fontSize: 16}}
+                />
+                <CustomText title={`${'\u20B9'}${totalInc}`} isMedium />
+              </View>
+            </View>
+          </LinearGradient>
+          <View>
+            <FlatList
+              style={{marginBottom: vh(32)}}
+              data={goalList}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </>
+      )}
       <CustomFav />
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.backgroundColor,
+    // backgroundColor: Colors.backgroundColor,
     flex: 1,
     width: '100%',
     alignSelf: 'center',
-    marginTop: vh(2),
   },
   search_container: {
     marginVertical: vh(2),
@@ -165,7 +336,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 1,
     borderColor: Colors.borderColor,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.inputColor,
     elevation: 3,
     borderRadius: 50,
   },
@@ -183,8 +354,8 @@ const styles = StyleSheet.create({
   },
   flatlist_container: {
     backgroundColor: Colors.white,
-    marginTop: vh(2),
-    marginBottom: vh(1),
+    marginTop: vh(1),
+    marginBottom: vh(0.6),
     width: '92%',
     elevation: 1,
     borderWidth: 0.5,
@@ -230,12 +401,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   goal: state.goalData,
   total: state.totalAmt,
+  deposit: state.goalDeposit,
 });
 
 const mapDispatchToProps = dispatch => {
   return {
     delete_goal: id => {
       dispatch(delete_goal(id));
+    },
+    update_goal: data => {
+      dispatch(update_goal(data));
     },
   };
 };

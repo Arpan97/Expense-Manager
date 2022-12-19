@@ -9,7 +9,8 @@ const Colors = {
     black:"#000000",
     backgroundColor:'#F5F5F5',
     green:'#2ECC71',
-    transparent:'transparent'
+    transparent:'transparent',
+    inputColor:'#EEEEEE'
 }
 
 export default Colors

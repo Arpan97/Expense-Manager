@@ -26,6 +26,7 @@ const CustomBankFav = () => {
             icon: Images.bank,
             label: 'Add Bank Account',
             onPress: () => navigation.navigate('AddCard'),
+            color:Colors.orange
           },
         ]}
         onStateChange={onStateChange}

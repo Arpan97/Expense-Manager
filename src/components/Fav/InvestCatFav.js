@@ -23,9 +23,10 @@ const CustomInvestFav = () => {
         icon={!open ? Images.add_black : Images.minus_black}
         actions={[
           {
-            icon: Images.bank,
+            icon: Images.investment,
             label: 'Add Investment',
             onPress: () => navigation.navigate('AddInvestCat'),
+            color:Colors.themeColor
           },
         ]}
         onStateChange={onStateChange}

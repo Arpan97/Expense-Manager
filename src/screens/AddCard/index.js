@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, ImageBackground } from 'react-native'
 import React, { useState } from 'react'
 import Images from '../../utils/images'
 import CustomText from '../../components/CustomText'
@@ -37,15 +37,15 @@ const AddCard = (props) => {
         navigation.replace('Drawer',{screen:'Bank'})
     }
   return (
-    <View>
-      <View style={{flexDirection:'row', marginTop:vh(1), marginLeft:vw(3)}}>
+    <ImageBackground source={Images.back_1} style={{flex:1}}>
+      {/* <View style={{flexDirection:'row', marginTop:vh(1), marginLeft:vw(3)}}>
         <TouchableOpacity onPress={()=>navigation.goBack()} style={{height:22, width:22}}>
             <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
         </TouchableOpacity>
         <View style={{width:'85%', alignItems:'center', justifyContent:'center'}}>
             <CustomText title={'Add Bank Account'} isBold style={{fontSize:16, color:Colors.themeColor}} />
         </View>
-      </View>
+      </View> */}
       <ScrollView style={{marginTop:vh(3)}}>
       <View style={{width:'90%', alignSelf:'center'}}>
             <View>
@@ -114,8 +114,11 @@ const AddCard = (props) => {
             txtStyle={{color: Colors.white}}
           />
         </View>
+        <TouchableOpacity onPress={()=>navigation.goBack()} style={{justifyContent:'center', alignItems:'center', marginTop:vh(2)}}>
+            <CustomText title={'Cancel'} isBold />
+        </TouchableOpacity>
       </ScrollView>
-    </View>
+    </ImageBackground>
   )
 }
 

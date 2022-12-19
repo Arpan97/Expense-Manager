@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  TextInput
+  TextInput,
+  ImageBackground
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
@@ -71,7 +72,6 @@ const ShowHistory = props => {
       setMonthHistory(data);
       setBtnPress(true);
   };
-  console.log('the month history is ====>', monthHistory)
 
   const NumToWords = number => {
     let num = ~~number;
@@ -153,7 +153,7 @@ const ShowHistory = props => {
   }, [btnPress]);
 
   return (
-    <View>
+    <ImageBackground source={Images.back_1} style={{flex:1}}>
       {/* header  */}
       <View style={{flexDirection:'row', width:'90%', alignSelf:'center', marginTop:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
@@ -537,7 +537,6 @@ const ShowHistory = props => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: vh(35),
               }}>
               <Image
                 source={{
@@ -549,7 +548,7 @@ const ShowHistory = props => {
           )}
         </>
       )}
-    </View>
+    </ImageBackground>
   );
 };
 

@@ -25,6 +25,9 @@ import Premium from '../screens/Premium';
 import Investment from '../screens/Investment';
 import AddInvestCat from '../screens/AddInvestCat';
 import InvestmentDetail from '../screens/InvestmentDetail';
+import DepositGoal from '../screens/DepositGoal';
+import ViewDeposit from '../screens/ViewDeposit';
+import Report from '../screens/Calendar';
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -47,6 +50,9 @@ const AppContainer = () => {
             <Stack.Screen name='BankDetails' component={BankDetail} />
             <Stack.Screen name='Premium' component={Premium} />
             <Stack.Screen name='InvestDetail' component={InvestmentDetail} />
+            <Stack.Screen name='DepositGoal' component={DepositGoal} />
+            <Stack.Screen name='ViewDeposit' component={ViewDeposit} />
+            <Stack.Screen name='Report' component={Report} />
             {/* <Stack.Screen name='CategoryWise' component={CategoryWise} /> */}
             {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
             {/* <Stack.Screen name='Privacy' component={Privacy} />

@@ -27,7 +27,6 @@ const BankAccount = props => {
   const [accBackup, setAccBackup] = useState('');
 
   const renderAcc = ({item, index}) => {
-    console.log('the item is ===>', item)
     let allData = props?.expense?.filter((i, j) => {
       return i?.account == item?.title;
     });
@@ -181,15 +180,16 @@ const BankAccount = props => {
   }, [props?.accountData]);
 
   return (
-    <View
+    <ImageBackground
+    source={Images.back_1}
       style={{
-        backgroundColor: Colors.backgroundColor,
+        // backgroundColor: Colors.backgroundColor,
         flex: 1,
         width: '100%',
         alignSelf: 'center',
-        marginTop: vh(2),
+        // marginTop: vh(2),
       }}>
-      <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center'}}>
+      <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop:vh(2)}}>
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
           style={{
@@ -203,7 +203,7 @@ const BankAccount = props => {
         <View
           style={{
             width: '85%',
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.inputColor,
             borderRadius: 10,
             paddingLeft: vh(1),
             elevation: 2,
@@ -224,7 +224,7 @@ const BankAccount = props => {
         />
       </View>
       <CustomBankFav />
-    </View>
+    </ImageBackground>
   );
 };
 

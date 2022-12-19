@@ -1,4 +1,4 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Images from '../../utils/images';
 import { useNavigation } from '@react-navigation/native';
@@ -37,7 +37,7 @@ const InvestmentDetail = props => {
 
   const renderHistory = ({item,index}) => {
     return(
-        <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, marginBottom:vh(1.5), borderRadius:15, width:'90%', alignSelf:'center'}}>
+        <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'90%', alignSelf:'center'}}>
             <View style={{flexDirection:'row'}}>
                 <View style={{width:40, height:40, borderRadius:25, backgroundColor:Colors.white, elevation:3, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
                     <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
@@ -89,16 +89,58 @@ const InvestmentDetail = props => {
     props?.delete_investment(id)
   }
   return (
-    <View style={{marginTop:vh(2), flex:1}}>
-      <View style={{flexDirection:'row', marginLeft:vw(5)}}>
+    <ImageBackground source={Images.back_1} style={{ flex:1}}>
+      <View style={{flexDirection:'row', marginLeft:vw(5), marginTop:vh(2)}}>
         <TouchableOpacity style={{width:'10%'}} onPress={onBack}>
             <Image source={Images.back_3d} style={{height:22, width:22}} />
         </TouchableOpacity>
         <View style={{width:'74%', alignItems:'center'}}>
-            <CustomText title={data?.category} isBold style={{color:Colors.themeColor}} />
+            <CustomText title={'Investment Detail'} isBold style={{color:Colors.themeColor}} />
+            {/* <CustomText title={data?.category} isBold style={{color:Colors.themeColor}} /> */}
         </View>
       </View>
       <View
+        style={{
+          width: '95%',
+          alignSelf: 'center',
+          borderRadius: 20,
+          overflow: 'hidden',
+          marginTop: vh(2),
+        }}>
+        <ImageBackground
+          source={Images.invest_background}
+          style={{height: 210, width: '100%'}}>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(2)}}>
+              <CustomText title={data?.category} isBold style={{color:Colors.white, fontSize:16}} />
+            </View>
+          <View style={{position: 'absolute', bottom: vh(11.5), left: vw(8)}}>
+            <Image source={data?.image} style={{height: 60, width: 60}} />
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: vh(5),
+              marginLeft: vw(15),
+            }}>
+            <CustomText
+              title={'Total Investment'}
+              isBold
+              style={{fontSize: 16, color: Colors.white}}
+            />
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: vh(2),
+              marginLeft: vw(15),
+            }}>
+            <CustomText title={`${'\u20B9'}${total}`} isBold style={{color:Colors.white}} />
+          </View>
+        </ImageBackground>
+      </View>
+      {/* <View
           style={{
             flexDirection: 'row',
             backgroundColor: Colors.white,
@@ -127,15 +169,15 @@ const InvestmentDetail = props => {
             <Image source={Images.totalMoney} style={{height: 40, width: 40}} />
             <CustomText title={`${'\u20B9'}${total}`} />
         </View>
-      </View>
+      </View> */}
       <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
         <CustomText title={'Transaction History'} isBold style={{fontSize:12}} />
       </View>
-      <View style={{marginTop:vh(2), marginBottom:vh(20)}}>
-        <FlatList data={history} renderItem={renderHistory} ListEmptyComponent={renderEmpty} />
+      <View style={{ marginBottom:vh(37)}}>
+        <FlatList data={history} renderItem={renderHistory} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
       </View>
-      <CustomInvestFav />
-    </View>
+      {/* <CustomInvestFav /> */}
+    </ImageBackground>
   );
 };
 
