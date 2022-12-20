@@ -76,7 +76,17 @@ const Images = {
     cat_white: require('../assets/Images/cat_white.jpg'),
     onboarding_1: require('../assets/Images/onboarding_1.jpg'),
     onboarding_2: require('../assets/Images/onboarding_2.png'),
-    onboarding_3: require('../assets/Images/onboarding_3.png')
+    onboarding_3: require('../assets/Images/onboarding_3.png'),
+    credit_card:require('../assets/Images/credit_card.png'),
+    card_1: require('../assets/Images/card_1.png'),
+    card_2: require('../assets/Images/card_2.png'),
+    card_3: require('../assets/Images/card_3.png'),
+    card_4: require('../assets/Images/card_4.png'),
+    card_5: require('../assets/Images/card_5.png'),
+    card_6: require('../assets/Images/card_6.png'),
+    card_7: require('../assets/Images/card_7.png'),
+    card_8: require('../assets/Images/card_8.png'),
+    card_9: require('../assets/Images/card_9.png'),
 
 
 }

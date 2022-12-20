@@ -60,3 +60,15 @@ export const investCatType = [
     {id:11, category:'Indusland Bank', type:'Indusland'},
     {id:12, category:'State Bank of India', type:'SBI'},
 ]
+
+export const Cards = [
+    {id:1, card_img:Images.card_1},
+    {id:2, card_img:Images.card_2},
+    {id:3, card_img:Images.card_3},
+    {id:4, card_img:Images.card_4},
+    {id:5, card_img:Images.card_5},
+    {id:6, card_img:Images.card_6},
+    {id:7, card_img:Images.card_7},
+    {id:8, card_img:Images.card_8},
+    {id:9, card_img:Images.card_9},
+]

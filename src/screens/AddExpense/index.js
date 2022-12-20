@@ -259,6 +259,8 @@ const AddExpense = props => {
                   paddingHorizontal: vh(1),
                   paddingTop: vh(0.1),
                   paddingBottom: vh(0.1),
+                  flexDirection:'row',
+                  justifyContent:'space-between'
                 }}>
                 <TextInput
                   placeholder="Select date"
@@ -267,6 +269,9 @@ const AddExpense = props => {
                   placeholderTextColor={Colors.textColor}
                   editable={false}
                 />
+                <View style={{marginTop:vh(2)}}>
+                  <Image source={Images.calendar} style={{height:20, width:20}} />
+                </View>
               </TouchableOpacity>
             </View>
             {/* end  */}
@@ -280,7 +285,7 @@ const AddExpense = props => {
                 }}>
                 <CustomText
                   title={
-                    typeExpense ? `Enter ${typeExpense} amount` : `Enter amount`
+                    typeExpense ? `${typeExpense}` : `Enter amount`
                   }
                 />
               </View>
@@ -294,6 +299,8 @@ const AddExpense = props => {
                   paddingHorizontal: vh(1),
                   paddingTop: vh(0.1),
                   paddingBottom: vh(0.1),
+                  flexDirection:'row',
+                  justifyContent:'space-between'
                 }}>
                 <TextInput
                   placeholder="Enter amount"
@@ -301,7 +308,11 @@ const AddExpense = props => {
                   onChangeText={amt => setAmount(amt)}
                   keyboardType="number-pad"
                   placeholderTextColor={Colors.textColor}
+                  style={{width:'90%'}}
                 />
+                <View style={{marginTop:vh(2)}}>
+                  <Image source={Images.totalMoney} style={{height:20, width:20}} />
+                </View>
               </View>
             </View>
             {/* pending work  */}

@@ -32,6 +32,8 @@ const DrawerContainer = (props) => {
             navigation.navigate('Drawer',{screen:'Bank'})
         }else if(txt == 'Invest'){
             navigation.navigate('Drawer',{screen:'Invest'})
+        }else if(txt == 'Credit'){
+            navigation.navigate('Drawer', {screen:'CreditCard'})
         }
     }else{
         AlertBox('warning','Warning','Please subscribe to use this feature. You can choose trial version for 1 Month')
@@ -155,6 +157,21 @@ const DrawerContainer = (props) => {
                     </View>
                     <View style={{width:'60%', justifyContent:'center'}}>
                         <CustomText title={'Bank Account'} isBold />
+                    </View>
+                    {!isPremium && (
+                        <View style={{width:'20%', alignItems:'center'}}>
+                            <Image source={Images.lock} style={{height:25,width:25}} />
+                        </View>
+                    )}
+                </TouchableOpacity>
+            </View>
+            <View style={{paddingVertical:vh(0.6)}}>
+                <TouchableOpacity onPress={()=>checkPremium('Credit')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                    <View style={{width:'20%', alignItems:'center'}}>
+                        <Image source={Images.credit_card} style={{height:25, width:25}} />
+                    </View>
+                    <View style={{width:'60%', justifyContent:'center'}}>
+                        <CustomText title={'Credit Card'} isBold />
                     </View>
                     {!isPremium && (
                         <View style={{width:'20%', alignItems:'center'}}>

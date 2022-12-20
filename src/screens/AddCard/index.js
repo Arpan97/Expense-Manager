@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../components/CustomButton'
 import { connect } from 'react-redux'
 import { account_data } from '../../redux/Action/Action'
+import { Cards } from '../../utils/constants'
 
 const AddCard = (props) => {
     const navigation = useNavigation()
@@ -94,6 +95,19 @@ const AddCard = (props) => {
             <View>
                 <TextInput placeholder='Enter opening balance...' keyboardType='numeric' value={openingAmt} onChangeText={(txt)=>setOpeningAmt(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} />
             </View>
+        </View>
+        <View style={{marginTop:vh(2)}}>
+            {/* pending work */}
+            <ScrollView horizontal style={{marginLeft:vw(4)}}>
+                {Cards?.map((item,index)=>{
+                    return(
+                        <View>
+                            <Image source={item?.card_img} style={{height:160, width:250}} />
+                        </View>
+                    )
+                })}
+                
+            </ScrollView>
         </View>
         <View
           style={{

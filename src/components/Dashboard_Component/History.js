@@ -55,7 +55,7 @@ const History = (props) => {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: vh(5),
+            marginTop: vh(10),
           }}>
           <Image
             source={{
