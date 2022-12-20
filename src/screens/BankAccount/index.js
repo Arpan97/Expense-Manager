@@ -38,9 +38,10 @@ const BankAccount = props => {
       expense = expense + x?.expenseAmount;
       total = item?.openingAmt + income - expense;
     });
+    // console.log('teh item is ===>', item)
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('BankDetails', {data: item})} style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden', backgroundColor:Colors.white, elevation:3}}>
-        <ImageBackground source={Images.card} style={{height:200, width:'100%'}}>
+      <TouchableOpacity onPress={() => navigation.navigate('BankDetails', {data: item})} style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden'}}>
+        <ImageBackground source={item?.cardImage} style={{height:200, width:'100%'}} >
           <TouchableOpacity
             onPress={() => delete_account(item?.id)}
             style={{
@@ -55,34 +56,39 @@ const BankAccount = props => {
               style={{height: '100%', width: '100%'}}
             />
           </TouchableOpacity>
-          <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
+          <View style={{justifyContent:'center', marginTop:vh(3), width:'88%', alignSelf:'center'}}>
             <CustomText
               title={(item?.title).toUpperCase()}
               isBold
               style={{color: Colors.white}}
             />
           </View>
-          <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(20)}}>
-            <CustomText title={item?.cardNum == undefined ? '' : `${item?.cardNum?.substring(0,4)} ${item?.cardNum?.substring(4,8)} ${item?.cardNum?.substring(8,12)} ${item?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
+          <View style={{justifyContent:'center', marginTop:vh(7), width:'88%', alignSelf:'center'}}>
+            <CustomText title={item?.cardNum == undefined ? '' : `${item?.cardNum?.substring(0,4)}  ${item?.cardNum?.substring(4,8)}  ${item?.cardNum?.substring(8,12)}  ${item?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
           </View>
           <View style={{flexDirection:'row'}}>
-            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
-              <CustomText title={item?.expiryDate == undefined ? '' : `Valid To : ${item?.expiryDate?.substring(0,2)}/${item?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+            <View style={{justifyContent:'center', width:'40%', alignSelf:'center', marginLeft:vw(5), bottom:vh(1)}}>
+              <CustomText title={item?.cvv == undefined ? '' : `CVV : ${item?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
             </View>
-            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
-            <CustomText title={item?.cvv == undefined ? '' : `CVV : ${item?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+            <View style={{justifyContent:'center', alignItems:'center',  marginLeft:vw(27)}}>
+              <CustomText title={'Valid'}  isBold style={{fontSize:10, color:Colors.white}} />
+              <CustomText title={'Upto'}   isBold style={{fontSize:10, color:Colors.white}}/>
+            </View>
+            <View style={{marginTop:vh(0.5), marginLeft:vw(2)}}>
+              <CustomText title={item?.expiryDate == undefined ? '' : `${item?.expiryDate?.substring(0,2)}/${item?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:16, color:Colors.white}}  />
             </View>
           </View>
-          <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
-            <CustomText title={item?.accHolder == undefined ? '' : `${item?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
-          </View>
-          <View style={{justifyContent:'center',marginTop:vh(2), marginLeft:vw(10)}}>
+          <View style={{justifyContent:'center', bottom:vh(1), width:'89%', alignSelf:'center'}}>
           <CustomText
             title={`Available Bal : ${'\u20B9'} ${total}`}
             isBold
             style={{fontSize: 14, color: Colors.white}}
           />
         </View>
+          <View style={{justifyContent:'center', width:'89%', alignSelf:'center', bottom:vh(1)}}>
+            <CustomText title={item?.accHolder == undefined ? '' : `${item?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
+          </View>
+          
         </ImageBackground>
       </TouchableOpacity>
       // <TouchableOpacity

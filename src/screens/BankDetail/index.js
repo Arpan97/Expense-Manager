@@ -113,13 +113,14 @@ const BankDetail = (props) => {
       </View>
     );
   }
+  console.log('teh data is ==>', data)
   return (
     <ImageBackground source={Images.back_1} style={{flex:1}}>
       <TouchableOpacity onPress={goBack} style={{height:25, width:25, marginTop:vh(2), marginLeft:vw(2)}}>
         <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
       </TouchableOpacity>
-      <View style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden', backgroundColor:Colors.white, elevation:3}}>
-        <ImageBackground source={Images.card} style={{height:200, width:'100%'}}>
+      <View style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden'}}>
+        <ImageBackground source={data?.cardImage} style={{height:200, width:'100%'}}>
             <TouchableOpacity
               onPress={()=>checkBal()}
               style={{
@@ -146,18 +147,18 @@ const BankDetail = (props) => {
             </View>
             <View style={{flexDirection:'row'}}>
               <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
-                <CustomText title={data?.expiryDate == undefined ? '' : `Valid To : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+                <CustomText title={data?.expiryDate == undefined ? '' : `Valid Upto : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
               </View>
               <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
               <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
               </View>
             </View>
-            <View style={{flexDirection:'row', width:'100%', marginTop:vh(4)}}>
-              <View style={{flexDirection:'row', width:'50%', justifyContent:'center', alignItems:'center'}}>
+            <View style={{flexDirection:'row', width:'100%', marginTop:vh(2)}}>
+              <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                 <Image source={Images.increase} style={{width:40, height:40}} />
                 <CustomText title={`${'\u20B9'}${income}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
               </View>
-              <View style={{flexDirection:'row', width:'50%', justifyContent:'center', alignItems:'center'}}>
+              <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                 <Image source={Images.decrease} style={{width:40, height:40}} />
                 <CustomText title={`${'\u20B9'}${expense}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
               </View>

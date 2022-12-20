@@ -24,7 +24,7 @@ const CustomCreditFav = () => {
         actions={[
           {
             icon: Images.investment,
-            label: 'Add Investment',
+            label: 'Add Credit Card',
             onPress: () => navigation.navigate('AddCreditCard'),
             color:Colors.themeColor
           },

@@ -14,3 +14,6 @@ export const INVESTMENT = 'INVESTMENT'
 export const DELETE_INVESTMENT = 'DELETE_INVESTMENT'
 
 export const GOAL_DEPOSIT = 'GOAL_DEPOSIT'
+
+export const SAVE_CARD = 'SAVE_CARD'
+export const DELETE_CREDIT = 'DELETE_CREDIT'

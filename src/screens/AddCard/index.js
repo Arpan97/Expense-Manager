@@ -18,6 +18,7 @@ const AddCard = (props) => {
     const [userName, setUserName] = useState('')
     const [expiry, setExpiry] = useState('')
     const [cvv, setCvv] = useState('')
+    const [cardSelect, setCardSelect] = useState('')
 
     const addNewCard = () => {
         let body = {
@@ -31,7 +32,8 @@ const AddCard = (props) => {
             accHolder:userName,
             cardNum:cardNo,
             expiryDate:expiry,
-            cvv:cvv
+            cvv:cvv,
+            cardImage: cardSelect?.card_img
         }
 
         props?.save_account(body)
@@ -47,7 +49,7 @@ const AddCard = (props) => {
             <CustomText title={'Add Bank Account'} isBold style={{fontSize:16, color:Colors.themeColor}} />
         </View>
       </View> */}
-      <ScrollView style={{marginTop:vh(3)}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{marginTop:vh(3)}}>
       <View style={{width:'90%', alignSelf:'center'}}>
             <View>
                 <CustomText title={'Card Holder Name'} style={{fontSize:12}} isBold />
@@ -96,14 +98,17 @@ const AddCard = (props) => {
                 <TextInput placeholder='Enter opening balance...' keyboardType='numeric' value={openingAmt} onChangeText={(txt)=>setOpeningAmt(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} />
             </View>
         </View>
-        <View style={{marginTop:vh(2)}}>
+        <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
+            <View>
+                <CustomText title={'Select Card Type'} isBold style={{fontSize:12}} />
+            </View>
             {/* pending work */}
-            <ScrollView horizontal style={{marginLeft:vw(4)}}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                 {Cards?.map((item,index)=>{
                     return(
-                        <View>
+                        <TouchableOpacity onPress={()=>setCardSelect(item)} style={{borderWidth: item?.id == cardSelect?.id ? 1 : 0, marginLeft:vw(2), borderRadius: item?.id == cardSelect?.id ? 10 : 0, borderColor:item?.id == cardSelect?.id ? Colors.themeColor : null, marginTop:vw(2) }}>
                             <Image source={item?.card_img} style={{height:160, width:250}} />
-                        </View>
+                        </TouchableOpacity>
                     )
                 })}
                 
@@ -128,7 +133,7 @@ const AddCard = (props) => {
             txtStyle={{color: Colors.white}}
           />
         </View>
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={{justifyContent:'center', alignItems:'center', marginTop:vh(2)}}>
+        <TouchableOpacity onPress={()=>navigation.goBack()} style={{justifyContent:'center', alignItems:'center', marginTop:vh(2), marginBottom:vh(2)}}>
             <CustomText title={'Cancel'} isBold />
         </TouchableOpacity>
       </ScrollView>

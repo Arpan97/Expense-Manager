@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { account_reducer } from "./accountReducer";
+import { creditCardReducer } from "./creditCardReducer";
 import { expenseReducer } from "./expenseReducer";
 import { goalDepositReducer } from "./goaldepositReducer";
 import { goalReducer } from "./goalReducer";
@@ -16,5 +17,6 @@ export default combineReducers({
     account:account_reducer,
     premium: premiumReducer,
     invest: investmentReducer,
-    goalDeposit: goalDepositReducer
+    goalDeposit: goalDepositReducer,
+    credit: creditCardReducer
 })
