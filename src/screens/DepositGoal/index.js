@@ -1,5 +1,5 @@
-import {View, TextInput, TouchableOpacity, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, TextInput, TouchableOpacity, ScrollView, ImageBackground} from 'react-native';
+import React, {useEffect, useState, useMemo} from 'react';
 import CustomText from '../../components/CustomText';
 import {connect} from 'react-redux';
 import {goal_deposit, update_goal} from '../../redux/Action/Action';
@@ -13,12 +13,22 @@ import Textstyles from '../../utils/text';
 import CustomButton from '../../components/CustomButton';
 import Notify from '../../utils/Dialog';
 import moment from 'moment';
+import Images from '../../utils/images';
 
 const DepositGoal = props => {
   const navigation = useNavigation();
   const [goalCat, setGoalCat] = useState(props?.route?.params?.data?.title);
   const [depositAmt, setDepositAmt] = useState(0);
   const [totalInc, setTotalInc] = useState(0)
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
 
   const addNewDeposit = () => {
     if(depositAmt != ''){
@@ -75,24 +85,24 @@ const DepositGoal = props => {
     calculateAmt()
   },[])
   return (
-    <View style={{backgroundColor: Colors.themeColor, flex: 1}}>
-      <View style={{backgroundColor: Colors.themeColor, flex: 0.25}}>
+    <ImageBackground source={nightMode == true ? Images.black_1 :Images.back_1} style={{backgroundColor: Colors.themeColor, flex: 1}}>
+      <View style={{height:200}}>
         <View style={{top: vh(8), marginLeft: vw(4), width:'90%', alignSelf:'center'}}>
           <CustomText
             title={`Deposit amount to save for ${props?.route?.params?.data?.title}`}
             isBold
-            style={{fontSize: 25, color: Colors.white}}
+            style={{fontSize: 25, color: nightMode == true ? Colors.white : Colors.textColor}}
           />
         </View>
       </View>
       <ScrollView
         style={{
-          flex: 0.7,
-          backgroundColor: Colors.white,
+          // flex: 0.7,
+          // backgroundColor:  Colors.white,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           elevation: 3,
-          marginTop: vh(12),
+          // marginTop: vh(12),
         }}>
         <View>
           <View
@@ -102,17 +112,19 @@ const DepositGoal = props => {
               alignSelf: 'center',
             }}>
             <View>
-              <CustomText title={'Goal title'} isBold style={{fontSize: 13}} />
+              <CustomText title={'Goal title'} isBold style={{fontSize: 13, color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View>
               <TextInput
                 value={goalCat}
+                placeholderTextColor={nightMode == true ? Colors.white : Colors.textColor}
                 editable={false}
                 style={[
                   Textstyles.bold,
                   {
                     borderBottomWidth: 1,
-                    borderColor: Colors.black + 50,
+                    borderColor: nightMode == true ? Colors.white : Colors.black + 50,
+                    color: nightMode == true ? Colors.white : Colors.textColor
                   },
                 ]}
               />
@@ -128,20 +140,21 @@ const DepositGoal = props => {
               <CustomText
                 title={'Deposit Amount'}
                 isBold
-                style={{fontSize: 13}}
+                style={{fontSize: 13, color: nightMode == true ? Colors.white : Colors.textColor}}
               />
             </View>
             <View>
               <TextInput
                 placeholder="Enter amount to save"
                 value={depositAmt}
+                placeholderTextColor={nightMode == true ? Colors.white : Colors.textColor}
                 onChangeText={amt => setDepositAmt(amt)}
                 keyboardType="number-pad"
                 style={[
                   Textstyles.bold,
                   {
                     borderBottomWidth: 1,
-                    borderColor: Colors.black + 50,
+                    borderColor:nightMode == true ? Colors.white : Colors.black + 50,
                   },
                 ]}
               />
@@ -173,15 +186,16 @@ const DepositGoal = props => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{justifyContent: 'center', alignItems: 'center'}}>
-          <CustomText title={'Cancel'} isBold style={{fontSize: 14}} />
+          <CustomText title={'Cancel'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const mapStateToProps = state => ({
-    deposit: state.goalDeposit
+    deposit: state.goalDeposit,
+    themeMode: state.theme
 })
 
 const mapDispatchToProps = dispatch => {

@@ -121,6 +121,16 @@ const DrawerContainer = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={{paddingVertical:vh(0.6)}}>
+                <TouchableOpacity  onPress={()=>navigation.navigate('Profile')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                    <View style={{width:'20%', alignItems:'center'}}>
+                        <Image source={Images.user} style={{height:25, width:25}} />
+                    </View>
+                    <View style={{width:'80%', justifyContent:'center'}}>
+                        <CustomText title={'Profile'} isBold />
+                    </View>
+                </TouchableOpacity>
+            </View>
+            {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity  onPress={()=>navigation.navigate('EditProfile',{data:props?.user})} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.user} style={{height:25, width:25}} />
@@ -129,7 +139,7 @@ const DrawerContainer = (props) => {
                         <CustomText title={'Edit Profile'} isBold />
                     </View>
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity  onPress={()=>navigation.navigate('ViewGoal')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
@@ -217,7 +227,7 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             </View> */}
-            <View style={{paddingVertical:vh(0.6)}}>
+            {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity onPress={()=>navigation.navigate('Privacy')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.privacy} style={{height:25, width:25}} />
@@ -226,7 +236,7 @@ const DrawerContainer = (props) => {
                         <CustomText title={'Privacy Policy'} isBold />
                     </View>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
         <View style={{flexDirection:'row', marginTop:vh(3), justifyContent:'center', alignItems:'center'}}>
             <CustomText title={`${'\u00A9'}2022 Expense Inc. All rights reserved`} isBold style={{fontSize:12, color:Colors.white}} />

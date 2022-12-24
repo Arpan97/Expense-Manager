@@ -87,6 +87,13 @@ const Images = {
     card_7: require('../assets/Images/card_7.png'),
     card_8: require('../assets/Images/card_8.png'),
     card_9: require('../assets/Images/card_9.png'),
+    back_white: require('../assets/Images/back_white.png'),
+    setting: require('../assets/Images/setting.png'),
+    night_mode: require('../assets/Images/night_mode.png'),
+    switch_on: require('../assets/Images/switch_on.png'),
+    switch_off: require('../assets/Images/switch_off.png'),
+    black_1: require('../assets/Images/black_back.jpg'),
+    menu_white: require('../assets/Images/menu_white.png')
 
 
 }

@@ -11,17 +11,19 @@ import { credit_card } from '../../../redux/Action/Action'
 import { Cards } from '../../../utils/constants'
 
 const AddCreditCard = (props) => {
+    // console.log('the props route', props?.route?.params?.data)
+    const data = props?.route?.params?.data
     const navigation = useNavigation()
-    const [name, setName] = useState('')
-    const [openingAmt, setOpeningAmt] = useState(0)
-    const [cardNo, setCardNo] = useState('')
-    const [userName, setUserName] = useState('')
-    const [expiry, setExpiry] = useState('')
-    const [cvv, setCvv] = useState('')
+    const [name, setName] = useState(data == undefined ? '' : data?.title)
+    const [openingAmt, setOpeningAmt] = useState(data == undefined ? 0 : (data?.openingAmt).toString())
+    const [cardNo, setCardNo] = useState(data == undefined ? '' : data?.cardNum)
+    const [userName, setUserName] = useState(data == undefined ? '' : data?.accHolder)
+    const [expiry, setExpiry] = useState(data == undefined ? '' : data?.expiryDate)
+    const [cvv, setCvv] = useState(data == undefined ? '' : data?.cvv)
     const [cardSelect, setCardSelect] = useState('')
-    const [payableTime, setPayableTime] = useState('')
+    const [payableTime, setPayableTime] = useState(data == undefined ? '' : data?.payableTime)
 
-    const addNewCard = (data) => {
+    const addNewCard = () => {
       var date = new Date(); // Now
       date.setDate(date.getDate() + parseInt(payableTime)); // Set now + 30 days as the new date
         let body = {
@@ -117,7 +119,7 @@ const AddCreditCard = (props) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                 {Cards?.map((item,index)=>{
                     return(
-                        <TouchableOpacity onPress={()=>setCardSelect(item)} style={{borderWidth: item?.id == cardSelect?.id ? 1 : 0, marginLeft:vw(2), borderRadius: item?.id == cardSelect?.id ? 10 : 0, borderColor:item?.id == cardSelect?.id ? Colors.themeColor : null, marginTop:vw(2) }}>
+                        <TouchableOpacity key={index} onPress={()=>setCardSelect(item)} style={{borderWidth: item?.id == cardSelect?.id ? 1 : 0, marginLeft:vw(2), borderRadius: item?.id == cardSelect?.id ? 10 : 0, borderColor:item?.id == cardSelect?.id ? Colors.themeColor : null, marginTop:vw(2) }}>
                             <Image source={item?.card_img} style={{height:160, width:250}} />
                         </TouchableOpacity>
                     )

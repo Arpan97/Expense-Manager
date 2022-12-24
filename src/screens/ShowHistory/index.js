@@ -206,11 +206,6 @@ const ShowHistory = props => {
         </View>
       </View>
       {/* invoice  */}
-      {isLoading ? (
-        <View style={styles.loader_view}>
-          <CustomLoader />
-        </View>
-      ) : (
         <>
           {monthHistory != '' ? (
             <View style={styles.history_container}>
@@ -262,7 +257,7 @@ const ShowHistory = props => {
                       borderRadius: 15,
                       overflow: 'hidden',
                       marginRight: vh(2),
-                      elevation: 3,
+                      // elevation: 3,
                     }}>
                     <Image
                       source={
@@ -547,7 +542,6 @@ const ShowHistory = props => {
             </View>
           )}
         </>
-      )}
     </ImageBackground>
   );
 };

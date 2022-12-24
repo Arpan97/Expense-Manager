@@ -52,7 +52,7 @@ const Report = (props) => {
                 week: {
                   flexDirection: 'row',
                   justifyContent: 'space-around',
-                  padding: 10,
+                  padding: 5,
                 },
               },
               'stylesheet.day.basic': {

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import Colors from '../../utils/color';
 import {
   widthPercentageToDP as vw,
@@ -31,6 +31,15 @@ const ViewGoal = props => {
   const navigation = useNavigation();
   const [completed, setCompleted] = useState(0);
   const [pending, setPending] = useState(0);
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
 
   const checkGoalComplete = () => {
     let g = props?.goal?.map((item, index) => {
@@ -202,7 +211,7 @@ const ViewGoal = props => {
   }, [props?.goal]);
 
   return (
-    <ImageBackground source={Images.back_1} style={styles.container}>
+    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={styles.container}>
       {/* header  */}
       <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop:vh(1)}}>
         <TouchableOpacity
@@ -213,7 +222,7 @@ const ViewGoal = props => {
             alignItems: 'center',
             marginRight: vw(4),
           }}>
-          <Image source={Images.menu} style={{height: 30, width: 30}} />
+          <Image source={nightMode == true ? Images.menu_white : Images.menu} style={{height: 30, width: 30}} />
         </TouchableOpacity>
         <View
           style={{
@@ -402,6 +411,7 @@ const mapStateToProps = state => ({
   goal: state.goalData,
   total: state.totalAmt,
   deposit: state.goalDeposit,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {

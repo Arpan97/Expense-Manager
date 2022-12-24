@@ -1,5 +1,5 @@
 import { Image, ImageBackground, StyleSheet, FlatList, TouchableOpacity, View } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import Images from '../../utils/images'
@@ -12,6 +12,7 @@ const ViewDeposit = (props) => {
     const propData = props?.route?.params?.data
     const [totalInc, setTotalInc] = useState(0)
     const [depositData, setDepositData] = useState('')
+    const [nightMode, setNightMode] = useState(false)
 
     const calculateAmt = () => {
         var save = 0;
@@ -62,19 +63,26 @@ const ViewDeposit = (props) => {
         calculateAmt()
         getData()
       },[])
+      useMemo(()=>{
+        if(props?.themeMode == false){
+          setNightMode(false)
+        }else if(props?.themeMode == true){
+          setNightMode(true)
+        }
+      },[props?.themeMode, nightMode])
   return (
-    <ImageBackground style={{flex:1}} source={Images.back_1}>
+    <ImageBackground style={{flex:1}} source={nightMode == true ? Images.black_1 : Images.back_1}>
       <View style={{flexDirection:'row', width:'100%', marginTop:vh(2), marginBottom:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.goBack()} style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
-            <Image source={Images.back_3d} style={{height:22, width:22}} />
+            <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:22, width:22}} />
         </TouchableOpacity>
         <View style={{width:'80%', justifyContent:'center', alignItems:'center'}}>
-            <CustomText isBold style={{fontSize:16, textAlign:'center'}} title={'Deposit Detail'} />
+            <CustomText isBold style={{fontSize:16, textAlign:'center', color: nightMode == true ? Colors.white : Colors.textColor}} title={'Deposit Detail'} />
         </View>
       </View>
       <View style={{width:'95%', alignSelf:'center', borderRadius:20, overflow:'hidden'}}>
         <ImageBackground source={Images.goal_card} style={{height:210, width:'100%'}}>
-            <View style={{justifyContent:'center', alignItems:'center'}}>
+            <View style={{justifyContent:'center', alignItems:'center', top:vh(1)}}>
                 <CustomText title={propData?.title} isBold style={{fontSize:16}} />
             </View>
             <View style={{marginTop:vh(0.4)}}>
@@ -108,6 +116,7 @@ const ViewDeposit = (props) => {
 const mapStateToProps = state => ({
     deposit: state.goalDeposit,
     goal: state.goalData,
+    themeMode: state.theme
 })
 
 export default connect (mapStateToProps, null) (ViewDeposit)

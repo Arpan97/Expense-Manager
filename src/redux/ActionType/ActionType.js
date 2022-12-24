@@ -17,3 +17,5 @@ export const GOAL_DEPOSIT = 'GOAL_DEPOSIT'
 
 export const SAVE_CARD = 'SAVE_CARD'
 export const DELETE_CREDIT = 'DELETE_CREDIT'
+
+export const DARK_MODE = 'DARK_MODE'

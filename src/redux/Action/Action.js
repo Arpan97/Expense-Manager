@@ -1,4 +1,4 @@
-import { ADD_INCOME, ADD_EXPENSE, SAVE_USER, ADD_GOAL, DELETE_GOAL, DELETE_EXPENSE, TOTAL_INCOME, ACCOUNTS, DELETE_ACCOUNT, CHECK_PREMIUM, INVESTMENT, DELETE_INVESTMENT, GOAL_DEPOSIT, UPDATE_GOAL, SAVE_CARD, DELETE_CREDIT } from "../ActionType/ActionType";
+import { ADD_INCOME, ADD_EXPENSE, SAVE_USER, ADD_GOAL, DELETE_GOAL, DELETE_EXPENSE, TOTAL_INCOME, ACCOUNTS, DELETE_ACCOUNT, CHECK_PREMIUM, INVESTMENT, DELETE_INVESTMENT, GOAL_DEPOSIT, UPDATE_GOAL, SAVE_CARD, DELETE_CREDIT, DARK_MODE } from "../ActionType/ActionType";
 
 export const save_user_data = data => ({
     type:SAVE_USER,
@@ -74,3 +74,9 @@ export const delete_credit = id => ({
     type:DELETE_CREDIT,
     payload: id
 })
+
+export const change_theme = data => ({
+    type: DARK_MODE,
+    payload: data,
+  });
+  

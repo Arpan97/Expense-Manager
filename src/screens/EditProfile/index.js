@@ -7,7 +7,7 @@ import {
   Modal,
   ImageBackground,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../utils/color';
 import Images from '../../utils/images';
@@ -34,6 +34,7 @@ const EditProfile = props => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [nightMode, setNightMode] = useState(false)
 
   const checkData = () => {
     setName(data.name);
@@ -82,16 +83,24 @@ const EditProfile = props => {
     checkData();
   }, [data]);
 
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
   return (
-    <ImageBackground source={Images.back_1} style={{flex: 1}}>
+    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={{flex: 1}}>
       {/* header */}
       <View style={{flexDirection:'row', marginTop:vh(2)}}>
         {/* <CustomHeader isBack /> */}
-        <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{ width:'15%', justifyContent:'center', alignItems:'center'}}>
-          <Image source={Images.menu} style={{height:25, width:25}} />
+        <TouchableOpacity onPress={()=>navigation.goBack()} style={{ width:'15%', justifyContent:'center', alignItems:'center'}}>
+          <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:25, width:25}} />
         </TouchableOpacity>
         <View style={{width:'70%', alignSelf:'center', alignItems:'center', justifyContent:'center'}}>
-          <CustomText title={'Edit Profile'} isBold style={{fontSize:18, color:Colors.themeColor}}  />
+          <CustomText title={'Edit Profile'} isBold style={{fontSize:18, color:nightMode == true ? Colors.white : Colors.themeColor}}  />
         </View>
       </View>
       {/* img view  */}
@@ -130,7 +139,7 @@ const EditProfile = props => {
                   alignSelf: 'center',
                   marginBottom: vh(1),
                 }}>
-                <CustomText title={'Name'} />
+                <CustomText title={'Name'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
               </View>
               <View
                 style={{
@@ -153,7 +162,7 @@ const EditProfile = props => {
                   marginTop: vh(2),
                   marginBottom: vh(1),
                 }}>
-                <CustomText title={'Email'} />
+                <CustomText title={'Email'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
               </View>
               <View
                 style={{
@@ -176,7 +185,7 @@ const EditProfile = props => {
                   marginTop: vh(2),
                   marginBottom: vh(1),
                 }}>
-                <CustomText title={'Mobile'} />
+                <CustomText title={'Mobile'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
               </View>
               <View
                 style={{
@@ -299,6 +308,7 @@ const EditProfile = props => {
 
 const mapStateToProps = state => ({
   user: state.userData,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {

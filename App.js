@@ -7,12 +7,23 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {StatusBar} from 'react-native';
 import 'react-native-gesture-handler';
-import {AlertNotificationRoot} from 'react-native-alert-notification';
+import {AlertNotificationRoot} from 'react-native-alert-notification'
+import PushNotification from 'react-native-push-notification';
 
 const App = () => {
   useEffect(() => {
     LogBox.ignoreAllLogs();
   }, []);
+  
+  useEffect(()=>{
+    setInterval(()=>{
+      PushNotification.localNotification({
+        title:'Expense Manager',
+        message:'Update your daily expenses',
+        channelId:'Expense'
+    })
+    },8640000)
+  },[])
   return (
     <AlertNotificationRoot>
       <Provider store={store}>

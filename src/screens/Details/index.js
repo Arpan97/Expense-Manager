@@ -90,7 +90,7 @@ const Details = props => {
         <View>
           <CustomText
             title={
-              'This is a default profile created to track your personal expenses. Customize this profile as per your needs'
+              'Please fill some details to make your experience better. You can customize your profile later'
             }
           />
         </View>

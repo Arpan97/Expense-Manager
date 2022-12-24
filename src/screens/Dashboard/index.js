@@ -24,6 +24,8 @@ import {total_income} from '../../redux/Action/Action';
 import CustomLoader from '../../components/CustomLoader';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import PushNotification from 'react-native-push-notification';
+import { not } from '../../notification/notificationAndroid';
 
 const Dashboard = props => {
   const navigation = useNavigation();
@@ -63,6 +65,21 @@ const Dashboard = props => {
     setGreet('Evening');
   };
 
+  useEffect(()=>{
+    
+  },[])
+
+  const Push = (title, message) => {
+    PushNotification.localNotification({
+      title:title,
+      message:message,
+      channelId:'Arpan'
+      // title:'Expense Manager',
+      // message:'Please update your expenses',
+      // channelId:'Arpan'
+    })
+  }
+
   return (
     <ImageBackground
     source={Images.back_1}
@@ -79,7 +96,7 @@ const Dashboard = props => {
           <Image source={Images.menu} style={{height:30, width:30}} />
         </TouchableOpacity>
         <View style={{justifyContent:'center', width:'74%'}}>
-          <CustomText title={`Good ${greet}, ${props?.user?.name}`} isBold style={{fontSize:15}} />
+          <CustomText title={`Good ${greet}, ${props?.user?.name == '' ? 'User' : props?.user?.name}`} isBold style={{fontSize:15}} />
         </View>
         {/* <TouchableOpacity style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
           <Image source={Images.show_account} style={{height:25, width:25}} />
@@ -153,6 +170,7 @@ const Dashboard = props => {
             <History />
           </View>
         </View>
+        
       </ScrollView>
       {/* fav button  */}
       <CustomFav />

@@ -1,7 +1,12 @@
-import {View, Image, FlatList} from 'react-native';
+import {
+  View,
+  Image,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Images from '../../utils/images';
-import CustomHeader from '../../components/CustomHeader';
 import CustomText from '../../components/CustomText';
 import {
   widthPercentageToDP as vw,
@@ -9,7 +14,7 @@ import {
 } from 'react-native-responsive-screen';
 import Colors from '../../utils/color';
 import {connect} from 'react-redux';
-import CustomLoader from '../../components/CustomLoader';
+import {useNavigation} from '@react-navigation/native';
 
 const CategoryWise = props => {
   let data = props?.route?.params?.data;
@@ -17,7 +22,7 @@ const CategoryWise = props => {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
 
   const getExpense = () => {
     const filterData = props?.expense?.filter((i, j) => {
@@ -27,7 +32,7 @@ const CategoryWise = props => {
   };
 
   useEffect(() => {
-      getExpense();
+    getExpense();
   }, [props?.expense]);
 
   useEffect(() => {
@@ -117,86 +122,86 @@ const CategoryWise = props => {
   };
 
   return (
-    <View style={{width: '95%', alignSelf: 'center', flex: 1}}>
+    <ImageBackground source={Images.back_1} style={{flex: 1}}>
       {/* header component */}
-      <View style={{flexDirection: 'row', width: '100%'}}>
-        <CustomHeader isBack />
-        <CustomText
-          title={data?.category}
-          style={{fontSize: 18, marginTop: vh(0.6), marginLeft: vw(5)}}
-        />
+      <View style={{flexDirection: 'row', width: '95%'}}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            justifyContent: 'center',
+            marginTop: vh(0.6),
+            marginLeft: vw(2),
+          }}>
+          <Image source={Images.back_3d} style={{height: 22, width: 22}} />
+        </TouchableOpacity>
+        {/* <CustomHeader isBack /> */}
+        <View style={{justifyContent: 'center'}}>
+          <CustomText
+            title={data?.category}
+            style={{fontSize: 18, marginTop: vh(0.6), marginLeft: vw(5)}}
+          />
+        </View>
       </View>
-      {isLoading ? (
-        <CustomLoader />
-      ) : (
-        <>
-          {/* total amount section  */}
+      <>
+        {/* total amount section  */}
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: Colors.white,
+            marginTop: vh(3),
+            width: '95%',
+            elevation: 3,
+            borderWidth: 0.5,
+            borderColor: Colors.borderColor,
+            borderRadius: 10,
+            alignSelf: 'center',
+          }}>
           <View
             style={{
-              flexDirection: 'row',
-              backgroundColor: Colors.white,
-              marginTop: vh(3),
-              width: '100%',
-              elevation: 3,
-              borderWidth: 0.5,
-              borderColor: Colors.borderColor,
-              borderRadius: 10,
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: vh(1),
+              paddingBottom: vh(1),
             }}>
-            <View
-              style={{
-                width: '50%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingTop: vh(1),
-                paddingBottom: vh(1),
-              }}>
-              <CustomText
-                title={'Total Income'}
-                isBold
-                style={{fontSize: 16}}
-              />
-              <Image source={Images.increase} style={{height: 40, width: 40}} />
-              <CustomText title={`${'\u20B9'}${income}`} />
-            </View>
-            <View
-              style={{borderLeftWidth: 1, borderLeftColor: Colors.black + 18}}
+            <CustomText title={'Total Income'} isBold style={{fontSize: 16}} />
+            <Image source={Images.increase} style={{height: 40, width: 40}} />
+            <CustomText title={`${'\u20B9'}${income}`} />
+          </View>
+          <View
+            style={{borderLeftWidth: 1, borderLeftColor: Colors.black + 18}}
+          />
+          <View
+            style={{
+              width: '50%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: vh(1),
+              paddingBottom: vh(1),
+            }}>
+            <CustomText title={'Total Expense'} isBold style={{fontSize: 16}} />
+            <Image
+              source={Images.decrease}
+              style={{height: 40, width: 40, transform: [{rotate: '180deg'}]}}
             />
-            <View
-              style={{
-                width: '50%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingTop: vh(1),
-                paddingBottom: vh(1),
-              }}>
-              <CustomText
-                title={'Total Expense'}
-                isBold
-                style={{fontSize: 16}}
-              />
-              <Image
-                source={Images.decrease}
-                style={{height: 40, width: 40, transform: [{rotate: '180deg'}]}}
-              />
-              <CustomText title={`${'\u20B9'}${expense}`} />
-            </View>
+            <CustomText title={`${'\u20B9'}${expense}`} />
           </View>
-          {/*history section */}
-          <View style={{marginTop: vh(2)}}>
-            <View style={{marginBottom: vh(2)}}>
-              <CustomText title={'History'} isBold style={{fontSize: 16}} />
-            </View>
-            <View style={{}}>
-              <FlatList
-                data={catdata}
-                renderItem={renderItem}
-                ListEmptyComponent={emptyComponent}
-              />
-            </View>
+        </View>
+        {/*history section */}
+        <View style={{marginTop: vh(2), width: '95%', alignSelf: 'center'}}>
+          <View style={{marginBottom: vh(2)}}>
+            <CustomText title={'History'} isBold style={{fontSize: 16}} />
           </View>
-        </>
-      )}
-    </View>
+          <View style={{}}>
+            <FlatList
+              data={catdata}
+              renderItem={renderItem}
+              ListEmptyComponent={emptyComponent}
+            />
+          </View>
+        </View>
+      </>
+    </ImageBackground>
   );
 };
 

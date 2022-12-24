@@ -6,6 +6,7 @@ import { goalDepositReducer } from "./goaldepositReducer";
 import { goalReducer } from "./goalReducer";
 import { investmentReducer } from "./investmentReducer";
 import { premiumReducer } from "./premiumReducer";
+import { themeReducer } from "./themeReducer";
 import { totalAmtReducer } from "./totalAmtReducer";
 import { userReducer } from "./userReducer";
 
@@ -18,5 +19,6 @@ export default combineReducers({
     premium: premiumReducer,
     invest: investmentReducer,
     goalDeposit: goalDepositReducer,
-    credit: creditCardReducer
+    credit: creditCardReducer,
+    theme: themeReducer
 })
