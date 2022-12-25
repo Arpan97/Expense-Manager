@@ -162,8 +162,8 @@ const Dashboard = props => {
         </View>
         )}
         {/* history  */}
-        <View style={{marginTop: vh(2), width:'90%', alignSelf:'center'}}>
-          <View style={{marginBottom: vh(2)}}>
+        <View style={{marginTop: vh(2), width:'100%', alignSelf:'center'}}>
+          <View style={{marginBottom: vh(2), width:'90%', alignSelf:'center'}}>
             <CustomText title={'Transaction History'} isBold style={{fontSize: 14}} />
           </View>
           <View>

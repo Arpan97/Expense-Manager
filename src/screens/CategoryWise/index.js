@@ -15,6 +15,7 @@ import {
 import Colors from '../../utils/color';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const CategoryWise = props => {
   let data = props?.route?.params?.data;
@@ -49,15 +50,13 @@ const CategoryWise = props => {
           marginBottom: vh(1.5),
           borderRadius: 10,
           flexDirection: 'row',
-          width: '100%',
+          width: '95%',
+          alignSelf:'center'
         }}>
         <View
           style={{
             width: 40,
             height: 40,
-            borderRadius: 25,
-            backgroundColor: Colors.white,
-            elevation: 3,
             overflow: 'hidden',
             justifyContent: 'center',
             alignItems: 'center',
@@ -144,7 +143,8 @@ const CategoryWise = props => {
       </View>
       <>
         {/* total amount section  */}
-        <View
+        <LinearGradient
+        colors={['#E7F5FF', '#BDDDFF']}
           style={{
             flexDirection: 'row',
             backgroundColor: Colors.white,
@@ -182,14 +182,14 @@ const CategoryWise = props => {
             <CustomText title={'Total Expense'} isBold style={{fontSize: 16}} />
             <Image
               source={Images.decrease}
-              style={{height: 40, width: 40, transform: [{rotate: '180deg'}]}}
+              style={{height: 40, width: 40}}
             />
             <CustomText title={`${'\u20B9'}${expense}`} />
           </View>
-        </View>
+        </LinearGradient>
         {/*history section */}
-        <View style={{marginTop: vh(2), width: '95%', alignSelf: 'center'}}>
-          <View style={{marginBottom: vh(2)}}>
+        <View style={{marginTop: vh(2), width: '100%'}}>
+          <View style={{marginBottom: vh(2), width:'95%', alignSelf:'center'}}>
             <CustomText title={'History'} isBold style={{fontSize: 16}} />
           </View>
           <View style={{}}>

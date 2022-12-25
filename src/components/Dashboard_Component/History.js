@@ -6,6 +6,7 @@ import Images from '../../utils/images'
 import Colors from '../../utils/color'
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen'
 import { delete_expense } from '../../redux/Action/Action'
+import moment from 'moment'
 
 const History = (props) => {
     const [history, setHistory] = useState([])
@@ -15,9 +16,9 @@ const History = (props) => {
     }
     const renderItem = ({item,index}) => {
         return(
-            <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
+            <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, marginBottom:vh(1.5), borderRadius:10, width:'90%', alignSelf:'center'}}>
             <View style={{flexDirection:'row'}}>
-                <View style={{width:40, height:40, borderRadius:25, backgroundColor:Colors.white, elevation:3, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
+                <View style={{width:40, height:40, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
                     <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
                 </View>
                 <View style={{width:'40%', marginLeft:vh(3)}}>
@@ -42,7 +43,7 @@ const History = (props) => {
                     </TouchableOpacity>
             </View>
             <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-                <CustomText title={`Created at: ${item?.expenseDate}`} style={{fontSize:11}} />
+                <CustomText title={`${moment(item?.expenseDate).format('DD-MMM-YYYY')}`} style={{fontSize:11}} />
             </View>
             </View>
         )

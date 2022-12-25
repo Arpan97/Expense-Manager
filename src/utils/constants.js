@@ -63,6 +63,18 @@ export const allMonth = [
     {id:12, month:'December', key:12},
 ]
 
+export const allYear = [
+    {id:1, year:'2019', key:1},
+    {id:2, year:'2020', key:2},
+    {id:3, year:'2021', key:3},
+    {id:4, year:'2022', key:4},
+    {id:5, year:'2023', key:5},
+    {id:6, year:'2024', key:6},
+    {id:7, year:'2025', key:7},
+    {id:8, year:'2026', key:8},
+    {id:9, year:'2027', key:9},
+]
+
 export const investmentCat = [
     {id:1, category:'Mutual Fund', image:Images.mutual, type:'Mutual'},
     {id:2, category:'Stocks', image:Images.stock, type:'Stock'},

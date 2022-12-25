@@ -13,22 +13,25 @@ import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../utils/color';
 import CustomText from '../../components/CustomText';
 import Images from '../../utils/images';
-import {allMonth} from '../../utils/constants';
+import {allMonth, allYear} from '../../utils/constants';
 import CustomButton from '../../components/CustomButton';
 import moment from 'moment';
 import CustomLoader from '../../components/CustomLoader';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
+import Notify from '../../utils/Dialog'
 
 const ShowHistory = props => {
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const [isMonthModal, setIsMonthModal] = useState(false);
+  const [isYearModal, setIsYearModal] = useState(false);
   const [selectMonth, setSelectMonth] = useState('');
   const [selectMonthKey, setSelectMonthKey] = useState();
+  const [selectYear, setSelectYear] = useState('');
   const [getAllMonths, setGetAllMonths] = useState([]);
+  const [getAllYears, setGetAllYears] = useState([]);
   const [monthHistory, setMonthHistory] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
   const styles = getStyles(isMonthModal);
@@ -59,18 +62,73 @@ const ShowHistory = props => {
   const getMonth = () => {
     setGetAllMonths(allMonth);
     setTotalIncome(props?.total);
+    setGetAllYears(allYear)
   };
 
   const submitMonth = () => {
-    let data = props?.expense?.filter((item, index) => {
-      let a = item?.expenseDate;
-      let b = moment(a).format('M');
-      let month = parseInt(b);
-      let selectedMonth = selectMonthKey;
-      return month == selectedMonth;
-    });
-      setMonthHistory(data);
-      setBtnPress(true);
+    console.log('the select month and year', selectMonth, selectYear, 'the data check', selectMonth == '', selectYear == '')
+    if(selectMonth != ''){
+      if(selectYear != ''){
+        let data = props?.expense?.filter((item,index)=>{
+          let year = moment(item?.expenseDate).format('Y')
+          return year == selectYear
+        })
+        let data2 = data?.filter((i,j)=>{
+          let a = moment(i?.expenseDate).format('M')
+          let month = parseInt(a)
+          let selectedMonth = selectMonthKey
+          return month == selectedMonth
+        })
+        setMonthHistory(data2);
+      }else{
+        Notify('error', "Alert", "Please select year before submit")
+      }
+    }else{
+      Notify('error', "Alert", "Please select month before submit")
+    }
+    // if(selectYear != '' && selectMonth == ''){
+    //   let data = props?.expense?.filter((item,index)=>{
+    //     let year = moment(item?.expenseDate).format('Y')
+    //     return year == selectYear
+    //   })
+    //   setMonthHistory(data)
+    //   setBtnPress(true)
+    // }else if(selectYear == '' && selectMonth != ''){
+    //   let data = props?.expense?.filter((item, index) => {
+    //     let a = item?.expenseDate;
+    //     let b = moment(a).format('M');
+    //     let month = parseInt(b);
+    //     let selectedMonth = selectMonthKey;
+    //     return month == selectedMonth;
+    //   });
+    //     setMonthHistory(data);
+    //     setBtnPress(true);
+    // }else if(selectMonth != '' && selectYear != ''){
+    //   let data = props?.expense?.filter((i,index)=>{
+    //     let year = moment(i?.expenseDate).format('Y')
+    //     return year == selectYear
+    //   })
+    //   let data2 = data?.filter((item,index)=>{
+    //       let a = item?.expenseDate;
+    //       let b = moment(a).format('M');
+    //       let month = parseInt(b);
+    //       let selectedMonth = selectMonthKey;
+    //       return month == selectedMonth;
+    //     })
+    //       setMonthHistory(data2);
+    //       setBtnPress(true);
+    // }
+    
+    // console.log('the data is ', data)
+    // let data = props?.expense?.filter((item, index) => {
+    //   let a = item?.expenseDate;
+    //   let b = moment(a).format('M');
+    //   let month = parseInt(b);
+    //   let selectedMonth = selectMonthKey;
+    //   return month == selectedMonth;
+    // });
+    //   setMonthHistory(data);
+    //   setBtnPress(true);
   };
 
   const NumToWords = number => {
@@ -164,13 +222,13 @@ const ShowHistory = props => {
         </View>
       </View>
       {/* header component */}
-      <View style={{marginTop:vh(2)}}>
+      <View style={{marginTop:vh(2), flexDirection:'row'}}>
         {/* dropdown & input */}
         <View style={styles.input_container}>
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
-              setIsMonthModal(!isMonthModal), setBtnPress(false);
+              setIsMonthModal(!isMonthModal)
             }}
             style={styles.input_view}>
             <CustomText title={selectMonth ? selectMonth : 'Choose Month'} />
@@ -195,8 +253,39 @@ const ShowHistory = props => {
             </ScrollView>
           )}
         </View>
+
+        <View style={styles.input_container}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              setIsYearModal(!isYearModal)
+            }}
+            style={styles.input_view}>
+            <CustomText title={selectYear ? selectYear : 'Choose Year'} />
+            <Image source={Images.back_black} style={styles.arrow_input} />
+          </TouchableOpacity>
+          {isYearModal && (
+            <ScrollView>
+              {getAllYears?.map((item, index) => {
+                return (
+                  <View style={styles.dropdown_view}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setIsYearModal(false),
+                          setSelectYear(item?.year)
+                      }}>
+                      <CustomText title={item?.year} />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </ScrollView>
+          )}
+        </View>
         {/* button  */}
-        <View style={styles.btn_view}>
+        
+      </View>
+      <View style={styles.btn_view}>
           <CustomButton
             title={'Submit'}
             onPress={() => submitMonth()}
@@ -204,7 +293,6 @@ const ShowHistory = props => {
             txtStyle={styles.txt_style}
           />
         </View>
-      </View>
       {/* invoice  */}
         <>
           {monthHistory != '' ? (
@@ -246,8 +334,8 @@ const ShowHistory = props => {
                       />
                     </View>
                     <View style={{flexDirection: 'row'}}>
-                      <CustomText title={'Month: '} isBold />
-                      <CustomText title={selectMonth} />
+                      <CustomText title={'Report: '} isBold />
+                      <CustomText title={`${selectMonth}`} />
                     </View>
                   </View>
                   <View
@@ -562,12 +650,13 @@ const getStyles = isMonthModal =>
     input_container: {
       backgroundColor: Colors.white,
       elevation: 3,
-      width: '95%',
+      width: '45%',
       borderRadius: 10,
       alignSelf: 'center',
       paddingHorizontal: vh(1),
       paddingTop: vh(1.2),
       paddingBottom: vh(0.5),
+      marginLeft:vw(3.2)
     },
     input_view: {
       flexDirection: 'row',
