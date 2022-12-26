@@ -7,24 +7,48 @@ import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-nat
 import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../components/CustomButton'
 import { connect } from 'react-redux'
-import { account_data } from '../../redux/Action/Action'
+import { account_data, update_debit } from '../../redux/Action/Action'
 import { Cards } from '../../utils/constants'
+import Notify from '../../utils/Dialog'
 
 const AddCard = (props) => {
+    const data = props?.route?.params?.data
     const navigation = useNavigation()
-    const [name, setName] = useState('')
-    const [openingAmt, setOpeningAmt] = useState(0)
-    const [cardNo, setCardNo] = useState('')
-    const [userName, setUserName] = useState('')
-    const [expiry, setExpiry] = useState('')
-    const [cvv, setCvv] = useState('')
+    const [name, setName] = useState(data == undefined ? '' : data?.title)
+    const [openingAmt, setOpeningAmt] = useState(data == undefined ? 0 : (data?.openingAmt).toString())
+    const [cardNo, setCardNo] = useState(data == undefined ? '' : data?.cardNum)
+    const [userName, setUserName] = useState(data == undefined ? '' : data?.accHolder)
+    const [expiry, setExpiry] = useState(data == undefined ? '' : data?.expiryDate)
+    const [cvv, setCvv] = useState(data == undefined ? '' : data?.cvv)
     const [cardSelect, setCardSelect] = useState('')
+    const [accNo, setAccNo] = useState(data == undefined ? '' : data?.accNo)
 
+    const updateDebitCard = () => {
+        let obj = {
+            id: data?.id,
+            title:name,
+            openingAmt: parseInt(openingAmt),
+            accNo: accNo,
+            img: Images.bank,
+            totalIncome:0,
+            totalExpense:0,
+            totalBal:0,
+            accHolder:userName,
+            cardNum:cardNo,
+            expiryDate:expiry,
+            cvv:cvv,
+            cardImage: cardSelect?.card_img
+        }
+        props?.update_debit(obj)
+        navigation.replace('Drawer',{screen:'Bank'})
+        Notify('success', "Successfully", "Your card detail updated successfully")
+    }
     const addNewCard = () => {
         let body = {
             id: Math.random().toString(16).slice(2),
             title: name,
             openingAmt: parseInt(openingAmt),
+            accNo: accNo,
             img: Images.bank,
             totalIncome:0,
             totalExpense:0,
@@ -38,6 +62,7 @@ const AddCard = (props) => {
 
         props?.save_account(body)
         navigation.replace('Drawer',{screen:'Bank'})
+        Notify('success', "Successfully", "Your card detail saved successfully")
     }
   return (
     <ImageBackground source={Images.back_1} style={{flex:1}}>
@@ -60,15 +85,23 @@ const AddCard = (props) => {
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'Card Number (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'Account Number'} style={{fontSize:12}} isBold />
             </View>
             <View>
-                <TextInput placeholder='Enter account number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
+                <TextInput placeholder='Enter account number...' value={accNo} onChangeText={(txt)=>setAccNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'Expiry Date (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'Card Number'} style={{fontSize:12}} isBold />
+            </View>
+            <View>
+                <TextInput placeholder='Enter card number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
+            </View>
+        </View>
+        <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
+            <View>
+                <CustomText title={'Expiry Date'} style={{fontSize:12}} isBold />
             </View>
             <View>
                 <TextInput placeholder='Enter expiry date (Enter without special characters)' value={expiry} onChangeText={(txt)=>setExpiry(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} maxLength={4} />
@@ -76,7 +109,7 @@ const AddCard = (props) => {
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'CVV (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'CVV'} style={{fontSize:12}} isBold />
             </View>
             <View>
                 <TextInput placeholder='Enter cvv number...' value={cvv} onChangeText={(txt)=>setCvv(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={3} />
@@ -121,7 +154,7 @@ const AddCard = (props) => {
             marginTop: vh(5),
           }}>
           <CustomButton
-            onPress={() => addNewCard()}
+            onPress={() => data == undefined ? addNewCard() : updateDebitCard() }
             btnStyle={{
               backgroundColor: Colors.themeColor,
               borderRadius: 10,
@@ -129,7 +162,7 @@ const AddCard = (props) => {
               marginBottom: vh(1),
               paddingVertical: vh(1.4),
             }}
-            title={'Save Account'}
+            title={data == undefined ? 'Save Account' : 'Update Account'}
             txtStyle={{color: Colors.white}}
           />
         </View>
@@ -149,6 +182,9 @@ const mapDispatchToProps = dispatch => {
     return{
         save_account: data => {
             dispatch(account_data(data))
+        },
+        update_debit: data => {
+            dispatch(update_debit(data))
         }
     }
 }

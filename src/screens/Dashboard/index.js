@@ -26,6 +26,7 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import PushNotification from 'react-native-push-notification';
 import { not } from '../../notification/notificationAndroid';
+import { useMemo } from 'react';
 
 const Dashboard = props => {
   const navigation = useNavigation();
@@ -35,6 +36,26 @@ const Dashboard = props => {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [greet, setGreet] = useState('')
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const checkExpense = () => {
     var total = 0,
@@ -81,10 +102,9 @@ const Dashboard = props => {
   }
 
   return (
-    <ImageBackground
-    source={Images.back_1}
+    <View
       style={{
-        // backgroundColor: Colors.backgroundColor,
+        backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor,
         flex: 1,
         width: '100%',
         alignSelf: 'center',
@@ -96,7 +116,7 @@ const Dashboard = props => {
           <Image source={Images.menu} style={{height:30, width:30}} />
         </TouchableOpacity>
         <View style={{justifyContent:'center', width:'74%'}}>
-          <CustomText title={`Good ${greet}, ${props?.user?.name == '' ? 'User' : props?.user?.name}`} isBold style={{fontSize:15}} />
+          <CustomText title={`Good ${greet}, ${props?.user?.name == '' ? 'User' : props?.user?.name}`} isBold style={{fontSize:15, color:nightMode == true ? Colors.white : Colors.textColor}} />
         </View>
         {/* <TouchableOpacity style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
           <Image source={Images.show_account} style={{height:25, width:25}} />
@@ -164,7 +184,7 @@ const Dashboard = props => {
         {/* history  */}
         <View style={{marginTop: vh(2), width:'100%', alignSelf:'center'}}>
           <View style={{marginBottom: vh(2), width:'90%', alignSelf:'center'}}>
-            <CustomText title={'Transaction History'} isBold style={{fontSize: 14}} />
+            <CustomText title={'Transaction History'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           <View>
             <History />
@@ -174,7 +194,7 @@ const Dashboard = props => {
       </ScrollView>
       {/* fav button  */}
       <CustomFav />
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -183,6 +203,7 @@ const mapStateToProps = state => ({
   expense: state.expenseData,
   total: state.totalAmt,
   goal: state.goalData,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {

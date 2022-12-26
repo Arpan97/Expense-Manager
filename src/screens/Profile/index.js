@@ -60,7 +60,7 @@ const Profile = (props) => {
   }, [navigation, props?.user, props?.themeMode]);
 
   return (
-    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={styles.container} >
+    <View style={{flex:1, backgroundColor:nightMode == true ? Colors.black : Colors.backgroundColor}} >
       <View style={styles.header_container}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()}>
           <Image source={nightMode == true ? Images.menu_white : Images.menu} style={{height:22, width:22}} />
@@ -182,7 +182,7 @@ const Profile = (props) => {
         </View> */}
       </View>
       {/* add goal view  */}
-      {/* <View style={{
+      <View style={{
             backgroundColor: Colors.white,
             width: '90%',
             alignSelf: 'center',
@@ -201,7 +201,7 @@ const Profile = (props) => {
           <TouchableOpacity onPress={()=>onChangeTheme()} style={{position:'absolute', right:vw(3), top:vh(1.6)}} >
             <Image source={nightMode == false ? Images.switch_off : Images.switch_on} style={{height:26,width:26}} />
           </TouchableOpacity>
-      </View> */}
+      </View>
 
       {/* pdf generate */}
       <TouchableOpacity onPress={()=>navigation.navigate('CustomBill')} activeOpacity={0.6} style={{
@@ -237,10 +237,10 @@ const Profile = (props) => {
           <CustomText title={'Privacy Policy'} />
           <Image source={Images.back_black} style={{height:20,width:20, transform:[{rotate:'180deg'}], position:'absolute', right:vw(3), top:vh(2)}} />
       </TouchableOpacity>
-      <View style={{flexDirection:'row', marginTop:vh(47), justifyContent:'center', alignItems:'center'}}>
+      <View style={{flexDirection:'row', marginTop:vh(39), justifyContent:'center', alignItems:'center'}}>
         <CustomText title={`${'\u00A9'}2022 Expense Inc. All rights reserved`} isBold style={{fontSize:12, color:nightMode == true ? Colors.white : Colors.textColor}} />
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -259,7 +259,7 @@ const mapDispatchToProps = dispatch => {
 
 const getStyles = (nightMode) => StyleSheet.create({
   container:{
-    flex:1
+    flex:1,
   },
   header_container:{
     flexDirection:'row',

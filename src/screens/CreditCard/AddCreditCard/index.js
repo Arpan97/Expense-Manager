@@ -7,8 +7,9 @@ import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-nat
 import { useNavigation } from '@react-navigation/native'
 import CustomButton from '../../../components/CustomButton'
 import { connect } from 'react-redux'
-import { credit_card } from '../../../redux/Action/Action'
+import { credit_card, update_credit } from '../../../redux/Action/Action'
 import { Cards } from '../../../utils/constants'
+import Notify from '../../../utils/Dialog'
 
 const AddCreditCard = (props) => {
     // console.log('the props route', props?.route?.params?.data)
@@ -23,6 +24,28 @@ const AddCreditCard = (props) => {
     const [cardSelect, setCardSelect] = useState('')
     const [payableTime, setPayableTime] = useState(data == undefined ? '' : data?.payableTime)
 
+    const updateCreditCard = () => {
+        var date = new Date();
+        date.setDate(date.getDate() + parseInt(payableTime));
+        let obj = {
+            id:data?.id,
+            title:name,
+            openingAmt: parseInt(openingAmt),
+            img: Images.bank,
+            totalIncome:0,
+            totalExpense:0,
+            totalBal:0,
+            accHolder:userName,
+            cardNum:cardNo,
+            expiryDate:expiry,
+            cvv:cvv,
+            cardImage:cardSelect?.card_img,
+            payableTime:date
+        }
+        props?.update_credit(obj)
+        navigation.replace('Drawer', {screen:'CreditCard'})
+        Notify('success', "Successfully", "Your card detail updated successfully")
+    }
     const addNewCard = () => {
       var date = new Date(); // Now
       date.setDate(date.getDate() + parseInt(payableTime)); // Set now + 30 days as the new date
@@ -43,6 +66,7 @@ const AddCreditCard = (props) => {
         }
         props?.save_credit(body)
         navigation.replace('Drawer',{screen:'CreditCard'})
+        Notify('success', "Successfully", "Your card detail saved successfully")
     }
   return (
     <ImageBackground source={Images.back_1} style={{flex:1}}>
@@ -65,15 +89,15 @@ const AddCreditCard = (props) => {
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'Credit Card Number (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'Credit Card Number'} style={{fontSize:12}} isBold />
             </View>
             <View>
-                <TextInput placeholder='Enter account number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
+                <TextInput placeholder='Enter credit number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={16} />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'Expiry Date (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'Expiry Date'} style={{fontSize:12}} isBold />
             </View>
             <View>
                 <TextInput placeholder='Enter expiry date (Enter without special characters)' value={expiry} onChangeText={(txt)=>setExpiry(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} maxLength={4} />
@@ -81,7 +105,7 @@ const AddCreditCard = (props) => {
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'CVV (optional)'} style={{fontSize:12}} isBold />
+                <CustomText title={'CVV'} style={{fontSize:12}} isBold />
             </View>
             <View>
                 <TextInput placeholder='Enter cvv number...' value={cvv} onChangeText={(txt)=>setCvv(txt)} style={{borderBottomWidth:0.3, color:Colors.black, fontSize:12}} keyboardType='number-pad' maxLength={3} />
@@ -134,7 +158,7 @@ const AddCreditCard = (props) => {
             marginTop: vh(5),
           }}>
           <CustomButton
-            onPress={() => addNewCard()}
+            onPress={() => data == undefined ? addNewCard() : updateCreditCard()}
             btnStyle={{
               backgroundColor: Colors.themeColor,
               borderRadius: 10,
@@ -142,7 +166,7 @@ const AddCreditCard = (props) => {
               marginBottom: vh(1),
               paddingVertical: vh(1.4),
             }}
-            title={'Save Card'}
+            title={data == undefined ? 'Save Card' : 'Update Card'}
             txtStyle={{color: Colors.white}}
           />
         </View>
@@ -162,6 +186,9 @@ const mapDispatchToProps = dispatch => {
     return{
         save_credit: data => {
             dispatch(credit_card(data))
+        },
+        update_credit: data => {
+            dispatch(update_credit(data))
         }
     }
 }

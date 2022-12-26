@@ -9,12 +9,35 @@ import Images from '../../utils/images';
 import Colors from '../../utils/color';
 import Slider from '@react-native-community/slider';
 import { connect } from 'react-redux';
+import { useMemo } from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const Add_Goals = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [goals, setGoals] = useState([]);
   const [totalInc, setTotalInc] = useState()
   const [percent, setPercent] = useState()
+  const [nightMode, setNightMode] = useState(false)
+  const navigation = useNavigation()
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const getAllGoal = () => {
       // setGoals(props?.goal);
@@ -146,7 +169,7 @@ const Add_Goals = (props) => {
   const renderEmpty = () => {
     return(
       <View style={{marginTop:vh(1.5)}}>
-          <CustomText title={'No goals available'} style={{fontSize:13}} />
+          <CustomText title={'No goals available'} style={{fontSize:13, color:nightMode == true ? Colors.white : Colors.textColor}} />
       </View>
   )
   }
@@ -161,7 +184,7 @@ const Add_Goals = (props) => {
       {goals && (
         <>
           <View style={{marginBottom:vh(1)}}>
-            <CustomText title={'My Goal'} isBold style={{fontSize: 14}} />
+            <CustomText title={'My Goal'} isBold style={{fontSize: 14, color:nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           <ScrollView style={{width:'100%', borderRadius:20}} 
           horizontal 
@@ -217,6 +240,7 @@ const mapStateToProps = state => ({
   goal: state.goalData,
   total: state.totalAmt,
   deposit: state.goalDeposit,
+  themeMode: state.theme
 })
 
 export default connect(mapStateToProps, null)(Add_Goals);
