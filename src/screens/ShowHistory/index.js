@@ -20,6 +20,7 @@ import CustomLoader from '../../components/CustomLoader';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
 import Notify from '../../utils/Dialog'
+import { useMemo } from 'react';
 
 const ShowHistory = props => {
   const [income, setIncome] = useState(0);
@@ -37,8 +38,29 @@ const ShowHistory = props => {
   const styles = getStyles(isMonthModal);
   const [btnPress, setBtnPress] = useState(false);
   const navigation = useNavigation()
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const checkExpense = () => {
+    console.log('it work')
     var total = 0,
       income = 0,
       expense = 0;
@@ -49,15 +71,19 @@ const ShowHistory = props => {
       let selectedMonth = selectMonthKey;
       return month == selectedMonth;
     });
+    // console.log('the data is',selectMonthKey, 'return','dataaaaaaaaaaa', data )
     data?.map(item => {
+      // console.log('the item is ', item?.incomeAmount)
       income = income + item?.incomeAmount;
       expense = expense + item?.expenseAmount;
       total = income + expense;
     });
-    setIncome(income.toFixed(2));
-    setExpense(expense.toFixed(2));
-    setTotal(total.toFixed(2));
+    // console.log('income', income, expense, total)
+    setIncome(income);
+    setExpense(expense);
+    setTotal(total);
   };
+
 
   const getMonth = () => {
     setGetAllMonths(allMonth);
@@ -66,11 +92,11 @@ const ShowHistory = props => {
   };
 
   const submitMonth = () => {
-    console.log('the select month and year', selectMonth, selectYear, 'the data check', selectMonth == '', selectYear == '')
     if(selectMonth != ''){
       if(selectYear != ''){
         let data = props?.expense?.filter((item,index)=>{
           let year = moment(item?.expenseDate).format('Y')
+          // console.log('the year is', year, typeof(year), selectMonthKey, typeof(selectMonthKey))
           return year == selectYear
         })
         let data2 = data?.filter((i,j)=>{
@@ -79,7 +105,9 @@ const ShowHistory = props => {
           let selectedMonth = selectMonthKey
           return month == selectedMonth
         })
+        // console.log('the data 2 is ===>', data2)
         setMonthHistory(data2);
+        // checkExpense()
       }else{
         Notify('error', "Alert", "Please select year before submit")
       }
@@ -208,17 +236,17 @@ const ShowHistory = props => {
   useEffect(() => {
     checkExpense();
     getMonth();
-  }, [btnPress]);
+  }, [monthHistory]);
 
   return (
-    <ImageBackground source={Images.back_1} style={{flex:1}}>
+    <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.white}}>
       {/* header  */}
       <View style={{flexDirection:'row', width:'90%', alignSelf:'center', marginTop:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
-          <Image source={Images.menu} style={{height:30, width:30}} />
+          <Image source={nightMode == true ? Images.menu_white : Images.menu} style={{height:30, width:30}} />
         </TouchableOpacity>
         <View style={{width:'80%', alignItems:'center'}}>
-          <CustomText title={'Monthly Report'} isBold style={{fontSize:16}} />
+          <CustomText title={'Monthly Report'} isBold style={{fontSize:16, color: nightMode == true ? Colors.white : Colors.textColor}} />
         </View>
       </View>
       {/* header component */}
@@ -335,6 +363,7 @@ const ShowHistory = props => {
                     </View>
                     <View style={{flexDirection: 'row'}}>
                       <CustomText title={'Report: '} isBold />
+                      {/* {console.log('the select month', selectMonth)} */}
                       <CustomText title={`${selectMonth}`} />
                     </View>
                   </View>
@@ -444,7 +473,7 @@ const ShowHistory = props => {
                         }}>
                         <CustomText
                           style={{textAlign: 'center', fontSize: 11}}
-                          title={item?.expenseDate}
+                          title={moment(item?.expenseDate).format('DD-MMM-YYYY')}
                         />
                       </View>
                       <View
@@ -574,7 +603,7 @@ const ShowHistory = props => {
                     marginTop: vh(2),
                     marginBottom: vh(2),
                   }}>
-                  <View style={{flexDirection: 'row'}}>
+                  {/* <View style={{flexDirection: 'row'}}>
                     <CustomText title={'Total Income: '} isBold />
                     <CustomText title={`${'\u20B9'}${income}`} />
                   </View>
@@ -595,7 +624,7 @@ const ShowHistory = props => {
                         expense == 0 ? '-' : `Rupees ${NumToWords(expense)}`
                       }
                     />
-                  </View>
+                  </View> */}
                   {/* <View style={{flexDirection:'row'}}>
                         <CustomText title={'Total Saving: '} isBold />
                         <CustomText title={totalIncome <= 0 ? '-' : `${'\u20B9'}${totalIncome}`} />
@@ -630,7 +659,7 @@ const ShowHistory = props => {
             </View>
           )}
         </>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -638,6 +667,7 @@ const mapStateToProps = state => ({
   user: state.userData,
   total: state.totalAmt,
   expense: state.expenseData,
+  themeMode: state.theme
 });
 
 const getStyles = isMonthModal =>

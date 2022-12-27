@@ -9,6 +9,7 @@ import CustomText from '../../components/CustomText';
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
 import Images from '../../utils/images';
 import { useNavigation } from '@react-navigation/native';
+import { useMemo } from 'react';
 
 const Report = (props) => {
   const [monthChng, setMonthChng] = useState(
@@ -17,6 +18,15 @@ const Report = (props) => {
   const navigation = useNavigation()
   const [dataList, setDataList] = useState(props?.expense);
   const [userId, setUserId] = useState('');
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
 
   let markedDay = {};
   dataList?.map(item => {
@@ -29,13 +39,13 @@ const Report = (props) => {
 
 
   return (
-    <ImageBackground source={Images.back_1} style={{flex:1}}>
+    <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <View style={{width:'100%', flexDirection:'row', marginTop:vh(2), marginLeft:vw(2)}}>
         <TouchableOpacity onPress={()=>navigation.goBack()} style={{width:'10%'}}>
-          <Image source={Images.back_3d} style={{height:22, width:22}} />
+          <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:22, width:22}} />
         </TouchableOpacity>
         <View style={{width:'90%', justifyContent:'center'}}>
-          <CustomText title={'Report'} isBold style={{fontSize:16}} />
+          <CustomText title={'Report'} isBold style={{fontSize:16, color:nightMode == true ? Colors.white : Colors.textColor}} />
         </View>
       </View>
       <>
@@ -70,7 +80,7 @@ const Report = (props) => {
           />
         </View>
           <View style={{marginTop:vh(1), marginLeft:vw(3)}}>
-            <CustomText title={'Monthly Report'} isBold />
+            <CustomText title={'Monthly Report'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           {dataList == '' ? (
             <View
@@ -110,12 +120,13 @@ const Report = (props) => {
             </ScrollView>
           )}
       </>
-    </ImageBackground>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
-    expense: state.expenseData
+    expense: state.expenseData,
+    themeMode: state.theme
 })
 
 export default connect (mapStateToProps, null) (Report);

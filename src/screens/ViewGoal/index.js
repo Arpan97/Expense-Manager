@@ -22,6 +22,7 @@ import Snack from '../../utils/snackbar';
 import {useNavigation} from '@react-navigation/native';
 import CustomFav from '../../components/CustomFav';
 import LinearGradient from 'react-native-linear-gradient';
+import CustomGoalFav from '../../components/Fav/GoalFav';
 
 const ViewGoal = props => {
   const [search, setSearch] = useState('');
@@ -211,7 +212,7 @@ const ViewGoal = props => {
   }, [props?.goal]);
 
   return (
-    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={styles.container}>
+    <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       {/* header  */}
       <View style={{flexDirection: 'row', width: '90%', alignSelf: 'center', marginTop:vh(1)}}>
         <TouchableOpacity
@@ -327,8 +328,8 @@ const ViewGoal = props => {
           </View>
         </>
       )}
-      <CustomFav />
-    </ImageBackground>
+      <CustomGoalFav />
+    </View>
   );
 };
 

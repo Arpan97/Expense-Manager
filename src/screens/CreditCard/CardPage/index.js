@@ -8,12 +8,34 @@ import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-nat
 import CustomCreditFav from '../../../components/Fav/CreditCustomFav'
 import { connect } from 'react-redux'
 import { delete_credit } from '../../../redux/Action/Action'
+import { useMemo } from 'react'
 
 const CreditCard = (props) => {
     const navigation = useNavigation()
     const [search, setSearch] = useState('')
     const [accBackup, setAccBackup] = useState('')
     const [bankAcc, setBankAcc] = useState('')
+    const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
+
     const searchFunctionality = async txt => {
         setSearch(txt);
         let masterDataSource = props?.creditCard;
@@ -140,10 +162,10 @@ const CreditCard = (props) => {
 
       // console.log('the credit card ===>', props?.creditCard)
   return (
-    <ImageBackground source={Images.back_1} style={{flex:1}}>
+    <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <View style={{flexDirection:'row', width:'100%', marginTop:vh(2), marginLeft:vw(2)}}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center'}}>
-            <Image source={Images.menu} style={{height: 30, width: 30}} />
+            <Image source={nightMode == true ? Images.menu_white : Images.menu} style={{height: 30, width: 30}} />
         </TouchableOpacity>
         <View
           style={{
@@ -169,13 +191,14 @@ const CreditCard = (props) => {
         />
       </View>
       <CustomCreditFav />
-    </ImageBackground>
+    </View>
   )
 }
 
 const mapStateToProps = state => ({
   creditCard: state.credit,
   expense: state.expenseData,
+  themeMode: state.theme
 })
 
 const mapDispatchToProps = dispatch => {

@@ -25,6 +25,8 @@ import {
   widthPercentageToDP as vw,
   heightPercentageToDP as vh,
 } from 'react-native-responsive-screen';
+import Textstyles from '../../utils/text';
+import { useMemo } from 'react';
 
 const AddExpense = props => {
   const navigation = useNavigation();
@@ -41,13 +43,35 @@ const AddExpense = props => {
   const [isBankModal, setIsbankModal] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [accountType, setAccountType] = useState('Debit');
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const onStartChange = async (event, selectedDate) => {
+    setCalendarVisible(false);
     const currentDate = selectedDate || calendarDate;
     const fullDate = await `${moment(currentDate).year()}-${
       moment(currentDate).month() + 1
     }-${moment(currentDate).date()}`;
-    setCalendarDate(fullDate);
+    const dates = await currentDate
+    setCalendarDate(dates);
     setCalendarVisible(false);
   };
 
@@ -64,8 +88,8 @@ const AddExpense = props => {
           expenseAmount: 0,
           description: desc,
           expenseDate: calendarDate
-            ? calendarDate
-            : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+            // ? calendarDate
+            // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
         };
         props?.add_expense(obj);
         Notify('success', 'Income', 'Income added successfully');
@@ -81,8 +105,8 @@ const AddExpense = props => {
           expenseAmount: parseInt(amount),
           description: desc,
           expenseDate: calendarDate
-            ? calendarDate
-            : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+            // ? calendarDate
+            // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
         };
 
         props?.add_expense(obj);
@@ -143,7 +167,7 @@ const AddExpense = props => {
   }, [typeExpense]);
 
   return (
-    <ImageBackground source={Images.back_1} style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor:nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <ScrollView>
         <View>
           {/* header  */}
@@ -250,7 +274,7 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Choose category'} />
+              <CustomText title={'Choose category'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View
               style={{
@@ -318,7 +342,7 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={`Select date`} />
+              <CustomText title={`Select date`} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <TouchableOpacity
               activeOpacity={0.6}
@@ -337,10 +361,11 @@ const AddExpense = props => {
               }}>
               <TextInput
                 placeholder="Select date"
-                value={calendarDate}
+                value={calendarDate == '' ? calendarDate : moment(calendarDate).format('DD-MM-YYYY')}
                 keyboardType="number-pad"
                 placeholderTextColor={Colors.textColor}
                 editable={false}
+                style={[Textstyles.medium,{color:Colors.textColor, width:'50%'}]}
               />
               <View style={{marginTop: vh(2)}}>
                 <Image
@@ -361,6 +386,7 @@ const AddExpense = props => {
               }}>
               <CustomText
                 title={typeExpense ? `${typeExpense}` : `Enter amount`}
+                style={{color: nightMode == true ? Colors.white : Colors.textColor}}
               />
             </View>
             <View
@@ -382,7 +408,7 @@ const AddExpense = props => {
                 onChangeText={amt => setAmount(amt)}
                 keyboardType="number-pad"
                 placeholderTextColor={Colors.textColor}
-                style={{width: '90%'}}
+                style={[Textstyles.medium,{width: '90%'}]}
               />
               <View style={{marginTop: vh(2)}}>
                 <Image
@@ -401,7 +427,7 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Account Type'} />
+              <CustomText title={'Account Type'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View
               style={{
@@ -464,7 +490,7 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Choose Account'} />
+              <CustomText title={'Choose Account'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             {/* {props?.accountData == '' && props?.creditCard == '' ? (
                 <TouchableOpacity onPress={()=>checkPremium()} style={{marginLeft:vw(2.5)}}>
@@ -563,7 +589,7 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Enter Description'} />
+              <CustomText title={'Enter Description'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View
               style={{
@@ -599,10 +625,11 @@ const AddExpense = props => {
             onPress={() => navigation.goBack()}
             btnStyle={{backgroundColor: Colors.transparent}}
             title={'Cancel'}
+            txtStyle={{ color: nightMode == true ? Colors.white : Colors.textColor}}
           />
           <CustomButton
             onPress={() => save_expense()}
-            title={'Save'}
+            title={'Save Expense'}
             btnStyle={{
               backgroundColor:
                 typeExpense == 'Income' ? Colors.themeColor : Colors.red,
@@ -626,7 +653,7 @@ const AddExpense = props => {
           textColor="black"
         />
       )}
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -635,6 +662,7 @@ const mapStateToProps = state => ({
   accountData: state.account,
   premiumData: state.premium,
   creditCard: state.credit,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {

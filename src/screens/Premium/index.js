@@ -22,6 +22,7 @@ import moment from 'moment';
 import {connect} from 'react-redux';
 import {add_premium} from '../../redux/Action/Action';
 import Notify from '../../utils/Dialog'
+import { useMemo } from 'react';
 
 const {width, height} = Dimensions.get('window');
 
@@ -77,6 +78,15 @@ const Premium = props => {
         `,
     },
   ]);
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
 
   const handleBack = () => {
     navigation.goBack();
@@ -128,16 +138,15 @@ const Premium = props => {
     )
   }
 
-  console.log('the premium', props?.premiumData)
 
   return (
-    <ImageBackground style={{flex:1}} source={Images.back_1}>
+    <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <View style={{flexDirection: 'row', marginTop: vh(2), marginLeft: vw(4)}}>
         <TouchableOpacity
           onPress={() => handleBack()}
           style={{height: 22, width: 22}}>
           <Image
-            source={Images.back_3d}
+            source={nightMode == true ? Images.back_white : Images.back_3d}
             style={{height: '100%', width: '100%'}}
           />
         </TouchableOpacity>
@@ -150,7 +159,7 @@ const Premium = props => {
           <CustomText
             title={'Buy Premium'}
             isBold
-            style={{color: Colors.themeColor, fontSize: 18}}
+            style={{color: nightMode == true ? Colors.white : Colors.textColor, fontSize: 18}}
           />
         </View>
       </View>
@@ -188,12 +197,13 @@ const Premium = props => {
         <FlatList data={plans} renderItem={renderPlans} style={{marginBottom: props?.premiumData != '' ? vh(33) : vh(5)}} showsVerticalScrollIndicator={false} />
       </View>
       
-    </ImageBackground>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
-  premiumData: state.premium
+  premiumData: state.premium,
+  themeMode: state.theme
 })
 
 const mapDispatchToProps = dispatch => {

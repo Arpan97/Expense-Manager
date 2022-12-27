@@ -19,12 +19,33 @@ import CustomText from '../../components/CustomText';
 import CustomBankFav from '../../components/CustomBankFav';
 import {connect} from 'react-redux';
 import {delete_account} from '../../redux/Action/Action';
+import { useMemo } from 'react';
 
 const BankAccount = props => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [bankAcc, setBankAcc] = useState('');
   const [accBackup, setAccBackup] = useState('');
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const renderAcc = ({item, index}) => {
     let allData = props?.expense?.filter((i, j) => {
@@ -38,7 +59,6 @@ const BankAccount = props => {
       expense = expense + x?.expenseAmount;
       total = item?.openingAmt + income - expense;
     });
-    console.log('teh item is ===>', item)
     return (
       <TouchableOpacity onPress={() => navigation.navigate('BankDetails', {data: item})} style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden'}}>
         <ImageBackground source={item?.cardImage} style={{height:200, width:'100%'}} >
@@ -207,10 +227,9 @@ const BankAccount = props => {
   }, [props?.accountData]);
 
   return (
-    <ImageBackground
-    source={Images.back_1}
+    <View
       style={{
-        // backgroundColor: Colors.backgroundColor,
+        backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor,
         flex: 1,
         width: '100%',
         alignSelf: 'center',
@@ -225,7 +244,7 @@ const BankAccount = props => {
             alignItems: 'center',
             marginRight: vw(4),
           }}>
-          <Image source={Images.menu} style={{height: 30, width: 30}} />
+          <Image source={nightMode == true ? Images.menu_white : Images.menu} style={{height: 30, width: 30}} />
         </TouchableOpacity>
         <View
           style={{
@@ -251,13 +270,14 @@ const BankAccount = props => {
         />
       </View>
       <CustomBankFav />
-    </ImageBackground>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
   accountData: state.account,
   expense: state.expenseData,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {

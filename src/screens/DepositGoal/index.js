@@ -39,7 +39,7 @@ const DepositGoal = props => {
                     goalId: props?.route?.params?.data?.id,
                     goalTitle: props?.route?.params?.data?.title,
                     depositAmt: parseInt(depositAmt),
-                    depositDate: moment().format('DD/MM/YYYY')
+                    depositDate: new Date()
                 }
                 let obj = {
                     id:props?.route?.params?.data?.id,
@@ -85,7 +85,7 @@ const DepositGoal = props => {
     calculateAmt()
   },[])
   return (
-    <ImageBackground source={nightMode == true ? Images.black_1 :Images.back_1} style={{backgroundColor: Colors.themeColor, flex: 1}}>
+    <View style={{backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor, flex: 1}}>
       <View style={{height:200}}>
         <View style={{top: vh(8), marginLeft: vw(4), width:'90%', alignSelf:'center'}}>
           <CustomText
@@ -95,15 +95,7 @@ const DepositGoal = props => {
           />
         </View>
       </View>
-      <ScrollView
-        style={{
-          // flex: 0.7,
-          // backgroundColor:  Colors.white,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          elevation: 3,
-          // marginTop: vh(12),
-        }}>
+     
         <View>
           <View
             style={{
@@ -114,17 +106,19 @@ const DepositGoal = props => {
             <View>
               <CustomText title={'Goal title'} isBold style={{fontSize: 13, color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
-            <View>
+            <View style={{marginTop:vh(0.6)}}>
               <TextInput
                 value={goalCat}
-                placeholderTextColor={nightMode == true ? Colors.white : Colors.textColor}
+                placeholderTextColor={Colors.black}
                 editable={false}
                 style={[
-                  Textstyles.bold,
+                  Textstyles.medium,
                   {
-                    borderBottomWidth: 1,
-                    borderColor: nightMode == true ? Colors.white : Colors.black + 50,
-                    color: nightMode == true ? Colors.white : Colors.textColor
+                    color: Colors.black,
+                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
+                    borderRadius:10,
+                    // borderColor: nightMode == true ? Colors.white : Colors.black,
+                    // borderWidth:0.6
                   },
                 ]}
               />
@@ -143,7 +137,7 @@ const DepositGoal = props => {
                 style={{fontSize: 13, color: nightMode == true ? Colors.white : Colors.textColor}}
               />
             </View>
-            <View>
+            <View style={{marginTop:vh(0.6)}}>
               <TextInput
                 placeholder="Enter amount to save"
                 value={depositAmt}
@@ -151,10 +145,13 @@ const DepositGoal = props => {
                 onChangeText={amt => setDepositAmt(amt)}
                 keyboardType="number-pad"
                 style={[
-                  Textstyles.bold,
+                  Textstyles.medium,
                   {
-                    borderBottomWidth: 1,
-                    borderColor:nightMode == true ? Colors.white : Colors.black + 50,
+                    color: Colors.black,
+                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
+                    borderRadius:10,
+                    // borderColor: nightMode == true ? Colors.white : Colors.black,
+                    // borderWidth:0.6
                   },
                 ]}
               />
@@ -188,8 +185,7 @@ const DepositGoal = props => {
           style={{justifyContent: 'center', alignItems: 'center'}}>
           <CustomText title={'Cancel'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
         </TouchableOpacity>
-      </ScrollView>
-    </ImageBackground>
+    </View>
   );
 };
 

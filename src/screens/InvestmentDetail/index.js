@@ -1,5 +1,5 @@
 import {FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Images from '../../utils/images';
 import { useNavigation } from '@react-navigation/native';
 import CustomText from '../../components/CustomText';
@@ -9,12 +9,34 @@ import CustomInvestFav from '../../components/Fav/InvestCatFav';
 import { connect } from 'react-redux';
 import { delete_investment } from '../../redux/Action/Action';
 import Notify from '../../utils/Dialog';
+import moment from 'moment';
 
 const InvestmentDetail = props => {
   const data = props?.route?.params?.data;
   const navigation = useNavigation()
   const [total, setTotal] = useState(0)
   const [history, setHistory] = useState('')
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
+
   const onBack = () => {
     navigation.goBack()
   }
@@ -35,34 +57,61 @@ const InvestmentDetail = props => {
     getInvestData()
   },[props?.investment])
 
+
   const renderHistory = ({item,index}) => {
     return(
-        <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'90%', alignSelf:'center'}}>
-            <View style={{flexDirection:'row'}}>
-                <View style={{width:40, height:40, borderRadius:25, backgroundColor:Colors.white, elevation:3, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
+        <View style={{backgroundColor:Colors.white, padding:vh(0.6), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'90%', alignSelf:'center'}}>
+                {/* <View style={{width:40, height:40,  overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
                     <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
+                </View> */}
+                <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', borderBottomWidth:0.6, borderColor:'lightgrey', borderStyle:'dashed', paddingBottom:vh(1), marginBottom:vh(1)}}>
+                    <View style={{width:'80%', flexDirection:'row', left:vw(2)}} >
+                    <View style={{justifyContent:'center', alignItems:'center'}}>
+                  <Image source={Images.calendar} style={{height:30, width:30}} />
                 </View>
-                <View style={{width:'40%', marginLeft:vh(3)}}>
-                    <CustomText title={item?.investment_title} />
-                    <CustomText title={`By ${item?.investment_platform}`} />
+                      <View>
+                        <CustomText title={moment(item?.investment_date).format('DD')} isBold style={{fontSize:28}} />
+                      </View>
+                      <View style={{alignItems:'center', justifyContent:'center'}}>
+                        <CustomText title={`${moment(item?.investment_date).format('MMM')}`} isBold style={{fontSize:10}} />
+                        <CustomText title={`${moment(item?.investment_date).format('YYYY')}`} isBold style={{fontSize:10}} />
+                      </View>
+                      
+                    </View>
+                    <View style={{flexDirection:'row',width:'20%', justifyContent:'center', alignItems:'center'}}>
+                      <TouchableOpacity onPress={()=>navigation.navigate('AddInvestCat', {data:item})} style={{left:vh(1), marginRight:vw(2)}}>
+                          <Image source={Images.edit} style={{height:20,width:20}} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>delete_investment(item?.id)} style={{left:vh(1)}}>
+                          <Image source={Images.delete} style={{height:20,width:20}} />
+                      </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={{width:'30%', justifyContent:'center', alignItems:'center'}}>
+                <View style={{flexDirection:'row', width:'100%', borderRadius:15, justifyContent:'space-between', left:vw(2)}}>
+                  <View style={{width:'80%'}} >
+                    <CustomText title={`${item?.investment_platform}`} style={{fontSize:14}} />
+                    <CustomText title={item?.investment_title} style={{fontSize:12}} />
+                  </View>
+                </View>
+                <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:vh(1), marginBottom:vh(1)}}>
+                  <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
                     <View>
                         <Image source={Images.increase} style={{height:20,width:20}} />
                     </View>
                     <View>
                         <CustomText title={`${'\u20B9'}${(item?.investment_amount).toFixed(2)}`} />
                     </View>
-
+                  </View>
+                  <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+                    <View>
+                        <Image source={Images.decrease} style={{height:20,width:20}} />
+                    </View>
+                    <View>
+                        <CustomText title={`${'\u20B9'}0.00`} />
+                    </View>
+                  </View>
                 </View>
-                    <TouchableOpacity onPress={()=>delete_investment(item?.id)} style={{marginTop:vh(1), left:vh(1)}}>
-                        <Image source={Images.delete} style={{height:20,width:20}} />
-                    </TouchableOpacity>
-            </View>
-            <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-                <CustomText title={`Invest on: ${item?.investment_date}`} style={{fontSize:11}} />
-            </View>
-            </View>
+        </View>
     )
   }
   const renderEmpty = () => {
@@ -89,13 +138,13 @@ const InvestmentDetail = props => {
     props?.delete_investment(id)
   }
   return (
-    <ImageBackground source={Images.back_1} style={{ flex:1}}>
+    <View style={{ flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <View style={{flexDirection:'row', marginLeft:vw(5), marginTop:vh(2)}}>
         <TouchableOpacity style={{width:'10%'}} onPress={onBack}>
-            <Image source={Images.back_3d} style={{height:22, width:22}} />
+            <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:22, width:22}} />
         </TouchableOpacity>
         <View style={{width:'74%', alignItems:'center'}}>
-            <CustomText title={'Investment Detail'} isBold style={{color:Colors.themeColor}} />
+            <CustomText title={'Investment Detail'} isBold style={{color: nightMode == true ? Colors.white : Colors.themeColor}} />
             {/* <CustomText title={data?.category} isBold style={{color:Colors.themeColor}} /> */}
         </View>
       </View>
@@ -171,18 +220,19 @@ const InvestmentDetail = props => {
         </View>
       </View> */}
       <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
-        <CustomText title={'Transaction History'} isBold style={{fontSize:12}} />
+        <CustomText title={'Transaction History'} isBold style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} />
       </View>
       <View style={{ marginBottom:vh(37)}}>
         <FlatList data={history} renderItem={renderHistory} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
       </View>
       {/* <CustomInvestFav /> */}
-    </ImageBackground>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
-    investment: state.invest
+    investment: state.invest,
+    themeMode: state.theme
 })
 
 const mapDispatchToProps = dispatch => {

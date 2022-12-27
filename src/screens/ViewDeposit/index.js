@@ -6,6 +6,7 @@ import Images from '../../utils/images'
 import CustomText from '../../components/CustomText'
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen'
 import Colors from '../../utils/color'
+import moment from 'moment'
 
 const ViewDeposit = (props) => {
     const navigation = useNavigation()
@@ -34,28 +35,68 @@ const ViewDeposit = (props) => {
 
       const renderDeposit = ({item,index}) => {
         return(
-            <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, borderRadius:15, width:'95%', marginTop:vh(0.6), alignSelf:'center', marginBottom:vh(1.5)}}>
-            <View style={{flexDirection:'row', alignItems:'center'}}>
-                <View style={{width:60, height:60, justifyContent:'center', alignItems:'center'}}>
-                    <Image source={propData?.imgSet} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
+          <View style={{backgroundColor:Colors.white, padding:vh(0.6), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'95%', alignSelf:'center'}}>
+          <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', borderBottomWidth:0.6, borderColor:'lightgrey', borderStyle:'dashed', paddingBottom:vh(1), marginBottom:vh(1)}}>
+              <View style={{width:'80%', flexDirection:'row', left:vw(2)}} >
+                <View style={{justifyContent:'center', alignItems:'center'}}>
+                  <Image source={Images.calendar} style={{height:30, width:30}} />
                 </View>
-                <View style={{width:'40%', marginLeft:vh(3)}}>
-                    <CustomText title={item?.goalTitle} />
+                <View>
+                  <CustomText title={moment(item?.depositDate).format('DD')} isBold style={{fontSize:28}} />
                 </View>
-                <View style={{width:'30%', justifyContent:'center', alignItems:'center'}}>
-                    <View>
-                        <Image source={Images.increase} style={{height:20,width:20}} />
-                    </View>
-                    <View>
-                        <CustomText title={`${'\u20B9'}${(item?.depositAmt).toFixed(2)}`} />
-                    </View>
+                <View style={{alignItems:'center', justifyContent:'center'}}>
+                  <CustomText title={`${moment(item?.depositDate).format('MMM')}`} isBold style={{fontSize:10}} />
+                  <CustomText title={`${moment(item?.depositDate).format('YYYY')}`} isBold style={{fontSize:10}} />
+                </View>
+                
+              </View>
+          </View>
+          <View style={{flexDirection:'row', width:'100%', borderRadius:15, justifyContent:'space-between', left:vw(2)}}>
+            <View style={{width:'80%'}} >
+              <CustomText title={`${item?.goalTitle}`} style={{fontSize:14}} />
+            </View>
+          </View>
+          <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:vh(1), marginBottom:vh(1)}}>
+            <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+              <View>
+                  <Image source={Images.increase} style={{height:20,width:20}} />
+              </View>
+              <View>
+                  <CustomText title={`${'\u20B9'}${(item?.depositAmt).toFixed(2)}`} />
+              </View>
+            </View>
+            <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+              <View>
+                  <Image source={Images.decrease} style={{height:20,width:20}} />
+              </View>
+              <View>
+                  <CustomText title={`${'\u20B9'}0.00`} />
+              </View>
+            </View>
+          </View>
+      </View>
+            // <View style={{backgroundColor:Colors.white, padding:vh(1), elevation:3, borderRadius:15, width:'95%', marginTop:vh(0.6), alignSelf:'center', marginBottom:vh(1.5)}}>
+            // <View style={{flexDirection:'row', alignItems:'center'}}>
+            //     <View style={{width:60, height:60, justifyContent:'center', alignItems:'center'}}>
+            //         <Image source={propData?.imgSet} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
+            //     </View>
+            //     <View style={{width:'40%', marginLeft:vh(3)}}>
+            //         <CustomText title={item?.goalTitle} />
+            //     </View>
+            //     <View style={{width:'30%', justifyContent:'center', alignItems:'center'}}>
+            //         <View>
+            //             <Image source={Images.increase} style={{height:20,width:20}} />
+            //         </View>
+            //         <View>
+            //             <CustomText title={`${'\u20B9'}${(item?.depositAmt).toFixed(2)}`} />
+            //         </View>
 
-                </View>
-            </View>
-            <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-                <CustomText title={`Deposit on: ${item?.depositDate}`} style={{fontSize:11}} />
-            </View>
-            </View>
+            //     </View>
+            // </View>
+            // <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
+            //     <CustomText title={`Deposit on: ${item?.depositDate}`} style={{fontSize:11}} />
+            // </View>
+            // </View>
         )
       }
     
@@ -71,7 +112,7 @@ const ViewDeposit = (props) => {
         }
       },[props?.themeMode, nightMode])
   return (
-    <ImageBackground style={{flex:1}} source={nightMode == true ? Images.black_1 : Images.back_1}>
+    <View  style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}} >
       <View style={{flexDirection:'row', width:'100%', marginTop:vh(2), marginBottom:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.goBack()} style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
             <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:22, width:22}} />
@@ -109,7 +150,7 @@ const ViewDeposit = (props) => {
       <View>
         <FlatList data={depositData} renderItem={renderDeposit} style={{marginBottom:vh(32)}} />
       </View>
-    </ImageBackground>
+    </View>
   )
 }
 

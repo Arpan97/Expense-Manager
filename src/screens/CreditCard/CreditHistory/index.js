@@ -10,6 +10,9 @@ import Colors from '../../../utils/color'
 import Notify from '../../../utils/Dialog'
 import ALertBox from '../../../utils/AlertBox'
 import LinearGradient from 'react-native-linear-gradient'
+import { useMemo } from 'react'
+import moment from 'moment'
+import { delete_expense } from '../../../redux/Action/Action'
 
 const CreditHistory = (props) => {
     let data = props?.route?.params?.data
@@ -18,6 +21,26 @@ const CreditHistory = (props) => {
     const [expense, setExpense] = useState(0);
     const [total, setTotal] = useState(0);
     const [expenseData, setExpenseData] = useState('')
+    const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
     const goBack = () => {
         navigation.goBack()
@@ -63,35 +86,89 @@ const CreditHistory = (props) => {
         Amount Left - ${'\u20B9'}${total}
         `)
       }
+
+      const delete_expense = (id) => {
+        props?.delete_expense(id)
+    }
       const renderExpense =({item,index}) => {
         return(
-          <LinearGradient colors={['#E7F5FF', '#BDDDFF']} style={{ padding:vh(1), elevation:2, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
-          <View style={{flexDirection:'row'}}>
-              <View style={{width:45, height:45, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
-                  <Image source={Images.expense} style={{height:'100%', width:'100%'}} />
+          <View style={{backgroundColor:Colors.white, padding:vh(0.6), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'90%', alignSelf:'center'}}>
+          {/* <View style={{width:40, height:40,  overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
+              <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
+          </View> */}
+          <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', borderBottomWidth:0.6, borderColor:'lightgrey', borderStyle:'dashed', paddingBottom:vh(1), marginBottom:vh(1)}}>
+              <View style={{width:'80%', flexDirection:'row', left:vw(2)}} >
+                <View style={{justifyContent:'center', alignItems:'center'}}>
+                  <Image source={Images.calendar} style={{height:30, width:30}} />
+                </View>
+                <View>
+                  <CustomText title={moment(item?.expenseDate).format('DD')} isBold style={{fontSize:28}} />
+                </View>
+                <View style={{alignItems:'center', justifyContent:'center'}}>
+                  <CustomText title={`${moment(item?.expenseDate).format('MMM')}`} isBold style={{fontSize:10}} />
+                  <CustomText title={`${moment(item?.expenseDate).format('YYYY')}`} isBold style={{fontSize:10}} />
+                </View>
+                
               </View>
-              <View style={{width:'50%', marginLeft:vh(3)}}>
-                  <CustomText title={item?.category} isBold />
-                  <CustomText title={item?.description?.length > 60 ? `${(item?.description).substring(0,60)}...` : item?.description} style={{fontSize:12}} />
+              <View style={{flexDirection:'row',width:'20%', justifyContent:'center', alignItems:'center'}}>
+                
+                <TouchableOpacity onPress={()=>delete_expense(item?.id)} style={{left:vh(1)}}>
+                    <Image source={Images.delete} style={{height:20,width:20}} />
+                </TouchableOpacity>
               </View>
-              <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-                  <View>
-                      {item?.expenseType == 'Expense' ? (
-                          <Image source={Images.decrease} style={{height:20,width:20}} />
-                      ):(
-                          <Image source={Images.increase} style={{height:20,width:20}} />
-                      )}
-                  </View>
-                  <View>
-                      <CustomText title={item?.incomeAmount == 0 ? `${'\u20B9'}${(item?.expenseAmount).toFixed(2)}` : `${'\u20B9'}${(item?.incomeAmount).toFixed(2)}`} />
-                  </View>
+          </View>
+          <View style={{flexDirection:'row', width:'100%', borderRadius:15, justifyContent:'space-between', left:vw(2)}}>
+            <View style={{width:'80%'}} >
+              <CustomText title={`${item?.category}`} style={{fontSize:14}} />
+              <CustomText title={item?.description} style={{fontSize:12}} />
+            </View>
+          </View>
+          <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:vh(1), marginBottom:vh(1)}}>
+            <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+              <View>
+                  <Image source={Images.increase} style={{height:20,width:20}} />
+              </View>
+              <View>
+                  <CustomText title={`${'\u20B9'}${(item?.incomeAmount).toFixed(2)}`} />
+              </View>
+            </View>
+            <View style={{width:'30%', justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+              <View>
+                  <Image source={Images.decrease} style={{height:20,width:20}} />
+              </View>
+              <View>
+                  <CustomText title={`${'\u20B9'}${(item?.expenseAmount).toFixed(2)}`} />
+              </View>
+            </View>
+          </View>
+  </View>
+          // <LinearGradient colors={['#E7F5FF', '#BDDDFF']} style={{ padding:vh(1), elevation:2, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
+          // <View style={{flexDirection:'row'}}>
+          //     <View style={{width:45, height:45, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
+          //         <Image source={Images.expense} style={{height:'100%', width:'100%'}} />
+          //     </View>
+          //     <View style={{width:'50%', marginLeft:vh(3)}}>
+          //         <CustomText title={item?.category} isBold />
+          //         <CustomText title={item?.description?.length > 60 ? `${(item?.description).substring(0,60)}...` : item?.description} style={{fontSize:12}} />
+          //     </View>
+          //     <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
+          //         <View>
+          //             {item?.expenseType == 'Expense' ? (
+          //                 <Image source={Images.decrease} style={{height:20,width:20}} />
+          //             ):(
+          //                 <Image source={Images.increase} style={{height:20,width:20}} />
+          //             )}
+          //         </View>
+          //         <View>
+          //             <CustomText title={item?.incomeAmount == 0 ? `${'\u20B9'}${(item?.expenseAmount).toFixed(2)}` : `${'\u20B9'}${(item?.incomeAmount).toFixed(2)}`} />
+          //         </View>
     
-              </View>
-          </View>
-          <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-              <CustomText title={`${item?.expenseDate}`} style={{fontSize:11}} />
-          </View>
-          </LinearGradient>
+          //     </View>
+          // </View>
+          // <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
+          //     <CustomText title={`${item?.expenseDate}`} style={{fontSize:11}} />
+          // </View>
+          // </LinearGradient>
       )
       }
       const renderEmpty = () => {
@@ -113,9 +190,9 @@ const CreditHistory = (props) => {
         );
       }
     return(
-        <ImageBackground source={Images.back_1} style={{flex:1}}>
+        <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
         <TouchableOpacity onPress={goBack} style={{height:25, width:25, marginTop:vh(2), marginLeft:vw(2)}}>
-          <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
+          <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:'100%', width:'100%'}} />
         </TouchableOpacity>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden'}}>
           <ImageBackground source={data?.cardImage} style={{height:200, width:'100%'}}>
@@ -165,22 +242,31 @@ const CreditHistory = (props) => {
         </View>
         <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
           <View>
-            <CustomText title={'Transaction History'} isBold />
+            <CustomText title={'Transaction History'} isBold style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           <View style={{marginTop:vh(1)}}>
             <FlatList style={{paddingTop:vh(1), marginBottom:vh(37.3)}} data={expenseData} renderItem={renderExpense} ListEmptyComponent={renderEmpty} showsVerticalScrollIndicator={false} />
           </View>
         </View>
-      </ImageBackground>
+      </View>
     )
 }
 
 const mapStateToProps = state => ({
     expense: state.expenseData,
     total: state.totalAmt,
-    creditCard: state.credit
+    creditCard: state.credit,
+    themeMode: state.theme
   })
 
-export default connect(mapStateToProps, null)(CreditHistory)
+const mapDispatchToProps = dispatch => {
+  return{
+    delete_expense: id => {
+      dispatch(delete_expense(id))
+  }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreditHistory)
 
 const styles = StyleSheet.create({})

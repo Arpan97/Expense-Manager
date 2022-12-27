@@ -23,7 +23,7 @@ const Privacy = (props) => {
     }
   },[props?.themeMode, nightMode])
   return (
-    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:nightMode == true ? Colors.black : Colors.backgroundColor }}>
       <View style={{flexDirection:'row'}}>
         <TouchableOpacity style={{marginTop:vh(2), marginLeft:vh(2)}} onPress={()=>navigation.goBack()}>
           <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:20, width:20}} />
@@ -51,7 +51,7 @@ const Privacy = (props) => {
             <CustomText title= {'Email Us'} style={{fontSize:12, textAlign:'center',color:nightMode == true ? Colors.white : Colors.textColor}} isBold />
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 

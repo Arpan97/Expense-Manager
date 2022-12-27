@@ -113,7 +113,7 @@ const Dashboard = props => {
       {/* header section  */}
       <View style={{flexDirection:'row', width:'90%', alignSelf:'center', marginTop:vh(2)}}>
         <TouchableOpacity onPress={()=>navigation.openDrawer()} style={{width:'10%', justifyContent:'center', alignItems:'center', marginRight:vw(4)}}>
-          <Image source={Images.menu} style={{height:30, width:30}} />
+          <Image source={ nightMode == true ? Images.menu_white : Images.menu} style={{height:30, width:30}} />
         </TouchableOpacity>
         <View style={{justifyContent:'center', width:'74%'}}>
           <CustomText title={`Good ${greet}, ${props?.user?.name == '' ? 'User' : props?.user?.name}`} isBold style={{fontSize:15, color:nightMode == true ? Colors.white : Colors.textColor}} />
@@ -121,9 +121,9 @@ const Dashboard = props => {
         {/* <TouchableOpacity style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
           <Image source={Images.show_account} style={{height:25, width:25}} />
         </TouchableOpacity> */}
-        <TouchableOpacity onPress={()=>navigation.navigate('Report')} style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
+        {/* <TouchableOpacity onPress={()=>navigation.navigate('Report')} style={{width:'10%', justifyContent:'center', alignItems:'center'}}>
           <Image source={Images.calendar} style={{height:25, width:25}} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* total amount section  */}

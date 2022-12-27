@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import Images from '../utils/images';
 import { useNavigation } from '@react-navigation/native';
 import AlertBox from '../utils/AlertBox'
+import { useMemo } from 'react';
 const {height, width} = Dimensions.get('window')
 
 const DrawerContainer = (props) => {
@@ -16,6 +17,15 @@ const DrawerContainer = (props) => {
   const navigation = useNavigation();
   const [isPremium, setIsPremium] = useState(false)
   const [premiumTime, setPremiumTime] = useState('')
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
   const getUserData = () => {
     let data = props?.user
     setName(data?.name)
@@ -69,7 +79,7 @@ const DrawerContainer = (props) => {
     getUserData()
   },[props?.user])
   return (
-    <DrawerContentScrollView {...props} style={[Styles.container]} drawerLabelStyle={Styles.item}>
+    <DrawerContentScrollView {...props} style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.themeColor, width:width/1.5, height:'100%'}} drawerLabelStyle={Styles.item}>
         <View style={{flexDirection:'row'}}>
             <View style={{backgroundColor:Colors.white, width:90, height:90, overflow:'hidden', borderRadius:60, borderWidth:1, borderColor:Colors.borderColor, elevation:3, marginLeft:vw(2), marginTop:vh(2)}}>
                 <Image source={img ? {uri:img} : Images.user} style={{height: '100%', width: '100%', overflow:'hidden'}} />
@@ -256,7 +266,8 @@ const DrawerContainer = (props) => {
 
 const mapStateToProps = state => ({
     user: state.userData,
-    premiumData: state.premium
+    premiumData: state.premium,
+    themeMode: state.theme
   })
 
 export default connect (mapStateToProps, null)(DrawerContainer);

@@ -8,7 +8,7 @@ import {
   ImageBackground,
   Text,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import Images from '../../utils/images';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -27,6 +27,26 @@ const Investment = props => {
   const [totalInvest, setTotalInvest] = useState(0);
   const [allInvest, setAllInvest] = useState(0);
   const [category, setCategory] = useState('')
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const searchFunctionality = txt => {
     setSearch(txt);
@@ -107,12 +127,12 @@ const Investment = props => {
     );
   };
   return (
-    <ImageBackground source={Images.back_1} style={styles.container}>
+    <View style={{flex:1, width:'100%', alignSelf:'center', backgroundColor:nightMode == true ? Colors.black : Colors.backgroundColor}}>
       <View style={styles.header_view}>
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
           style={styles.back_btn_view}>
-          <Image source={Images.menu} style={styles.menu_icn} />
+          <Image source={nightMode == true ? Images.menu_white : Images.menu} style={styles.menu_icn} />
         </TouchableOpacity>
         <View style={styles.input_view}>
           <TextInput
@@ -172,12 +192,13 @@ const Investment = props => {
         />
       </View>
       <CustomInvestFav />
-    </ImageBackground>
+    </View>
   );
 };
 
 const mapStateToProps = state => ({
   investment: state.invest,
+  themeMode: state.theme
 });
 
 export default connect(mapStateToProps, null)(Investment);

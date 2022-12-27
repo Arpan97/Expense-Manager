@@ -18,6 +18,7 @@ import Snack from '../../utils/snackbar';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import Notify from '../../utils/Dialog';
+import { useMemo } from 'react';
 
 const AddGoal = props => {
   const [catImgs, setCatImgs] = useState([
@@ -45,6 +46,26 @@ const AddGoal = props => {
   const [checkComplete, setCheckComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [nightMode, setNightMode] = useState(false)
+
+  useMemo(()=>{
+    if(props?.themeMode == false){
+      setNightMode(false)
+    }else if(props?.themeMode == true){
+      setNightMode(true)
+    }
+  },[props?.themeMode, nightMode])
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if(props?.themeMode == false){
+        setNightMode(false)
+      }else if(props?.themeMode == true){
+        setNightMode(true)
+      }
+    });
+    return unsubscribe;
+  }, [navigation, props?.themeMode]);
 
   const checkGoal = () => {
     goals.filter((item, index) => {
@@ -98,25 +119,16 @@ const AddGoal = props => {
   }, [props?.goal]);
 
   return (
-    <View style={{backgroundColor: Colors.themeColor, flex: 1}}>
-      <View style={{backgroundColor: Colors.themeColor, flex: 0.25}}>
-        <View style={{top: vh(8), marginLeft: vw(4)}}>
+    <View style={{backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor, flex: 1}}>
+        <View style={{top: vh(3), justifyContent:'center', alignItems:'center'}}>
           <CustomText
-            title={`Create your new ${'\n'}saving goal!`}
+            title={`Create your new saving goal!`}
             isBold
-            style={{fontSize: 25, color: Colors.white}}
+            style={{fontSize: 20, color: nightMode == true ? Colors.white : Colors.textColor}}
           />
         </View>
-      </View>
-      <ImageBackground style={{
-        flex:1,
-        borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          elevation: 3,
-          overflow:'hidden',
-          marginTop: vh(8),
-        }} source={Images.back_1}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+      
+          <ScrollView showsVerticalScrollIndicator={false} style={{marginTop:vh(8)}}>
         <View>
           <ScrollView
             horizontal
@@ -133,7 +145,9 @@ const AddGoal = props => {
                     justifyContent:'center',
                     alignItems:'center',
                     height:110,
-                    width:120
+                    width:120,
+                    backgroundColor:nightMode == true ? Colors.white : null,
+                    marginLeft:nightMode == true ? vw(1) : null
                   }}>
                   <Image source={item?.img} style={{height: 40, width: 40}} />
                   <CustomText title={item?.title} isBold style={{fontSize:12, marginTop:vh(1)}} />
@@ -148,18 +162,19 @@ const AddGoal = props => {
               alignSelf: 'center',
             }}>
             <View>
-              <CustomText title={'Goal title'} isRegular />
+              <CustomText title={'Goal title'} isRegular style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
-            <View>
+            <View style={{marginTop:vh(0.6)}}>
               <TextInput
                 placeholder="Enter your goal..."
                 value={title}
                 onChangeText={txt => setTitle(txt)}
                 style={[
-                  Textstyles.bold,
+                  Textstyles.medium,
                   {
-                    borderBottomWidth: 1,
-                    borderColor: Colors.black + 50,
+                    color: Colors.black,
+                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
+                    borderRadius:10
                   },
                 ]}
               />
@@ -172,19 +187,20 @@ const AddGoal = props => {
               alignSelf: 'center',
             }}>
             <View>
-              <CustomText title={'Target Amount'} isRegular />
+              <CustomText title={'Target Amount'} isRegular style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
-            <View>
+            <View style={{marginTop:vh(0.6)}}>
               <TextInput
                 placeholder="Enter amount..."
                 value={amount}
                 onChangeText={amt => setAmount(amt)}
                 keyboardType="number-pad"
                 style={[
-                  Textstyles.bold,
+                  Textstyles.medium,
                   {
-                    borderBottomWidth: 1,
-                    borderColor: Colors.black + 50,
+                    color: Colors.black,
+                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
+                    borderRadius:10
                   },
                 ]}
               />
@@ -192,6 +208,30 @@ const AddGoal = props => {
           </View>
         </View>
         <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: vh(4),
+            marginBottom: vh(2),
+          }}>
+          <CustomButton
+            onPress={() => navigation.goBack()}
+            btnStyle={{backgroundColor: Colors.transparent}}
+            title={'Cancel'}
+            txtStyle={{ color: nightMode == true ? Colors.white : Colors.textColor}}
+          />
+          <CustomButton
+            onPress={() => addNewGoal()}
+            title={'Save Goal'}
+            btnStyle={{
+              backgroundColor: Colors.themeColor,
+              borderRadius: 10,
+              elevation: 3,
+            }}
+            txtStyle={{color: Colors.white}}
+          />
+        </View>
+        {/* <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
@@ -213,16 +253,17 @@ const AddGoal = props => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{justifyContent: 'center', alignItems: 'center'}}>
-          <CustomText title={'Cancel'} isBold style={{fontSize: 14}} />
-        </TouchableOpacity>
+          <CustomText title={'Cancel'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
+        </TouchableOpacity> */}
         </ScrollView>
-        </ImageBackground>
+        
     </View>
   );
 };
 
 const mapStateToProps = state => ({
   goal: state.goalData,
+  themeMode: state.theme
 });
 
 const mapDispatchToProps = dispatch => {
