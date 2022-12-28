@@ -14,6 +14,7 @@ import CustomButton from '../../components/CustomButton';
 import Notify from '../../utils/Dialog';
 import moment from 'moment';
 import Images from '../../utils/images';
+import CustomInput from '../../components/CustomComponent/CustomInput';
 
 const DepositGoal = props => {
   const navigation = useNavigation();
@@ -107,21 +108,7 @@ const DepositGoal = props => {
               <CustomText title={'Goal title'} isBold style={{fontSize: 13, color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-              <TextInput
-                value={goalCat}
-                placeholderTextColor={Colors.black}
-                editable={false}
-                style={[
-                  Textstyles.medium,
-                  {
-                    color: Colors.black,
-                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
-                    borderRadius:10,
-                    // borderColor: nightMode == true ? Colors.white : Colors.black,
-                    // borderWidth:0.6
-                  },
-                ]}
-              />
+              <CustomInput value={goalCat} editable={false} />
             </View>
           </View>
           <View
@@ -138,7 +125,8 @@ const DepositGoal = props => {
               />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-              <TextInput
+            <CustomInput keyboardType="number-pad" value={depositAmt} editable={false} placeholder={'Enter amount to deposit'} onChangeText={amt => setDepositAmt(amt)} />
+              {/* <TextInput
                 placeholder="Enter amount to save"
                 value={depositAmt}
                 placeholderTextColor={nightMode == true ? Colors.white : Colors.textColor}
@@ -154,7 +142,7 @@ const DepositGoal = props => {
                     // borderWidth:0.6
                   },
                 ]}
-              />
+              /> */}
             </View>
           </View>
         </View>
@@ -163,10 +151,19 @@ const DepositGoal = props => {
         </View>
         <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: vh(5),
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: vh(4),
+            marginBottom: vh(2),
           }}>
+          <CustomButton
+            onPress={() => navigation.goBack()}
+            btnStyle={{backgroundColor: Colors.transparent}}
+            title={'Cancel'}
+            txtStyle={{
+              color: nightMode == true ? Colors.white : Colors.textColor,
+            }}
+          />
           <CustomButton
             onPress={() => addNewDeposit()}
             btnStyle={{
@@ -180,11 +177,6 @@ const DepositGoal = props => {
             txtStyle={{color: Colors.white}}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{justifyContent: 'center', alignItems: 'center'}}>
-          <CustomText title={'Cancel'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
-        </TouchableOpacity>
     </View>
   );
 };

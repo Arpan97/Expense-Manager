@@ -39,6 +39,10 @@ useMemo(() => checkState, [])
             ? Textstyles.light
             : props?.isRegular
             ? Textstyles.regular
+            : props?.isCardBold
+            ? Textstyles.card_bold
+            : props?.isCardRegular
+            ? Textstyles.card_regular
             : Textstyles.medium,
           {
             // color: nightMode == true ? Colors.white : Colors.textColor,

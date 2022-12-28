@@ -9,6 +9,8 @@ import Images from '../utils/images';
 import { useNavigation } from '@react-navigation/native';
 import AlertBox from '../utils/AlertBox'
 import { useMemo } from 'react';
+import TouchID from 'react-native-touch-id';
+import Notify from '../utils/Dialog';
 const {height, width} = Dimensions.get('window')
 
 const DrawerContainer = (props) => {
@@ -36,6 +38,18 @@ const DrawerContainer = (props) => {
     navigation.navigate('Premium')
   }
 
+  const optionalConfigObject = {
+    title: 'Authentication Required', // Android
+    imageColor: Colors.themeColor, // Android
+    imageErrorColor: '#ff0000', // Android
+    sensorDescription: 'Authenticate to access this folder', // Android
+    sensorErrorDescription: 'Access failed. Please try again', // Android
+    cancelText: 'Cancel', // Android
+    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+    unifiedErrors: false, // use unified error messages (default false)
+    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+  };
+
   const checkPremium = (txt) => {
     if(isPremium){
         if(txt == 'Bank'){
@@ -44,6 +58,14 @@ const DrawerContainer = (props) => {
             navigation.navigate('Drawer',{screen:'Invest'})
         }else if(txt == 'Credit'){
             navigation.navigate('Drawer', {screen:'CreditCard'})
+        }else if(txt == 'Details'){
+            TouchID.authenticate('Please verify your fingerprint to access this folder', optionalConfigObject)
+            .then(success => {
+                navigation.navigate('Drawer', {screen:'BankInfo'})
+            })
+            .catch(error => {
+                Notify('error','Cancelled', 'Authentication is required for access')
+            });
         }
     }else{
         AlertBox('warning','Warning','Please subscribe to use this feature. You can choose trial version for 1 Month')
@@ -215,6 +237,16 @@ const DrawerContainer = (props) => {
                     )}
                 </TouchableOpacity>
             </View>
+            {/* <View style={{paddingVertical:vh(0.6)}}>
+                <TouchableOpacity onPress={()=>checkPremium('Details')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
+                    <View style={{width:'20%', alignItems:'center'}}>
+                        <Image source={Images.account} style={{height:25, width:25}} />
+                    </View>
+                    <View style={{width:'60%', justifyContent:'center'}}>
+                        <CustomText title={'Bank Information'} isBold />
+                    </View>
+                </TouchableOpacity>
+            </View> */}
             {isPremium && (
                 <View style={{paddingVertical:vh(0.6)}}>
                     <TouchableOpacity onPress={()=>navigation.navigate('Premium')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>

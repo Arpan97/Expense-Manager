@@ -165,8 +165,19 @@ const CategoryWise = props => {
 
   const emptyComponent = () => {
     return (
-      <View>
-        <CustomText title={'No history found...'} style={{fontSize: 13}} />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: vh(20),
+        }}>
+        <Image
+          source={{
+            uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/no-results-found-5732789-4812665.png',
+          }}
+          style={{height: 200, width: 200}}
+        />
       </View>
     );
   };

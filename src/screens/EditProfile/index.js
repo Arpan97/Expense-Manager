@@ -20,10 +20,10 @@ import CustomText from '../../components/CustomText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {connect} from 'react-redux';
 import {save_user_data} from '../../redux/Action/Action';
-import Snack from '../../utils/snackbar';
-import CustomLoader from '../../components/CustomLoader';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
+import Notify from '../../utils/Dialog'
+import CustomInput from '../../components/CustomComponent/CustomInput';
 
 const EditProfile = props => {
   let data = props?.route?.params?.data;
@@ -75,8 +75,8 @@ const EditProfile = props => {
       image: profileDp,
     };
     props?.save_user(body);
-      Snack('Profile updated successfully');
-      navigation.goBack();
+    Notify('success', "Updated", "Your profile has been updated successfully")
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -92,15 +92,15 @@ const EditProfile = props => {
   },[props?.themeMode, nightMode])
 
   return (
-    <ImageBackground source={nightMode == true ? Images.black_1 : Images.back_1} style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
       {/* header */}
       <View style={{flexDirection:'row', marginTop:vh(2)}}>
         {/* <CustomHeader isBack /> */}
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={{ width:'15%', justifyContent:'center', alignItems:'center'}}>
+        {/* <TouchableOpacity onPress={()=>navigation.goBack()} style={{ width:'15%', justifyContent:'center', alignItems:'center'}}>
           <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height:25, width:25}} />
-        </TouchableOpacity>
-        <View style={{width:'70%', alignSelf:'center', alignItems:'center', justifyContent:'center'}}>
-          <CustomText title={'Edit Profile'} isBold style={{fontSize:18, color:nightMode == true ? Colors.white : Colors.themeColor}}  />
+        </TouchableOpacity> */}
+        <View style={{width:'100%', alignSelf:'center', alignItems:'center', justifyContent:'center'}}>
+          <CustomText title={'Edit Profile'} isBold style={{fontSize:18, color:nightMode == true ? Colors.white : Colors.textColor}}  />
         </View>
       </View>
       {/* img view  */}
@@ -139,44 +139,18 @@ const EditProfile = props => {
                   alignSelf: 'center',
                   marginBottom: vh(1),
                 }}>
-                <CustomText title={'Name'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
+                <CustomText title={'Name'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor, fontSize:12}} />
               </View>
               <View
                 style={{
                   width: '95%',
                   alignSelf: 'center',
-                  borderRadius: 5,
-                  elevation: 3,
-                  backgroundColor: Colors.white,
                 }}>
-                <TextInput
-                  placeholder="Enter your name"
-                  value={name}
-                  onChangeText={txt => setName(txt)}
-                />
-              </View>
-              <View
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginTop: vh(2),
-                  marginBottom: vh(1),
-                }}>
-                <CustomText title={'Email'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
-              </View>
-              <View
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  borderRadius: 5,
-                  elevation: 3,
-                  backgroundColor: Colors.white,
-                }}>
-                <TextInput
-                  placeholder="Enter your email"
-                  value={email}
-                  onChangeText={txt => setEmail(txt)}
-                />
+                  <CustomInput
+                    value={name}
+                    onChangeText={txt => setName(txt)}
+                    placeholder={'Enter your name'}
+                  />
               </View>
               <View
                 style={{
@@ -185,37 +159,65 @@ const EditProfile = props => {
                   marginTop: vh(2),
                   marginBottom: vh(1),
                 }}>
-                <CustomText title={'Mobile'} style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
+                <CustomText title={'Email'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor, fontSize:12}} />
               </View>
               <View
                 style={{
                   width: '95%',
                   alignSelf: 'center',
-                  borderRadius: 5,
-                  elevation: 3,
-                  backgroundColor: Colors.white,
                 }}>
-                <TextInput
-                  placeholder="Enter your mobile"
-                  value={mobile}
-                  onChangeText={txt => setMobile(txt)}
-                  keyboardType="number-pad"
-                  maxLength={10}
-                />
+                  <CustomInput
+                    value={email}
+                    onChangeText={txt => setEmail(txt)}
+                    placeholder={'Enter your email'}
+                  />
               </View>
-              <CustomButton
-                onPress={() => updateProfile()}
-                title={'Update'}
-                txtStyle={{color: Colors.white}}
-                btnStyle={{
-                  marginTop: vh(4),
-                  backgroundColor: Colors.themeColor,
-                  borderRadius: 10,
-                  elevation: 3,
-                  marginBottom: vh(2),
+              <View
+                style={{
+                  width: '95%',
                   alignSelf: 'center',
-                }}
-              />
+                  marginTop: vh(2),
+                  marginBottom: vh(1),
+                }}>
+                <CustomText title={'Mobile'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor, fontSize:12}} />
+              </View>
+              <View
+                style={{
+                  width: '95%',
+                  alignSelf: 'center',
+                }}>
+                  <CustomInput
+                    value={mobile}
+                    onChangeText={txt => setMobile(txt)}
+                    placeholder={'Enter your mobile'}
+                    keyboardType={'number-pad'}
+                    maxLength={10}
+                  />
+              </View>
+              <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: vh(4),
+            marginBottom: vh(2),
+          }}>
+          <CustomButton
+            onPress={() => navigation.goBack()}
+            btnStyle={{backgroundColor: Colors.transparent}}
+            title={'Cancel'}
+            txtStyle={{ color: nightMode == true ? Colors.white : Colors.textColor}}
+          />
+          <CustomButton
+            onPress={() => updateProfile()}
+            title={'Update Profile'}
+            btnStyle={{
+              backgroundColor: Colors.themeColor,
+              borderRadius: 10,
+              elevation: 3,
+            }}
+            txtStyle={{color: Colors.white}}
+          />
+        </View>
             </KeyboardAwareScrollView>
           </>
       {/* modal view  */}
@@ -302,7 +304,7 @@ const EditProfile = props => {
           </View>
         </Modal>
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 

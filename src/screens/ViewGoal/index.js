@@ -15,14 +15,13 @@ import {
 import Images from '../../utils/images';
 import {FlatList} from 'react-native';
 import CustomText from '../../components/CustomText';
-import Slider from '@react-native-community/slider';
 import {connect} from 'react-redux';
 import {delete_goal, update_goal} from '../../redux/Action/Action';
-import Snack from '../../utils/snackbar';
 import {useNavigation} from '@react-navigation/native';
 import CustomFav from '../../components/CustomFav';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomGoalFav from '../../components/Fav/GoalFav';
+import { ProgressBar, MD3Colors } from 'react-native-paper';
 
 const ViewGoal = props => {
   const [search, setSearch] = useState('');
@@ -78,6 +77,8 @@ const ViewGoal = props => {
     a?.map((c, d) => {
       totalAmount = totalAmount + c?.depositAmt;
     });
+
+    let d = totalAmount / item?.amount
     return (
       <View style={styles.flatlist_container}>
         <View style={styles.header_view}>
@@ -96,15 +97,7 @@ const ViewGoal = props => {
           </TouchableOpacity> */}
         </View>
         <View>
-          <Slider
-            style={styles.slider}
-            maximumValue={parseInt(item?.amount)}
-            value={totalAmount}
-            maximumTrackTintColor="blue"
-            thumbTintColor={Colors.themeColor}
-            thumbImage={Images.circle}
-            disabled={true}
-          />
+          <ProgressBar progress={d} color={Colors.themeColor} />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View>
@@ -185,7 +178,6 @@ const ViewGoal = props => {
 
   const delete_goal = id => {
     props?.delete_goal(id);
-    Snack('Goal deleted successfully');
   };
 
   const search_functionality = text => {
@@ -259,7 +251,7 @@ const ViewGoal = props => {
         <>
           <LinearGradient
             colors={['#E7F5FF', '#BDDDFF']}
-            style={{paddingVertical: vh(4), marginTop: vh(2)}}>
+            style={{paddingVertical: vh(4), marginTop: vh(2), width:'92%', alignSelf:'center', borderRadius:10}}>
             <View
               style={{
                 justifyContent: 'center',

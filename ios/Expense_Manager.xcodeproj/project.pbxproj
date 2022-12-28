@@ -18,6 +18,8 @@
 		E0E3D33D3C21421288F4DDC3 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50B7844B262E4902AFBAEBF0 /* Roboto-Light.ttf */; };
 		F4A8C7AB6EC44719BD55D2A2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDB853E6546C40BEBC39C415 /* Roboto-Medium.ttf */; };
 		A66E5275DCCA47A8BC53D10A /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 709B006E5C2541548F7FC1F5 /* Roboto-Regular.ttf */; };
+		5B2188DE42CC4A4097521296 /* GemunuLibre-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0434D821F4BE4523963E6FC5 /* GemunuLibre-Bold.ttf */; };
+		B1D45341A7F54B43952572B0 /* GemunuLibre-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41FD71B955FB42EAAE79D791 /* GemunuLibre-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		50B7844B262E4902AFBAEBF0 /* Roboto-Light.ttf */ = {isa = PBXFileReference; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		DDB853E6546C40BEBC39C415 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		709B006E5C2541548F7FC1F5 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0434D821F4BE4523963E6FC5 /* GemunuLibre-Bold.ttf */ = {isa = PBXFileReference; name = "GemunuLibre-Bold.ttf"; path = "../src/assets/fonts/GemunuLibre-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		41FD71B955FB42EAAE79D791 /* GemunuLibre-Regular.ttf */ = {isa = PBXFileReference; name = "GemunuLibre-Regular.ttf"; path = "../src/assets/fonts/GemunuLibre-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,8 @@
 				50B7844B262E4902AFBAEBF0 /* Roboto-Light.ttf */,
 				DDB853E6546C40BEBC39C415 /* Roboto-Medium.ttf */,
 				709B006E5C2541548F7FC1F5 /* Roboto-Regular.ttf */,
+				0434D821F4BE4523963E6FC5 /* GemunuLibre-Bold.ttf */,
+				41FD71B955FB42EAAE79D791 /* GemunuLibre-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -269,6 +275,8 @@
 				E0E3D33D3C21421288F4DDC3 /* Roboto-Light.ttf in Resources */,
 				F4A8C7AB6EC44719BD55D2A2 /* Roboto-Medium.ttf in Resources */,
 				A66E5275DCCA47A8BC53D10A /* Roboto-Regular.ttf in Resources */,
+				5B2188DE42CC4A4097521296 /* GemunuLibre-Bold.ttf in Resources */,
+				B1D45341A7F54B43952572B0 /* GemunuLibre-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

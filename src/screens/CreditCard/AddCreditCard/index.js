@@ -11,6 +11,7 @@ import { credit_card, update_credit } from '../../../redux/Action/Action'
 import { Cards } from '../../../utils/constants'
 import Notify from '../../../utils/Dialog'
 import { useMemo } from 'react'
+import CustomInput from '../../../components/CustomComponent/CustomInput'
 
 const AddCreditCard = (props) => {
     // console.log('the props route', props?.route?.params?.data)
@@ -25,6 +26,7 @@ const AddCreditCard = (props) => {
     const [cardSelect, setCardSelect] = useState('')
     const [payableTime, setPayableTime] = useState(data == undefined ? '' : data?.payableTime)
     const [nightMode, setNightMode] = useState(false)
+    const [error, setError] = useState('')
 
   useMemo(()=>{
     if(props?.themeMode == false){
@@ -48,64 +50,126 @@ const AddCreditCard = (props) => {
     const updateCreditCard = () => {
         var date = new Date();
         date.setDate(date.getDate() + parseInt(payableTime));
-        let obj = {
-            id:data?.id,
-            title:name,
-            openingAmt: parseInt(openingAmt),
-            img: Images.bank,
-            totalIncome:0,
-            totalExpense:0,
-            totalBal:0,
-            accHolder:userName,
-            cardNum:cardNo,
-            expiryDate:expiry,
-            cvv:cvv,
-            cardImage:cardSelect?.card_img,
-            payableTime:date
+        if(userName != ''){
+          if(openingAmt != 0){
+            if(name != ''){
+              if(cardNo != ''){
+                if(expiry != ''){
+                  if(cvv != ''){
+                    if(payableTime != ''){
+                      let obj = {
+                        id:data?.id,
+                        title:name,
+                        openingAmt: parseInt(openingAmt),
+                        img: Images.bank,
+                        totalIncome:0,
+                        totalExpense:0,
+                        totalBal:0,
+                        accHolder:userName,
+                        cardNum:cardNo,
+                        expiryDate:expiry,
+                        cvv:cvv,
+                        cardImage:cardSelect?.card_img,
+                        payableTime:date
+                    }
+                    setError(false)
+                    props?.update_credit(obj)
+                    navigation.replace('Drawer', {screen:'CreditCard'})
+                    Notify('success', "Successfully", "Your card detail updated successfully")
+                    }else{
+                      setError(true)
+                    }
+                  }else{
+                    setError(true)
+                  }
+                }else{
+                  setError(true)
+                }
+              }else{
+                setError(true)
+              }
+            }else{
+              setError(true)
+            }
+          }else{
+            setError(true)
+          }
+        }else{
+          setError(true)
         }
-        props?.update_credit(obj)
-        navigation.replace('Drawer', {screen:'CreditCard'})
-        Notify('success', "Successfully", "Your card detail updated successfully")
     }
     const addNewCard = () => {
       var date = new Date(); // Now
       date.setDate(date.getDate() + parseInt(payableTime)); // Set now + 30 days as the new date
-        let body = {
-            id: Math.random().toString(16).slice(2),
-            title: name,
-            openingAmt: parseInt(openingAmt),
-            img: Images.bank,
-            totalIncome:0,
-            totalExpense:0,
-            totalBal:0,
-            accHolder:userName,
-            cardNum:cardNo,
-            expiryDate:expiry,
-            cvv:cvv,
-            cardImage: cardSelect?.card_img,
-            payableTime: date
+      if(userName != ''){
+        if(openingAmt != 0){
+          if(name != ''){
+            if(cardNo != ''){
+              if(expiry != ''){
+                if(cvv != ''){
+                  if(payableTime != ''){
+                    let body = {
+                      id: Math.random().toString(16).slice(2),
+                      title: name,
+                      openingAmt: parseInt(openingAmt),
+                      img: Images.bank,
+                      totalIncome:0,
+                      totalExpense:0,
+                      totalBal:0,
+                      accHolder:userName,
+                      cardNum:cardNo,
+                      expiryDate:expiry,
+                      cvv:cvv,
+                      cardImage: cardSelect?.card_img,
+                      payableTime: date
+                  }
+                  setError(false)
+                  props?.save_credit(body)
+                  navigation.replace('Drawer',{screen:'CreditCard'})
+                  Notify('success', "Successfully", "Your card detail saved successfully")
+                  }else{
+                    setError(true)
+                  }
+                }else{
+                  setError(true)
+                }
+              }else{
+                setError(true)
+              }
+            }else{
+              setError(true)
+            }
+          }else{
+            setError(true)
+          }
+        }else{
+          setError(true)
         }
-        props?.save_credit(body)
-        navigation.replace('Drawer',{screen:'CreditCard'})
-        Notify('success', "Successfully", "Your card detail saved successfully")
+      }else{
+        setError(true)
+      }
+        
     }
   return (
     <View style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor}}>
-      {/* <View style={{flexDirection:'row', marginTop:vh(1), marginLeft:vw(3)}}>
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={{height:22, width:22}}>
-            <Image source={Images.back_3d} style={{height:'100%', width:'100%'}} />
-        </TouchableOpacity>
-        <View style={{width:'85%', alignItems:'center', justifyContent:'center'}}>
-            <CustomText title={'Add Bank Account'} isBold style={{fontSize:16, color:Colors.themeColor}} />
+      <View style={{flexDirection:'row', marginTop:vh(1), marginLeft:vw(3)}}>
+        
+        <View style={{width:'100%', alignItems:'center', justifyContent:'center'}}>
+            <CustomText title={'Add Credit Card'} isBold style={{fontSize:18, color:nightMode == true ? Colors.white : Colors.textColor}} />
         </View>
-      </View> */}
+      </View>
       <ScrollView showsVerticalScrollIndicator={false} style={{marginTop:vh(3)}}>
       <View style={{width:'90%', alignSelf:'center'}}>
             <View>
                 <CustomText title={'Credit Card Holder Name'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter credit card holder name...' value={userName} onChangeText={(txt)=>setUserName(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} />
+              <CustomInput
+                value={userName}
+                onChangeText={txt => setUserName(txt)}
+                placeholder={'Enter credit card holder name'}
+                error={error == '' ? null : error}
+              />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
@@ -113,7 +177,14 @@ const AddCreditCard = (props) => {
                 <CustomText title={'Credit Card Number'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter credit number...' value={cardNo} onChangeText={(txt)=>setCardNo(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} keyboardType='number-pad' maxLength={16} />
+              <CustomInput
+                value={cardNo}
+                onChangeText={txt => setCardNo(txt)}
+                placeholder={'Enter card number'}
+                error={error == '' ? null : error}
+                maxLength={16}
+                keyboardType={'number-pad'}
+              />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
@@ -121,7 +192,14 @@ const AddCreditCard = (props) => {
                 <CustomText title={'Expiry Date'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter expiry date (Enter without special characters)' value={expiry} onChangeText={(txt)=>setExpiry(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} maxLength={4} />
+            <CustomInput
+              value={expiry}
+              onChangeText={txt => setExpiry(txt)}
+              placeholder={'Enter expiry date (Enter without special characters)'}
+              error={error == '' ? null : error}
+              maxLength={4}
+              keyboardType={'number-pad'}
+            />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
@@ -129,7 +207,14 @@ const AddCreditCard = (props) => {
                 <CustomText title={'CVV'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter cvv number...' value={cvv} onChangeText={(txt)=>setCvv(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} keyboardType='number-pad' maxLength={3} />
+            <CustomInput
+              value={cvv}
+              onChangeText={txt => setCvv(txt)}
+              placeholder={'Enter cvv number'}
+              error={error == '' ? null : error}
+              maxLength={3}
+              keyboardType={'number-pad'}
+            />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
@@ -137,15 +222,26 @@ const AddCreditCard = (props) => {
                 <CustomText title={'Bank Name'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter bank name...' value={name} onChangeText={(txt)=>setName(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} />
+            <CustomInput
+              value={name}
+              onChangeText={txt => setName(txt)}
+              placeholder={'Enter bank name'}
+              error={error == '' ? null : error}
+            />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
             <View>
-                <CustomText title={'Available Limit'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
+                <CustomText title={'Credit Limit'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter available limit...' keyboardType='numeric' value={openingAmt} onChangeText={(txt)=>setOpeningAmt(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} />
+            <CustomInput
+              value={openingAmt}
+              onChangeText={txt => setOpeningAmt(txt)}
+              placeholder={'Enter credit limit'}
+              error={error == '' ? null : error}
+              keyboardType={'numeric'}
+            />
             </View>
         </View>
         <View style={{width:'90%', alignSelf:'center', marginTop:vh(2)}}>
@@ -153,7 +249,13 @@ const AddCreditCard = (props) => {
                 <CustomText title={'Payable Time'} style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} isBold />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-                <TextInput placeholder='Enter payable time (in days)...' keyboardType='numeric' value={payableTime} onChangeText={(txt)=>setPayableTime(txt)} style={{ color:Colors.black, fontSize:12, backgroundColor:nightMode == true ? Colors.white : Colors.white, borderRadius:10}} />
+            <CustomInput
+              value={payableTime}
+              onChangeText={txt => setPayableTime(txt)}
+              placeholder={'Enter payable time (in days)'}
+              error={error == '' ? null : error}
+              keyboardType={'numeric'}
+            />
             </View>
         </View>
         <View style={{marginTop:vh(2), width:'90%', alignSelf:'center'}}>
@@ -180,7 +282,10 @@ const AddCreditCard = (props) => {
             marginBottom: vh(2),
           }}>
           <CustomButton
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              navigation.goBack()
+              setError(false)
+            }}
             btnStyle={{backgroundColor: Colors.transparent}}
             title={'Cancel'}
             txtStyle={{ color: nightMode == true ? Colors.white : Colors.textColor}}

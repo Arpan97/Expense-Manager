@@ -14,8 +14,6 @@ import {category} from '../../utils/constants';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {add_expense} from '../../redux/Action/Action';
-import Snack from '../../utils/snackbar';
-import CustomLoader from '../../components/CustomLoader';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import CustomButton from '../../components/CustomButton';
@@ -26,7 +24,9 @@ import {
   heightPercentageToDP as vh,
 } from 'react-native-responsive-screen';
 import Textstyles from '../../utils/text';
-import { useMemo } from 'react';
+import {useMemo} from 'react';
+import {Picker} from '@react-native-picker/picker';
+import CustomInput from '../../components/CustomComponent/CustomInput';
 
 const AddExpense = props => {
   const navigation = useNavigation();
@@ -43,22 +43,22 @@ const AddExpense = props => {
   const [isBankModal, setIsbankModal] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [accountType, setAccountType] = useState('Debit');
-  const [nightMode, setNightMode] = useState(false)
+  const [nightMode, setNightMode] = useState(false);
 
-  useMemo(()=>{
-    if(props?.themeMode == false){
-      setNightMode(false)
-    }else if(props?.themeMode == true){
-      setNightMode(true)
+  useMemo(() => {
+    if (props?.themeMode == false) {
+      setNightMode(false);
+    } else if (props?.themeMode == true) {
+      setNightMode(true);
     }
-  },[props?.themeMode, nightMode])
+  }, [props?.themeMode, nightMode]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if(props?.themeMode == false){
-        setNightMode(false)
-      }else if(props?.themeMode == true){
-        setNightMode(true)
+      if (props?.themeMode == false) {
+        setNightMode(false);
+      } else if (props?.themeMode == true) {
+        setNightMode(true);
       }
     });
     return unsubscribe;
@@ -70,7 +70,7 @@ const AddExpense = props => {
     const fullDate = await `${moment(currentDate).year()}-${
       moment(currentDate).month() + 1
     }-${moment(currentDate).date()}`;
-    const dates = await currentDate
+    const dates = await currentDate;
     setCalendarDate(dates);
     setCalendarVisible(false);
   };
@@ -83,13 +83,12 @@ const AddExpense = props => {
           expenseType: typeExpense,
           account: selectAcc ? selectAcc : 'No category',
           category: selectCat,
-          categroy_img: selectCatImg,
           incomeAmount: parseInt(amount),
           expenseAmount: 0,
           description: desc,
-          expenseDate: calendarDate
-            // ? calendarDate
-            // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+          expenseDate: calendarDate,
+          // ? calendarDate
+          // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
         };
         props?.add_expense(obj);
         Notify('success', 'Income', 'Income added successfully');
@@ -104,9 +103,9 @@ const AddExpense = props => {
           incomeAmount: 0,
           expenseAmount: parseInt(amount),
           description: desc,
-          expenseDate: calendarDate
-            // ? calendarDate
-            // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+          expenseDate: calendarDate,
+          // ? calendarDate
+          // : `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
         };
 
         props?.add_expense(obj);
@@ -167,60 +166,22 @@ const AddExpense = props => {
   }, [typeExpense]);
 
   return (
-    <View style={{flex: 1, backgroundColor:nightMode == true ? Colors.black : Colors.backgroundColor}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor:
+          nightMode == true ? Colors.black : Colors.backgroundColor,
+      }}>
       <ScrollView>
         <View>
-          {/* header  */}
-          {/* <View style={{flexDirection: 'row', width: '100%'}}>
-              <TouchableOpacity
-                onPress={() => setTypeExpense('Income')}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor:
-                    typeExpense == 'Income'
-                      ? Colors.themeColor
-                      : Colors.backgroundColor,
-                  width: '50%',
-                  // borderWidth: 1,
-                  padding: vh(1.2),
-                  borderColor: Colors.borderColor,
-                }}>
-                <CustomText
-                  title={'Income'}
-                  style={{
-                    color: typeExpense == 'Income' ? Colors.white : Colors.black,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setTypeExpense('Expense')}
-                style={{
-                  alignItems: 'center',
-                  backgroundColor:
-                    typeExpense == 'Expense'
-                      ? Colors.red
-                      : Colors.backgroundColor,
-                  width: '50%',
-                  // borderWidth: 1,
-                  padding: vh(1.2),
-                  borderColor: Colors.borderColor,
-                }}>
-                <CustomText
-                  title={'Expense'}
-                  style={{
-                    color: typeExpense == 'Expense' ? Colors.white : Colors.black,
-                  }}
-                />
-              </TouchableOpacity>
-            </View> */}
           <View
             style={{
               width: '95%',
               flexDirection: 'row',
               backgroundColor:
-              typeExpense == 'Income'
-                ? Colors.themeColor
-                : Colors.backgroundColor,
+                typeExpense == 'Income'
+                  ? Colors.themeColor
+                  : Colors.backgroundColor,
               elevation: 3,
               alignSelf: 'center',
               borderRadius: 3,
@@ -234,7 +195,7 @@ const AddExpense = props => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor:
-                typeExpense == 'Income' ? Colors.themeColor : Colors.white,
+                  typeExpense == 'Income' ? Colors.themeColor : Colors.white,
               }}
               onPress={() => setTypeExpense('Income')}>
               <CustomText
@@ -274,7 +235,14 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Choose category'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText
+                title={'Choose category'}
+                isBold
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                  fontSize: 12,
+                }}
+              />
             </View>
             <View
               style={{
@@ -287,50 +255,23 @@ const AddExpense = props => {
                 paddingTop: vh(1.2),
                 paddingBottom: vh(0.5),
               }}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => setIsCatModal(!isCatModal)}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  borderBottomWidth: isCatModal ? 1 : 0,
-                  borderColor: Colors.borderColor,
-                  paddingBottom: vh(1),
-                }}>
-                <CustomText title={selectCat ? selectCat : 'Choose Category'} />
-                <Image
-                  source={Images.back_black}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    transform: [{rotate: isCatModal ? '90deg' : '270deg'}],
-                  }}
-                />
-              </TouchableOpacity>
-              {isCatModal && (
-                <ScrollView>
-                  {categories?.map((item, index) => {
-                    return (
-                      <View
-                        style={{
-                          backgroundColor: Colors.white,
-                          borderBottomWidth: 1,
-                          borderColor: Colors.borderColor,
-                          padding: vh(1),
-                        }}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            setIsCatModal(false),
-                              setSelectCat(item?.category),
-                              setSelectCatImg(item?.img);
-                          }}>
-                          <CustomText title={item?.category} />
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-                </ScrollView>
-              )}
+              <Picker
+                selectedValue={selectCat}
+                mode={'dropdown'}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectCat(itemValue)
+                }
+                style={{height: 28, bottom: vh(2), right: vw(3)}}>
+                <Picker.Item label="Select Category" value={null} />
+                {categories?.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      label={item?.category}
+                      value={item?.category}
+                    />
+                  );
+                })}
+              </Picker>
             </View>
           </View>
           {/* start  */}
@@ -342,32 +283,34 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={`Select date`} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText
+                title={`Select date`}
+                isBold
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                  fontSize: 12,
+                }}
+              />
             </View>
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => setCalendarVisible(true)}
               style={{
-                backgroundColor: Colors.white,
-                elevation: 3,
                 width: '95%',
-                borderRadius: 10,
                 alignSelf: 'center',
-                paddingHorizontal: vh(1),
-                paddingTop: vh(0.1),
-                paddingBottom: vh(0.1),
                 flexDirection: 'row',
-                justifyContent: 'space-between',
               }}>
-              <TextInput
-                placeholder="Select date"
-                value={calendarDate == '' ? calendarDate : moment(calendarDate).format('DD-MM-YYYY')}
-                keyboardType="number-pad"
-                placeholderTextColor={Colors.textColor}
+              <CustomInput
+                placeholder={'Select Date'}
+                value={
+                  calendarDate == ''
+                    ? calendarDate
+                    : moment(calendarDate).format('DD-MM-YYYY')
+                }
+                keyboardType={'number-pad'}
                 editable={false}
-                style={[Textstyles.medium,{color:Colors.textColor, width:'50%'}]}
               />
-              <View style={{marginTop: vh(2)}}>
+              <View style={{right: vw(13), top: vh(2)}}>
                 <Image
                   source={Images.calendar}
                   style={{height: 20, width: 20}}
@@ -386,31 +329,24 @@ const AddExpense = props => {
               }}>
               <CustomText
                 title={typeExpense ? `${typeExpense}` : `Enter amount`}
-                style={{color: nightMode == true ? Colors.white : Colors.textColor}}
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                }}
               />
             </View>
             <View
               style={{
-                backgroundColor: Colors.white,
-                elevation: 3,
                 width: '95%',
-                borderRadius: 10,
                 alignSelf: 'center',
-                paddingHorizontal: vh(1),
-                paddingTop: vh(0.1),
-                paddingBottom: vh(0.1),
                 flexDirection: 'row',
-                justifyContent: 'space-between',
               }}>
-              <TextInput
-                placeholder="Enter amount"
+              <CustomInput
+                placeholder={'Enter amount'}
                 value={amount}
                 onChangeText={amt => setAmount(amt)}
-                keyboardType="number-pad"
-                placeholderTextColor={Colors.textColor}
-                style={[Textstyles.medium,{width: '90%'}]}
+                keyboardType={'number-pad'}
               />
-              <View style={{marginTop: vh(2)}}>
+              <View style={{right: vw(13), top: vh(2)}}>
                 <Image
                   source={Images.totalMoney}
                   style={{height: 20, width: 20}}
@@ -427,7 +363,12 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Account Type'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText
+                title={'Account Type'}
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                }}
+              />
             </View>
             <View
               style={{
@@ -490,7 +431,12 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Choose Account'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText
+                title={'Choose Account'}
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                }}
+              />
             </View>
             {/* {props?.accountData == '' && props?.creditCard == '' ? (
                 <TouchableOpacity onPress={()=>checkPremium()} style={{marginLeft:vw(2.5)}}>
@@ -508,77 +454,38 @@ const AddExpense = props => {
                 paddingTop: vh(1.2),
                 paddingBottom: vh(0.5),
               }}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => setIsbankModal(!isBankModal)}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  borderBottomWidth: isCatModal ? 1 : 0,
-                  borderColor: Colors.borderColor,
-                  paddingBottom: vh(1),
-                }}>
-                <CustomText title={selectAcc ? selectAcc : 'Choose Account'} />
-                <Image
-                  source={Images.back_black}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    transform: [{rotate: isBankModal ? '90deg' : '270deg'}],
-                  }}
-                />
-              </TouchableOpacity>
-              {isBankModal && (
-                <ScrollView>
-                  {accountType == 'Debit' ? (
-                    <>
-                      {props?.accountData?.map((item, index) => {
-                        return (
-                          <View
-                            style={{
-                              backgroundColor: Colors.white,
-                              borderBottomWidth: 1,
-                              borderColor: Colors.borderColor,
-                              padding: vh(1),
-                            }}>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setIsbankModal(false),
-                                  setSelectAcc(item?.title);
-                              }}>
-                              <CustomText title={item?.title} />
-                            </TouchableOpacity>
-                          </View>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    <>
-                      {props?.creditCard?.map((item, index) => {
-                        return (
-                          <View
-                            style={{
-                              backgroundColor: Colors.white,
-                              borderBottomWidth: 1,
-                              borderColor: Colors.borderColor,
-                              padding: vh(1),
-                            }}>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setIsbankModal(false),
-                                  setSelectAcc(item?.title);
-                              }}>
-                              <CustomText title={item?.title} />
-                            </TouchableOpacity>
-                          </View>
-                        );
-                      })}
-                    </>
-                  )}
-                </ScrollView>
+              {accountType == 'Debit' ? (
+                <Picker
+                  selectedValue={selectAcc}
+                  mode={'dropdown'}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectCat(itemValue)
+                  }
+                  style={{height: 28, bottom: vh(2), right: vw(3)}}>
+                  <Picker.Item label="Select Account" value={null} />
+                  {props?.accountData?.map((item, index) => {
+                    return (
+                      <Picker.Item label={item?.title} value={item?.title} />
+                    );
+                  })}
+                </Picker>
+              ) : (
+                <Picker
+                  selectedValue={selectAcc}
+                  mode={'dropdown'}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectCat(itemValue)
+                  }
+                  style={{height: 28, bottom: vh(2), right: vw(3)}}>
+                  <Picker.Item label="Select Account" value={null} />
+                  {props?.creditCard?.map((item, index) => {
+                    return (
+                      <Picker.Item label={item?.title} value={item?.title} />
+                    );
+                  })}
+                </Picker>
               )}
             </View>
-            {/* )} */}
           </View>
 
           <View>
@@ -589,28 +496,26 @@ const AddExpense = props => {
                 alignSelf: 'center',
                 marginBottom: vh(1),
               }}>
-              <CustomText title={'Enter Description'} style={{color: nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText
+                title={'Enter Description'}
+                style={{
+                  color: nightMode == true ? Colors.white : Colors.textColor,
+                }}
+              />
             </View>
             <View
               style={{
-                backgroundColor: Colors.white,
-                elevation: 3,
                 width: '95%',
                 borderRadius: 10,
                 alignSelf: 'center',
-                paddingHorizontal: vh(1),
-                paddingTop: vh(0.1),
-                paddingBottom: vh(0.1),
               }}>
-              <TextInput
-                placeholder="Enter Description..."
-                value={desc}
-                onChangeText={txt => setDesc(txt)}
-                multiline
-                numberOfLines={5}
-                style={{textAlignVertical: 'top'}}
-                placeholderTextColor={Colors.textColor}
-              />
+                <CustomInput 
+                  placeholder={'Enter Description'}
+                  value={desc}
+                  onChangeText={(txt) => setDesc(txt)}
+                  multiline={true}
+                  numberOfLines={5}
+                  style={{textAlignVertical:'top'}} />
             </View>
           </View>
         </View>
@@ -625,7 +530,9 @@ const AddExpense = props => {
             onPress={() => navigation.goBack()}
             btnStyle={{backgroundColor: Colors.transparent}}
             title={'Cancel'}
-            txtStyle={{ color: nightMode == true ? Colors.white : Colors.textColor}}
+            txtStyle={{
+              color: nightMode == true ? Colors.white : Colors.textColor,
+            }}
           />
           <CustomButton
             onPress={() => save_expense()}
@@ -662,7 +569,7 @@ const mapStateToProps = state => ({
   accountData: state.account,
   premiumData: state.premium,
   creditCard: state.credit,
-  themeMode: state.theme
+  themeMode: state.theme,
 });
 
 const mapDispatchToProps = dispatch => {

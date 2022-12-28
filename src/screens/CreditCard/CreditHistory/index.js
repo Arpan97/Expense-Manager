@@ -93,9 +93,6 @@ const CreditHistory = (props) => {
       const renderExpense =({item,index}) => {
         return(
           <View style={{backgroundColor:Colors.white, padding:vh(0.6), elevation:3, marginBottom:vh(1), marginTop:vh(0.6), borderRadius:15, width:'90%', alignSelf:'center'}}>
-          {/* <View style={{width:40, height:40,  overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
-              <Image source={Images.expense} style={{height:'80%', width:'80%', resizeMode:'contain'}} />
-          </View> */}
           <View style={{flexDirection:'row', width:'100%', justifyContent:'space-between', borderBottomWidth:0.6, borderColor:'lightgrey', borderStyle:'dashed', paddingBottom:vh(1), marginBottom:vh(1)}}>
               <View style={{width:'80%', flexDirection:'row', left:vw(2)}} >
                 <View style={{justifyContent:'center', alignItems:'center'}}>
@@ -142,33 +139,6 @@ const CreditHistory = (props) => {
             </View>
           </View>
   </View>
-          // <LinearGradient colors={['#E7F5FF', '#BDDDFF']} style={{ padding:vh(1), elevation:2, marginBottom:vh(1.5), borderRadius:15, width:'100%'}}>
-          // <View style={{flexDirection:'row'}}>
-          //     <View style={{width:45, height:45, overflow:'hidden', justifyContent:'center', alignItems:'center'}}>
-          //         <Image source={Images.expense} style={{height:'100%', width:'100%'}} />
-          //     </View>
-          //     <View style={{width:'50%', marginLeft:vh(3)}}>
-          //         <CustomText title={item?.category} isBold />
-          //         <CustomText title={item?.description?.length > 60 ? `${(item?.description).substring(0,60)}...` : item?.description} style={{fontSize:12}} />
-          //     </View>
-          //     <View style={{width:'40%', justifyContent:'center', alignItems:'center'}}>
-          //         <View>
-          //             {item?.expenseType == 'Expense' ? (
-          //                 <Image source={Images.decrease} style={{height:20,width:20}} />
-          //             ):(
-          //                 <Image source={Images.increase} style={{height:20,width:20}} />
-          //             )}
-          //         </View>
-          //         <View>
-          //             <CustomText title={item?.incomeAmount == 0 ? `${'\u20B9'}${(item?.expenseAmount).toFixed(2)}` : `${'\u20B9'}${(item?.incomeAmount).toFixed(2)}`} />
-          //         </View>
-    
-          //     </View>
-          // </View>
-          // <View style={{marginTop:vh(1), alignItems:'flex-end'}}>
-          //     <CustomText title={`${item?.expenseDate}`} style={{fontSize:11}} />
-          // </View>
-          // </LinearGradient>
       )
       }
       const renderEmpty = () => {
@@ -213,29 +183,29 @@ const CreditHistory = (props) => {
               <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
                 <CustomText
                   title={(data?.title).toUpperCase()}
-                  isBold
-                  style={{color: Colors.white}}
+                  isCardBold
+                  style={{color: Colors.white, fontSize:20}}
                 />
               </View>
-              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(20)}}>
-                <CustomText title={data?.cardNum == undefined ? '' : `${data?.cardNum?.substring(0,4)} ${data?.cardNum?.substring(4,8)} ${data?.cardNum?.substring(8,12)} ${data?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
+              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(5), marginLeft:vw(12)}}>
+                <CustomText title={data?.cardNum == undefined ? '' : `${data?.cardNum?.substring(0,4)} ${data?.cardNum?.substring(4,8)} ${data?.cardNum?.substring(8,12)} ${data?.cardNum?.substring(12,16)}`} isCardBold style={{fontSize:24, color:Colors.white}} />
               </View>
               <View style={{flexDirection:'row'}}>
-                <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
-                  <CustomText title={data?.expiryDate == undefined ? '' : `Valid Upto : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+                <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(0.5), marginLeft:vw(25)}}>
+                  <CustomText title={data?.expiryDate == undefined ? '' : `Valid Upto : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`} isCardBold style={{fontSize:16, color:Colors.white}}  />
                 </View>
-                <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
-                <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+                <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(9)}}>
+                <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isCardBold style={{fontSize:16, color:Colors.white}}  />
                 </View>
               </View>
               <View style={{flexDirection:'row', width:'100%', marginTop:vh(2)}}>
                 <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                   <Image source={Images.increase} style={{width:40, height:40}} />
-                  <CustomText title={`${'\u20B9'}${income}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+                  <CustomText title={`${'\u20B9'}${income}`} isCardBold style={{fontSize:16, color:Colors.white, marginLeft:vw(2), top:vh(0.7)}} />
                 </View>
                 <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                   <Image source={Images.decrease} style={{width:40, height:40}} />
-                  <CustomText title={`${'\u20B9'}${expense}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+                  <CustomText title={`${'\u20B9'}${expense}`} isCardBold style={{fontSize:16, color:Colors.white, marginLeft:vw(2), top:vh(0.7)}} />
                 </View>
               </View>
           </ImageBackground>

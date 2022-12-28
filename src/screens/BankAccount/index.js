@@ -90,44 +90,51 @@ const BankAccount = props => {
               style={{height: '100%', width: '100%'}}
             />
           </TouchableOpacity>
-          <View style={{justifyContent:'center', marginTop:vh(1), width:'88%', alignSelf:'center'}}>
+          <View style={{justifyContent:'center', marginTop:vh(2), width:'100%', alignSelf:'center', alignItems:'center'}}>
             <CustomText
               title={(item?.title).toUpperCase()}
-              isBold
-              style={{color: Colors.white}}
+              isCardBold
+              style={{color: Colors.white, fontSize:20}}
             />
           </View>
-          <View style={{justifyContent:'center', width:'88%', alignSelf:'center', top:vh(1)}}>
+          {/* <View style={{justifyContent:'center', width:'88%', alignSelf:'center', top:vh(1)}}>
             <CustomText
               title={item?.accNo == undefined ? '' : `Account No : ${item?.accNo}`}
               isBold
               style={{color: Colors.white}}
             />
-          </View>
-          <View style={{justifyContent:'center', marginTop:vh(8), width:'88%', alignSelf:'center'}}>
-            <CustomText title={item?.cardNum == undefined ? '' : `${item?.cardNum?.substring(0,4)}  ${item?.cardNum?.substring(4,8)}  ${item?.cardNum?.substring(8,12)}  ${item?.cardNum?.substring(12,16)}`} isBold style={{fontSize:17, color:Colors.white}} />
+          </View> */}
+          <View style={{justifyContent:'center', marginTop:vh(3), width:'88%', alignSelf:'center', left:vw(20)}}>
+            <CustomText title={item?.cardNum == undefined ? '' : `${item?.cardNum?.substring(0,4)}  ${item?.cardNum?.substring(4,8)}  ${item?.cardNum?.substring(8,12)}  ${item?.cardNum?.substring(12,16)}`} isCardBold style={{fontSize:24, color:Colors.white}} />
           </View>
           <View style={{flexDirection:'row'}}>
-            <View style={{justifyContent:'center', width:'40%', alignSelf:'center', marginLeft:vw(5), bottom:vh(1)}}>
-              <CustomText title={item?.cvv == undefined ? '' : `CVV : ${item?.cvv}`}  isBold style={{fontSize:11, color:Colors.white}}  />
+            <View style={{justifyContent:'center', width:'40%', alignSelf:'center', left:vw(25.4), bottom:vh(1)}}>
+              <CustomText title={item?.cvv == undefined ? '' : `CVV : ${item?.cvv}`}  isCardBold style={{fontSize:16, color:Colors.white}}  />
             </View>
-            <View style={{justifyContent:'center', alignItems:'center',  marginLeft:vw(27)}}>
+            <View style={{justifyContent:'center', alignItems:'center',  marginLeft:vw(27), top:vh(5)}}>
               <CustomText title={'Valid'}  isBold style={{fontSize:10, color:Colors.white}} />
               <CustomText title={'Upto'}   isBold style={{fontSize:10, color:Colors.white}}/>
             </View>
-            <View style={{marginTop:vh(0.3), marginLeft:vw(2)}}>
-              <CustomText title={item?.expiryDate == undefined ? '' : `${item?.expiryDate?.substring(0,2)}/${item?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:16, color:Colors.white}}  />
+            <View style={{marginTop:vh(0.3), marginLeft:vw(2), top:vh(5)}}>
+              <CustomText title={item?.expiryDate == undefined ? '' : `${item?.expiryDate?.substring(0,2)}/${item?.expiryDate?.substring(2,4)}`}  isCardBold style={{fontSize:20, color:Colors.white}}  />
             </View>
           </View>
-          <View style={{justifyContent:'center', bottom:vh(1), width:'89%', alignSelf:'center'}}>
+          <View style={{justifyContent:'center', bottom:vh(1), width:'89%', alignSelf:'center', marginTop:vh(2)}}>
           <CustomText
             title={`Available Bal : ${'\u20B9'} ${total}`}
-            isBold
-            style={{fontSize: 14, color: Colors.white}}
+            isCardBold
+            style={{fontSize: 18, color: Colors.white}}
           />
         </View>
           <View style={{justifyContent:'center', width:'89%', alignSelf:'center', bottom:vh(1)}}>
-            <CustomText title={item?.accHolder == undefined ? '' : `${item?.accHolder}`} isBold style={{fontSize:18, color:Colors.white}} />
+            <CustomText title={item?.accHolder == undefined ? '' : `${item?.accHolder}`} isCardBold style={{fontSize:20, color:Colors.white}} />
+          </View>
+          <View style={{justifyContent:'center', width:'88%', alignSelf:'center', bottom:vh(1)}}>
+            <CustomText
+              title={item?.accNo == undefined ? '' : `Account No : ${item?.accNo}`}
+              isCardBold
+              style={{color: Colors.white}}
+            />
           </View>
           
         </ImageBackground>

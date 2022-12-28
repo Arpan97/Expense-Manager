@@ -7,10 +7,10 @@ import {
 } from 'react-native-responsive-screen';
 import Images from '../../utils/images';
 import Colors from '../../utils/color';
-import Slider from '@react-native-community/slider';
 import { connect } from 'react-redux';
 import { useMemo } from 'react';
 import {useNavigation} from '@react-navigation/native';
+import Constant from '../../utils/language';
 
 const Add_Goals = (props) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -184,7 +184,7 @@ const Add_Goals = (props) => {
       {goals && (
         <>
           <View style={{marginBottom:vh(1)}}>
-            <CustomText title={'My Goal'} isBold style={{fontSize: 14, color:nightMode == true ? Colors.white : Colors.textColor}} />
+            <CustomText title={Constant.goalHeading} isBold style={{fontSize: 14, color:nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           <ScrollView style={{width:'100%', borderRadius:20}} 
           horizontal 
@@ -206,7 +206,7 @@ const Add_Goals = (props) => {
                       </View>
                       <View style={{marginTop:vh(0.4)}}>
                       <View style={{marginLeft:vw(1)}}>
-                          <CustomText title={'Target Amount'} isBold style={{fontSize:12}} />
+                          <CustomText title={Constant.target} isBold style={{fontSize:12}} />
                       </View>
                       <View style={{paddingLeft:vw(1), marginTop:vh(0.7), marginLeft:vw(0.6)}}>
                           <CustomText title={`${'\u20B9'}${item?.amount}`} style={{fontSize:12, color:Colors.white}} />
@@ -214,7 +214,7 @@ const Add_Goals = (props) => {
                       </View>
                       <View style={{marginTop:vh(0.4)}}>
                       <View style={{marginLeft:vw(1)}}>
-                          <CustomText title={'Deposit Amount'} isBold style={{fontSize:12}} />
+                          <CustomText title={Constant.deposit} isBold style={{fontSize:12}} />
                       </View>
                       <View style={{paddingLeft:vw(1), marginTop:vh(0.7), marginLeft:vw(0.6)}}>
                           <CustomText title={`${'\u20B9'}${totalAmount}`} style={{fontSize:12, color:Colors.white}} />

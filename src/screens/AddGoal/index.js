@@ -14,13 +14,14 @@ import Textstyles from '../../utils/text';
 import {TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {add_goal, delete_goal} from '../../redux/Action/Action';
-import Snack from '../../utils/snackbar';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
 import Notify from '../../utils/Dialog';
 import { useMemo } from 'react';
+import CustomInput from '../../components/CustomComponent/CustomInput';
 
 const AddGoal = props => {
+  const [error, setError] = useState('')
   const [catImgs, setCatImgs] = useState([
     {id: 1, img: Images.home, title: 'Home'},
     {id: 2, img: Images.car, title: 'Car'},
@@ -110,7 +111,6 @@ const AddGoal = props => {
   const deleteExistGoal = id => {
     setIsModal(false);
     props?.delete_goal(id);
-    Snack('Goal deleted successfully');
   };
 
   useEffect(() => {
@@ -162,21 +162,13 @@ const AddGoal = props => {
               alignSelf: 'center',
             }}>
             <View>
-              <CustomText title={'Goal title'} isRegular style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText title={'Goal title'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor, fontSize:12}} />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-              <TextInput
-                placeholder="Enter your goal..."
+            <CustomInput
                 value={title}
                 onChangeText={txt => setTitle(txt)}
-                style={[
-                  Textstyles.medium,
-                  {
-                    color: Colors.black,
-                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
-                    borderRadius:10
-                  },
-                ]}
+                placeholder={'Enter your goal'}
               />
             </View>
           </View>
@@ -187,22 +179,14 @@ const AddGoal = props => {
               alignSelf: 'center',
             }}>
             <View>
-              <CustomText title={'Target Amount'} isRegular style={{color:nightMode == true ? Colors.white : Colors.textColor}} />
+              <CustomText title={'Goal Amount'} isBold style={{color:nightMode == true ? Colors.white : Colors.textColor, fontSize:12}} />
             </View>
             <View style={{marginTop:vh(0.6)}}>
-              <TextInput
-                placeholder="Enter amount..."
+              <CustomInput
                 value={amount}
-                onChangeText={amt => setAmount(amt)}
-                keyboardType="number-pad"
-                style={[
-                  Textstyles.medium,
-                  {
-                    color: Colors.black,
-                    backgroundColor: nightMode == true ? Colors.white : Colors.white,
-                    borderRadius:10
-                  },
-                ]}
+                onChangeText={txt => setAmount(txt)}
+                placeholder={'Enter goal amount'}
+                keyboardType={'number-pad'}
               />
             </View>
           </View>

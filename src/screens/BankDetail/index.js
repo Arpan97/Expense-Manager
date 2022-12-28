@@ -211,29 +211,29 @@ const BankDetail = (props) => {
             <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1)}}>
               <CustomText
                 title={(data?.title).toUpperCase()}
-                isBold
-                style={{color: Colors.white}}
+                isCardBold
+                style={{color: Colors.white, fontSize:20}}
               />
             </View>
-            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(20)}}>
-              <CustomText title={data?.cardNum == undefined ? '' : `${data?.cardNum?.substring(0,4)} ${data?.cardNum?.substring(4,8)} ${data?.cardNum?.substring(8,12)} ${data?.cardNum?.substring(12,16)}`} isBold style={{fontSize:22, color:Colors.white}} />
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(3), marginLeft:vw(15)}}>
+              <CustomText title={data?.cardNum == undefined ? '' : `${data?.cardNum?.substring(0,4)} ${data?.cardNum?.substring(4,8)} ${data?.cardNum?.substring(8,12)} ${data?.cardNum?.substring(12,16)}`} isCardBold style={{fontSize:24, color:Colors.white}} />
             </View>
             <View style={{flexDirection:'row'}}>
               <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(27)}}>
-                <CustomText title={data?.expiryDate == undefined ? '' : `Valid Upto : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+                <CustomText title={data?.expiryDate == undefined ? '' : `Valid Upto : ${data?.expiryDate?.substring(0,2)}/${data?.expiryDate?.substring(2,4)}`}  isCardBold style={{fontSize:16, color:Colors.white}}  />
               </View>
-              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(16)}}>
-              <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isBold style={{fontSize:13, color:Colors.white}}  />
+              <View style={{justifyContent:'center', alignItems:'center', marginTop:vh(1), marginLeft:vw(8)}}>
+              <CustomText title={data?.cvv == undefined ? '' : `CVV : ${data?.cvv}`}  isCardBold style={{fontSize:16, color:Colors.white}}  />
               </View>
             </View>
             <View style={{flexDirection:'row', width:'100%', marginTop:vh(2)}}>
               <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                 <Image source={Images.increase} style={{width:40, height:40}} />
-                <CustomText title={`${'\u20B9'}${income}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+                <CustomText title={`${'\u20B9'}${income}`} isCardBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2), top:vh(1)}} />
               </View>
               <View style={{flexDirection:'row', width:'37%', justifyContent:'center', alignItems:'center'}}>
                 <Image source={Images.decrease} style={{width:40, height:40}} />
-                <CustomText title={`${'\u20B9'}${expense}`} isBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2)}} />
+                <CustomText title={`${'\u20B9'}${expense}`} isCardBold style={{fontSize:14, color:Colors.white, marginLeft:vw(2), top:vh(1)}} />
               </View>
             </View>
         </ImageBackground>

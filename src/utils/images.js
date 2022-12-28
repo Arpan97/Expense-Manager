@@ -10,7 +10,7 @@ const Images = {
     mobile: require('../assets/Images/mobile.png'),
     email: require('../assets/Images/email.png'),
     goal: require('../assets/Images/goal.png'),
-    // account: require('../assets/Images/account.png'),
+    account: require('../assets/Images/account.png'),
     privacy: require('../assets/Images/privacy.png'),
     delete: require('../assets/Images/delete.png'),
     dummy: require('../assets/Images/dummy.png'),
@@ -92,7 +92,9 @@ const Images = {
     switch_off: require('../assets/Images/switch_off.png'),
     black_1: require('../assets/Images/black_back.jpg'),
     menu_white: require('../assets/Images/menu_white.png'),
-    right_white: require('../assets/Images/right_white.png')
+    right_white: require('../assets/Images/right_white.png'),
+    success: require('../assets/Images/success.png'),
+    language: require('../assets/Images/language.png')
 }
 
 export default Images

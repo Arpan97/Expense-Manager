@@ -22,3 +22,5 @@ export const DELETE_CREDIT = 'DELETE_CREDIT'
 export const UPDATE_CREDIT = 'UPDATE_CREDIT'
 export const UPDATE_DEBIT = 'UPDATE_DEBIT'
 export const DARK_MODE = 'DARK_MODE'
+
+export const LANG_CHANGE = 'LANG_CHANGE'

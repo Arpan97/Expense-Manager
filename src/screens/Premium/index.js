@@ -30,18 +30,6 @@ const Premium = props => {
   const navigation = useNavigation();
   const [plans, setPlans] = useState([
     {
-      plan_name: 'Trial',
-      plan_price: 0,
-      plan_time: 1,
-      plan_desc:
-        'Get 1 Month subsciption for fully access to Expense Manager premium features',
-      inPlan: `
-      1. You can add Bank Account Details
-      2. You can use dark mode.
-      3. You can add Mutual fund and Stock accounts in it.
-      `,
-    },
-    {
       plan_name: 'Silver',
       plan_price: 149,
       plan_time: 3,

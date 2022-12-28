@@ -24,6 +24,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { save_investment, update_invest } from '../../redux/Action/Action';
+import {Picker} from '@react-native-picker/picker';
+import CustomInput from '../../components/CustomComponent/CustomInput';
 
 const AddInvestCat = (props) => {
   const data = props?.route?.params?.data
@@ -37,6 +39,7 @@ const AddInvestCat = (props) => {
   const [investmentDate, setInvestmentDate] = useState(data == undefined ? '' : data?.investmentDate)
   const [investmentVisible, setinvestmentVisible] = useState(false);
   const [nightMode, setNightMode] = useState(false)
+  const [error, setError] = useState('');
 
   useMemo(()=>{
     if(props?.themeMode == false){
@@ -85,23 +88,25 @@ const onStartChange = async (event, selectedDate) => {
                             investment_type:selectInvest,
                             investment_platform: selectApp
                         }
+                        // console.log('the body ', body)
+                        setError(false)
                         Notify('success', 'Successfull', 'You investment is successfully added')
                         props?.save_investment(body)
                         navigation.goBack()
                     }else{
-                        Notify('error', 'Alert', 'You have to select investment date to proceed')
+                      setError(true)
                     }
                 }else{
-                    Notify('error', 'Alert', 'You have to enter some amount to proceed')
+                  setError(true)
                 }
             }else{
-                Notify('error', 'Alert', 'You have to enter some title to proceed')
+              setError(true)
             }
         }else{
-            Notify('error', 'Alert', 'You have to select platform to proceed')
+          setError(true)
         }
     }else{
-        Notify('error', 'Alert', 'You have to select investment type to proceed')
+      setError(true)
     }
   }
 
@@ -119,36 +124,37 @@ const onStartChange = async (event, selectedDate) => {
                           investment_type:selectInvest,
                           investment_platform: selectApp
                       }
+                      setError(false)
                       Notify('success', 'Successfull', 'You investment is successfully updated')
                       props?.update_invest(body)
                       navigation.goBack()
                   }else{
-                      Notify('error', 'Alert', 'You have to select investment date to proceed')
+                    setError(true)
                   }
               }else{
-                  Notify('error', 'Alert', 'You have to enter some amount to proceed')
+                setError(true)
               }
           }else{
-              Notify('error', 'Alert', 'You have to enter some title to proceed')
+            setError(true)
           }
       }else{
-          Notify('error', 'Alert', 'You have to select platform to proceed')
+        setError(true)
       }
   }else{
-      Notify('error', 'Alert', 'You have to select investment type to proceed')
+    setError(true)
   }
   }
   return (
     <View style={{backgroundColor: nightMode == true ? Colors.black : Colors.backgroundColor, flex:1}}>
       <View style={{flexDirection: 'row', marginLeft: vw(5), marginTop:vh(2)}}>
-        <TouchableOpacity style={{width: '10%'}} onPress={onBack}>
+        {/* <TouchableOpacity style={{width: '10%'}} onPress={onBack}>
           <Image source={nightMode == true ? Images.back_white : Images.back_3d} style={{height: 22, width: 22}} />
-        </TouchableOpacity>
-        <View style={{width: '74%', alignItems: 'center'}}>
+        </TouchableOpacity> */}
+        <View style={{width: '100%', alignItems: 'center'}}>
           <CustomText
             title={'Add Investment'}
             isBold
-            style={{color: nightMode == true ? Colors.white : Colors.themeColor}}
+            style={{color: nightMode == true ? Colors.white : Colors.textColor, fontSize:18}}
           />
         </View>
       </View>
@@ -169,48 +175,21 @@ const onStartChange = async (event, selectedDate) => {
                     paddingTop: vh(1.2),
                     paddingBottom: vh(0.5),
                 }}>
-                <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => setIsCatModal(!isCatModal)}
-                    style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    borderBottomWidth: isCatModal ? 1 : 0,
-                    borderColor: Colors.borderColor,
-                    paddingBottom: vh(1),
-                    }}>
-                    <CustomText title={selectInvest ? selectInvest : 'Select Investment'} />
-                    <Image
-                    source={Images.back_black}
-                    style={{
-                        height: 20,
-                        width: 20,
-                        transform: [{rotate: isCatModal ? '90deg' : '270deg'}],
-                    }}
-                    />
-                </TouchableOpacity>
-                {isCatModal && (
-                    <ScrollView>
-                    {investmentCat?.map((item, index) => {
-                        return (
-                        <View
-                            style={{
-                            backgroundColor: Colors.white,
-                            borderBottomWidth: 1,
-                            borderColor: Colors.borderColor,
-                            padding: vh(1),
-                            }}>
-                            <TouchableOpacity
-                            onPress={() => {
-                                setIsCatModal(false), setSelectInvest(item?.category);
-                            }}>
-                            <CustomText title={item?.category} />
-                            </TouchableOpacity>
-                        </View>
-                        );
-                    })}
-                    </ScrollView>
-                )}
+                  <Picker
+                    selectedValue={selectInvest}
+                    mode={'dropdown'}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectInvest(itemValue)
+                    }
+                    style={{height:28, bottom:vh(2), right:vw(3)}}
+                    >
+                      <Picker.Item label='Select Investment' value={null} />
+                      {investmentCat?.map((item,index)=>{
+                        return(
+                        <Picker.Item label={item?.category} value={item?.category} />
+                        )
+                      })}
+                  </Picker>
                 </View>
             </View>
         </View>
@@ -230,65 +209,38 @@ const onStartChange = async (event, selectedDate) => {
                     paddingTop: vh(1.2),
                     paddingBottom: vh(0.5),
                 }}>
-                <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => setIsAppModal(!isAppModal)}
-                    style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    borderBottomWidth: isAppModal ? 1 : 0,
-                    borderColor: Colors.borderColor,
-                    paddingBottom: vh(1),
-                    }}>
-                    <CustomText title={selectApp ? selectApp : 'Select Application'} />
-                    <Image
-                    source={Images.back_black}
-                    style={{
-                        height: 20,
-                        width: 20,
-                        transform: [{rotate: isAppModal ? '90deg' : '270deg'}],
-                    }}
-                    />
-                </TouchableOpacity>
-                {isAppModal && (
-                    <ScrollView>
-                    {investCatType?.map((item, index) => {
-                        return (
-                        <View
-                            style={{
-                            backgroundColor: Colors.white,
-                            borderBottomWidth: 1,
-                            borderColor: Colors.borderColor,
-                            padding: vh(1),
-                            }}>
-                            <TouchableOpacity
-                            onPress={() => {
-                                setIsAppModal(false), setSelectApp(item?.category);
-                            }}>
-                            <CustomText title={item?.category} />
-                            </TouchableOpacity>
-                        </View>
-                        );
-                    })}
-                    </ScrollView>
-                )}
+                  <Picker
+                    selectedValue={investCatType}
+                    mode={'dropdown'}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectApp(itemValue)
+                    }
+                    style={{height:28, bottom:vh(2), right:vw(3)}}
+                    >
+                      <Picker.Item label='Select Platform' value={null} />
+                      {investCatType?.map((item,index)=>{
+                        return(
+                        <Picker.Item label={item?.category} value={item?.category} />
+                        )
+                      })}
+                  </Picker>
                 </View>
             </View>
         </View>
-        <View style={{marginTop:vh(2)}}>
+        <View style={{marginTop:vh(2), width:'99%', alignSelf:'center'}}>
             <View style={{width:'94%', alignSelf:'center'}}>
                 <CustomText title={'Investment Title'} isBold style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View style={{
-                    backgroundColor: Colors.white,
-                    elevation: 3,
-                    width: '95%',
-                    borderRadius: 10,
-                    alignSelf: 'center',
                     paddingHorizontal: vh(1),
                     marginTop:vh(1)
                 }}>
-                <TextInput placeholderTextColor={Colors.textColor} style={[Textstyles.medium,{color:Colors.textColor, fontSize:14}]} placeholder='Enter investment title' value={title} onChangeText={(txt)=>setTitle(txt)} />
+                  <CustomInput
+                    value={title}
+                    onChangeText={txt => setTitle(txt)}
+                    placeholder={'Enter investment title'}
+                    error={error == '' ? null : error}
+                  />
             </View>
         </View>
         <View style={{marginTop:vh(2)}}>
@@ -296,15 +248,16 @@ const onStartChange = async (event, selectedDate) => {
                 <CustomText title={'Invested Amount'} isBold style={{fontSize:12, color: nightMode == true ? Colors.white : Colors.textColor}} />
             </View>
             <View style={{
-                    backgroundColor: Colors.white,
-                    elevation: 3,
-                    width: '95%',
-                    borderRadius: 10,
-                    alignSelf: 'center',
                     paddingHorizontal: vh(1),
                     marginTop:vh(1)
                 }}>
-                <TextInput placeholderTextColor={Colors.textColor} style={[Textstyles.medium,{color:Colors.textColor, fontSize:14}]} placeholder='Enter investment amount' value={amount} onChangeText={(txt)=>setAmount(txt)} keyboardType='numeric' />
+                  <CustomInput
+                    value={amount}
+                    onChangeText={txt => setAmount(txt)}
+                    placeholder={'Enter investment amount'}
+                    error={error == '' ? null : error}
+                    keyboardType={'numeric'}
+                  />
             </View>
         </View>
         <View>
@@ -321,23 +274,17 @@ const onStartChange = async (event, selectedDate) => {
               activeOpacity={0.6}
               onPress={() => setinvestmentVisible(true)}
               style={{
-                backgroundColor: Colors.white,
-                elevation: 3,
-                width: '95%',
-                borderRadius: 10,
-                alignSelf: 'center',
                 paddingHorizontal: vh(1),
                 paddingTop: vh(0.1),
                 paddingBottom: vh(0.1),
               }}>
-              <TextInput
-                placeholder="Select investment date"
-                value={investmentDate == '' ? investmentDate : moment(investmentDate).format('DD-MM-YYYY')}
-                keyboardType="number-pad"
-                placeholderTextColor={Colors.textColor}
-                editable={false}
-                style={[Textstyles.medium,{color:Colors.textColor, fontSize:14}]}
-              />
+                <CustomInput
+                    value={investmentDate == '' ? investmentDate : moment(investmentDate).format('DD-MM-YYYY')}
+                    placeholder={'Select investment date'}
+                    error={error == '' ? null : error}
+                    keyboardType={'number-pad'}
+                    editable={false}
+                />
             </TouchableOpacity>
           </View>
         <View
@@ -348,7 +295,10 @@ const onStartChange = async (event, selectedDate) => {
             marginBottom:vh(2)
           }}>
           <CustomButton
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              navigation.goBack()
+              setError(false)
+            }}
             btnStyle={{backgroundColor: Colors.transparent}}
             title={'Cancel'}
             txtStyle={{color: nightMode == true ? Colors.white : Colors.textColor}}

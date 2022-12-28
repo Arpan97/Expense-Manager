@@ -2,6 +2,14 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/GemunuLibre-Bold.ttf",
+      "sha1": "06a4b2e1b689df67b8b9603d0692cc9571ee6625"
+    },
+    {
+      "path": "src/assets/fonts/GemunuLibre-Regular.ttf",
+      "sha1": "3111a5438e21fc46d807fdc8f22e699f3e7b6b06"
+    },
+    {
       "path": "src/assets/fonts/Roboto-Bold.ttf",
       "sha1": "62442a18a9fe9457c1afeabf683d263a691b7798"
     },

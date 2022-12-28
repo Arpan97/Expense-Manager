@@ -1,19 +1,15 @@
 import {
   View,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   Image,
-  ImageBackground,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import CustomHeader from '../../components/CustomHeader';
+import React, {useEffect, useState, useMemo} from 'react';
 import Colors from '../../utils/color';
 import {
   widthPercentageToDP as vw,
   heightPercentageToDP as vh,
 } from 'react-native-responsive-screen';
-import {category} from '../../utils/constants';
 import CustomText from '../../components/CustomText';
 import Images from '../../utils/images';
 import Add_Goals from '../../components/Dashboard_Component/Add_Goals';
@@ -21,12 +17,10 @@ import {connect} from 'react-redux';
 import CustomFav from '../../components/CustomFav';
 import History from '../../components/Dashboard_Component/History';
 import {total_income} from '../../redux/Action/Action';
-import CustomLoader from '../../components/CustomLoader';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import PushNotification from 'react-native-push-notification';
-import { not } from '../../notification/notificationAndroid';
-import { useMemo } from 'react';
+import Constant from '../../utils/language/index'
 
 const Dashboard = props => {
   const navigation = useNavigation();
@@ -148,7 +142,7 @@ const Dashboard = props => {
               paddingTop: vh(1),
               paddingBottom: vh(1),
             }}>
-            <CustomText title={'Income'} isBold style={{fontSize: 16}} />
+            <CustomText title={Constant.income} isBold style={{fontSize: 16}} />
             <Image source={Images.increase} style={{height: 40, width: 40}} />
             <CustomText title={`${'\u20B9'}${income}`} />
           </View>
@@ -163,7 +157,7 @@ const Dashboard = props => {
               paddingTop: vh(1),
               paddingBottom: vh(1),
             }}>
-            <CustomText title={'Expenses'} isBold style={{fontSize: 16}} />
+            <CustomText title={Constant.expense} isBold style={{fontSize: 16}} />
             <Image
               source={Images.decrease}
               style={{
@@ -184,7 +178,7 @@ const Dashboard = props => {
         {/* history  */}
         <View style={{marginTop: vh(2), width:'100%', alignSelf:'center'}}>
           <View style={{marginBottom: vh(2), width:'90%', alignSelf:'center'}}>
-            <CustomText title={'Transaction History'} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
+            <CustomText title={Constant.history} isBold style={{fontSize: 14, color: nightMode == true ? Colors.white : Colors.textColor}} />
           </View>
           <View>
             <History />
