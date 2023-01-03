@@ -54,11 +54,19 @@ const BankAccount = props => {
     var total = 0,
       income = 0,
       expense = 0;
-    allData?.map(x => {
-      income = income + x?.incomeAmount;
-      expense = expense + x?.expenseAmount;
-      total = item?.openingAmt + income - expense;
-    });
+      console.log('the all data is ', allData == '')
+      if(allData == ''){
+        total = item?.openingAmt
+        income = 0
+        expense = 0
+      }else{
+        allData?.map(x => {
+          income = income + x?.incomeAmount;
+          expense = expense + x?.expenseAmount;
+          total = item?.openingAmt + income - expense;
+        });
+      }
+    console.log('the total is ===>', total)
     return (
       <TouchableOpacity onPress={() => navigation.navigate('BankDetails', {data: item})} style={{width:'90%', alignSelf:'center', marginTop:vh(1.5), marginBottom:vh(1), borderRadius:10, overflow:'hidden'}}>
         <ImageBackground source={item?.cardImage} style={{height:200, width:'100%'}} >

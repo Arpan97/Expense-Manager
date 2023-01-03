@@ -31,6 +31,7 @@ const Details = props => {
   const [modalState, setModalState] = useState('');
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   const openModal = text => {
     setModalState(text);
@@ -50,15 +51,38 @@ const Details = props => {
     }
   };
 
-  const imageEdit = () => {
-    ImagePicker.openPicker({
-      width: 100,
-      height: 100,
-      cropping: true,
-    }).then(img => {
-      setImage(img.path);
-    });
+  const imageEdit = async status => {
+    if (status === 'Camera') {
+      ImagePicker.openCamera({
+        width: 100,
+        height: 100,
+        cropping: true,
+      }).then(img => {
+        setImage(img.path);
+        setIsVisible(false);
+      });
+    } else if (status === 'Gallery') {
+      ImagePicker.openPicker({
+        width: 100,
+        height: 100,
+        cropping: true,
+      }).then(img => {
+        setImage(img.path);
+        setIsVisible(false);
+      });
+    } else {
+    }
   };
+
+  // const imageEdit = () => {
+  //   ImagePicker.openPicker({
+  //     width: 100,
+  //     height: 100,
+  //     cropping: true,
+  //   }).then(img => {
+  //     setImage(img.path);
+  //   });
+  // };
 
   const onSaveBtn = () => {
     let body = {
@@ -95,7 +119,7 @@ const Details = props => {
           />
         </View>
         <TouchableOpacity
-          onPress={() => imageEdit()}
+          onPress={() => setIsVisible(true)}
           activeOpacity={0.6}
           style={{
             height: 120,
@@ -275,6 +299,90 @@ const Details = props => {
           </View>
         </Modal>
       )}
+            {/* modal view  */}
+            <View>
+        <Modal
+          visible={isVisible}
+          transparent={true}
+          onRequestClose={() => {
+            setIsVisible(false);
+          }}
+          animationType="slide">
+          <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              }}
+            />
+          </TouchableWithoutFeedback>
+          <View
+            style={{
+              backgroundColor: Colors.white,
+              width: '100%',
+              height: '20%',
+              top: vh(35),
+              borderRadius: 6,
+              width: '95%',
+              alignSelf: 'center',
+              paddingTop: vh(5),
+            }}>
+            <View>
+              <TouchableOpacity
+                onPress={() => imageEdit('Camera')}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: vw(3),
+                  width: '95%',
+                  marginBottom: vh(2),
+                }}>
+                <Image
+                  source={Images.camera}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: vw(5),
+                  }}
+                />
+                <CustomText title={'Open Camera'} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  borderBottomWidth: 0.2,
+                  width: '90%',
+                  alignSelf: 'center',
+                  borderStyle: 'dotted',
+                  marginBottom: vh(2),
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => imageEdit('Gallery')}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: vw(3),
+                  width: '95%',
+                  marginBottom: vh(1),
+                }}>
+                <Image
+                  source={Images.gallery}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: vw(5),
+                  }}
+                />
+                <CustomText title={'Open Gallery'} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </ImageBackground>
   );
 };

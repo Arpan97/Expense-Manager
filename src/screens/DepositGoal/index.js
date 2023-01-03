@@ -42,6 +42,7 @@ const DepositGoal = props => {
                     depositAmt: parseInt(depositAmt),
                     depositDate: new Date()
                 }
+                //run update goal api
                 let obj = {
                     id:props?.route?.params?.data?.id,
                     imgSet:props?.route?.params?.data?.imgSet,

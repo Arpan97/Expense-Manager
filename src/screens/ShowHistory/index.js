@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
 import Notify from '../../utils/Dialog'
 import { useMemo } from 'react';
+import {Picker} from '@react-native-picker/picker';
 
 const ShowHistory = props => {
   const [income, setIncome] = useState(0);
@@ -253,7 +254,34 @@ const ShowHistory = props => {
       <View style={{marginTop:vh(2), flexDirection:'row'}}>
         {/* dropdown & input */}
         <View style={styles.input_container}>
-          <TouchableOpacity
+              <View
+                style={{
+                    width: '95%',
+                    alignSelf: 'center',
+                    paddingTop: vh(1.2),
+                    paddingBottom: vh(1.5),
+                    bottom:vh(1)
+                }}>
+                  <Picker
+                    selectedValue={selectMonth}
+                    mode={'dropdown'}
+                    onValueChange={(itemValue, itemIndex) =>
+                      {
+                        setSelectMonth(itemValue)
+                        setSelectMonthKey(itemIndex)
+                      }
+                    }
+                    style={{height:10, bottom:vh(2), right:vw(3), width:180}}
+                    >
+                      <Picker.Item label='Select Month' value={null} />
+                      {getAllMonths?.map((item,index)=>{
+                        return(
+                        <Picker.Item label={item?.month} value={item?.month} />
+                        )
+                      })}
+                  </Picker>
+              </View>
+          {/* <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
               setIsMonthModal(!isMonthModal)
@@ -279,11 +307,38 @@ const ShowHistory = props => {
                 );
               })}
             </ScrollView>
-          )}
+          )} */}
         </View>
 
         <View style={styles.input_container}>
-          <TouchableOpacity
+          <View
+                style={{
+                    width: '95%',
+                    alignSelf: 'center',
+                    paddingTop: vh(1.2),
+                    paddingBottom: vh(1.5),
+                    bottom:vh(1)
+                }}>
+                  <Picker
+                    selectedValue={selectYear}
+                    mode={'dropdown'}
+                    onValueChange={(itemValue, itemIndex) =>
+                      {
+                        setSelectYear(itemValue)
+                        // setSelectMonthKey(itemIndex)
+                      }
+                    }
+                    style={{height:10, bottom:vh(2), right:vw(3), width:180}}
+                    >
+                      <Picker.Item label='Select Year' value={null} />
+                      {getAllYears?.map((item,index)=>{
+                        return(
+                        <Picker.Item label={item?.year} value={item?.year} />
+                        )
+                      })}
+                  </Picker>
+              </View>
+          {/* <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
               setIsYearModal(!isYearModal)
@@ -308,7 +363,7 @@ const ShowHistory = props => {
                 );
               })}
             </ScrollView>
-          )}
+          )} */}
         </View>
         {/* button  */}
         

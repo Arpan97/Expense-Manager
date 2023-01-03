@@ -85,7 +85,7 @@ const Profile = props => {
             style={{height: '100%', width: '100%', resizeMode: 'cover'}}
           />
         </View>
-        <View style={{marginTop: vh(8), marginLeft: vw(7)}}>
+        <View style={{marginTop: vh(7), marginLeft: vw(7)}}>
           <CustomText
             title={props?.user?.name == '' ? 'Welcome User' : props?.user?.name}
             isBold

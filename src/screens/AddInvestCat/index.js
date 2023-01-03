@@ -210,7 +210,7 @@ const onStartChange = async (event, selectedDate) => {
                     paddingBottom: vh(0.5),
                 }}>
                   <Picker
-                    selectedValue={investCatType}
+                    selectedValue={selectApp}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) =>
                       setSelectApp(itemValue)

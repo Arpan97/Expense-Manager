@@ -438,11 +438,6 @@ const AddExpense = props => {
                 }}
               />
             </View>
-            {/* {props?.accountData == '' && props?.creditCard == '' ? (
-                <TouchableOpacity onPress={()=>checkPremium()} style={{marginLeft:vw(2.5)}}>
-                  <CustomText title={'Add new account'} isBold style={{color:Colors.themeColor}} />
-                </TouchableOpacity>
-              ):( */}
             <View
               style={{
                 backgroundColor: Colors.white,
@@ -459,7 +454,7 @@ const AddExpense = props => {
                   selectedValue={selectAcc}
                   mode={'dropdown'}
                   onValueChange={(itemValue, itemIndex) =>
-                    setSelectCat(itemValue)
+                    setSelectAcc(itemValue)
                   }
                   style={{height: 28, bottom: vh(2), right: vw(3)}}>
                   <Picker.Item label="Select Account" value={null} />
@@ -474,7 +469,7 @@ const AddExpense = props => {
                   selectedValue={selectAcc}
                   mode={'dropdown'}
                   onValueChange={(itemValue, itemIndex) =>
-                    setSelectCat(itemValue)
+                    setSelectAcc(itemValue)
                   }
                   style={{height: 28, bottom: vh(2), right: vw(3)}}>
                   <Picker.Item label="Select Account" value={null} />
