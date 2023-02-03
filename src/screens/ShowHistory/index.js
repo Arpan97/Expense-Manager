@@ -379,7 +379,7 @@ const ShowHistory = props => {
       {/* invoice  */}
         <>
           {monthHistory != '' ? (
-            <View style={styles.history_container}>
+            <ScrollView style={styles.history_container}>
               {/* personal detail */}
               <View>
                 <View style={styles.invoice_heading}>
@@ -697,7 +697,7 @@ const ShowHistory = props => {
                   style={{textAlign: 'center', fontSize: 11}}
                 />
               </View>
-            </View>
+            </ScrollView>
           ):(
             <View
               style={{
