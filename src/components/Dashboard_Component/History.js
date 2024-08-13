@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   View,
-  Text,
   FlatList,
   Image,
   TouchableOpacity,
