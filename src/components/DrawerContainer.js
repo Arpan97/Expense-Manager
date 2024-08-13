@@ -1,42 +1,51 @@
-import {StyleSheet, Text, View, Dimensions, Image, Linking, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Colors from '../utils/color';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { widthPercentageToDP as vw, heightPercentageToDP as vh } from 'react-native-responsive-screen';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {
+  widthPercentageToDP as vw,
+  heightPercentageToDP as vh,
+} from 'react-native-responsive-screen';
 import CustomText from './CustomText';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Images from '../utils/images';
-import { useNavigation } from '@react-navigation/native';
-import AlertBox from '../utils/AlertBox'
-import { useMemo } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import AlertBox from '../utils/AlertBox';
+import {useMemo} from 'react';
 import TouchID from 'react-native-touch-id';
 import Notify from '../utils/Dialog';
-const {height, width} = Dimensions.get('window')
+const {width} = Dimensions.get('window');
 
-const DrawerContainer = (props) => {
-    const [name,setName] = useState('')
-  const [img, setImg] = useState('')
+const DrawerContainer = props => {
+  const [name, setName] = useState('');
+  const [img, setImg] = useState('');
   const navigation = useNavigation();
-  const [isPremium, setIsPremium] = useState(false)
-  const [premiumTime, setPremiumTime] = useState('')
-  const [nightMode, setNightMode] = useState(false)
+  const [isPremium, setIsPremium] = useState(false);
+  const [premiumTime, setPremiumTime] = useState('');
+  const [nightMode, setNightMode] = useState(false);
 
-  useMemo(()=>{
-    if(props?.themeMode == false){
-      setNightMode(false)
-    }else if(props?.themeMode == true){
-      setNightMode(true)
+  useMemo(() => {
+    if (props?.themeMode == false) {
+      setNightMode(false);
+    } else if (props?.themeMode == true) {
+      setNightMode(true);
     }
-  },[props?.themeMode, nightMode])
+  }, [props?.themeMode, nightMode]);
   const getUserData = () => {
-    let data = props?.user
-    setName(data?.name)
-    setImg(data?.image)
-  }
+    let data = props?.user;
+    setName(data?.name);
+    setImg(data?.image);
+  };
 
   const buyPremium = () => {
-    navigation.navigate('Premium')
-  }
+    navigation.navigate('Premium');
+  };
 
   const optionalConfigObject = {
     title: 'Authentication Required', // Android
@@ -50,119 +59,238 @@ const DrawerContainer = (props) => {
     passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
   };
 
-  const checkPremium = (txt) => {
-    if(isPremium){
-        if(txt == 'Bank'){
-            navigation.navigate('Drawer',{screen:'Bank'})
-        }else if(txt == 'Invest'){
-            navigation.navigate('Drawer',{screen:'Invest'})
-        }else if(txt == 'Credit'){
-            navigation.navigate('Drawer', {screen:'CreditCard'})
-        }else if(txt == 'Details'){
-            TouchID.authenticate('Please verify your fingerprint to access this folder', optionalConfigObject)
-            .then(success => {
-                navigation.navigate('Drawer', {screen:'BankInfo'})
-            })
-            .catch(error => {
-                Notify('error','Cancelled', 'Authentication is required for access')
-            });
-        }
-    }else{
-        AlertBox('warning','Warning','Please subscribe to use this feature. You can choose trial version for 1 Month')
+  const checkPremium = txt => {
+    if (isPremium) {
+      if (txt === 'Bank') {
+        navigation.navigate('Drawer', {screen: 'Bank'});
+      } else if (txt === 'Invest') {
+        navigation.navigate('Drawer', {screen: 'Invest'});
+      } else if (txt === 'Credit') {
+        navigation.navigate('Drawer', {screen: 'CreditCard'});
+      } else if (txt === 'Details') {
+        TouchID.authenticate(
+          'Please verify your fingerprint to access this folder',
+          optionalConfigObject,
+        )
+          .then(() => {
+            navigation.navigate('Drawer', {screen: 'BankInfo'});
+          })
+          .catch(() => {
+            Notify(
+              'error',
+              'Cancelled',
+              'Authentication is required for access',
+            );
+          });
+      }
+    } else {
+      AlertBox(
+        'warning',
+        'Warning',
+        'Please subscribe to use this feature. You can choose trial version for 1 Month',
+      );
     }
+  };
+
+  useEffect(() => {
+    if (props?.premiumData === '') {
+      setIsPremium(false);
+    } else {
+      getTimeRemaining(props?.premiumData?.expiry_time);
+      setIsPremium(true);
+    }
+  }, [props?.premiumData]);
+
+  useEffect(() => {
+    setInterval(() => {
+      getTimeRemaining(props?.premiumData?.expiry_time);
+    }, 60000);
+  }, []);
+
+  function getTimeRemaining(endtime) {
+    const total = Date.parse(endtime) - Date.parse(new Date());
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
+
+    setPremiumTime(`${days}D ${hours}H ${minutes} Min`);
   }
 
-  useEffect(()=>{
-    if(props?.premiumData == ''){
-        setIsPremium(false)
-    }else{
-        getTimeRemaining(props?.premiumData?.expiry_time)
-        setIsPremium(true)
-    }
-  },[props?.premiumData])
-
-  useEffect(()=>{
-    setInterval(() => {
-        getTimeRemaining(props?.premiumData?.expiry_time)
-    }, 60000);
-  },[])
-
-    function getTimeRemaining(endtime){
-        const total = Date.parse(endtime) - Date.parse(new Date());
-        const seconds = Math.floor( (total/1000) % 60 );
-        const minutes = Math.floor( (total/1000/60) % 60 );
-        const hours = Math.floor( (total/(1000*60*60)) % 24 );
-        const days = Math.floor( total/(1000*60*60*24) );
-        
-        setPremiumTime(`${days}D ${hours}H ${minutes} Min`)
-    }
-
-  useEffect(()=>{
-    getUserData()
-  },[props?.user])
+  useEffect(() => {
+    getUserData();
+  }, [props?.user]);
   return (
-    <DrawerContentScrollView {...props} style={{flex:1, backgroundColor: nightMode == true ? Colors.black : Colors.themeColor, width:width/1.5, height:'100%'}} drawerLabelStyle={Styles.item}>
-        <View style={{flexDirection:'row'}}>
-            <View style={{backgroundColor:Colors.white, width:90, height:90, overflow:'hidden', borderRadius:60, borderWidth:1, borderColor:Colors.borderColor, elevation:3, marginLeft:vw(2), marginTop:vh(2)}}>
-                <Image source={img ? {uri:img} : Images.user} style={{height: '100%', width: '100%', overflow:'hidden'}} />
-            </View>
-            {!isPremium ? (
-                <TouchableOpacity onPress={()=>buyPremium()} style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
-                    <View style={{width:20, height:20, marginRight:vw(2)}}>
-                        <Image source={Images.premium} style={{height:'100%', width:'100%'}} />
-                    </View>
-                    <View style={{}}>
-                        <CustomText title={'Buy premium'} isBold style={{fontSize:12, color:Colors.themeColor}} />
-                    </View>
-                </TouchableOpacity>
-            ) : (
-                <View>
-                    <View style={{flexDirection:'row', position:'absolute', top:vh(3), left:vw(8), justifyContent:'center', alignItems:'center'}}>
-                        <Image source={Images.premium} style={{height:20, width:20, marginRight:vw(1)}} />
-                        <CustomText title={'Premium'} isBold style={{fontSize:12, color:Colors.white}} />
-                    </View>
-                    <View style={{backgroundColor:Colors.white, justifyContent:'center', alignItems:'center', height:30, paddingHorizontal:vw(2), flexDirection:'row', borderRadius:10, elevation:5, marginTop:vh(6), marginLeft:vw(4)}}>
-                        <CustomText title={premiumTime} isBold />
-                    </View>
-                </View>
-            )}
+    <DrawerContentScrollView
+      {...props}
+      style={{
+        flex: 1,
+        backgroundColor: nightMode == true ? Colors.black : Colors.themeColor,
+        width: width / 1.5,
+        height: '100%',
+      }}
+      drawerLabelStyle={styles.item}>
+      <View style={{flexDirection: 'row'}}>
+        <View
+          style={{
+            backgroundColor: Colors.white,
+            width: 90,
+            height: 90,
+            overflow: 'hidden',
+            borderRadius: 60,
+            borderWidth: 1,
+            borderColor: Colors.borderColor,
+            elevation: 3,
+            marginLeft: vw(2),
+            marginTop: vh(2),
+          }}>
+          <Image
+            source={img ? {uri: img} : Images.user}
+            style={{height: '100%', width: '100%', overflow: 'hidden'}}
+          />
         </View>
-        <View style={{marginLeft:vw(4), marginVertical:vh(1)}}>
-            <CustomText title={`Hello,${name ? name : ' User'}`} isBold style={{fontSize:16, color:Colors.white}} />
-            <CustomText title={'Welcome Back'} isBold style={{fontSize:14, color:Colors.white}} />
+        {!isPremium ? (
+          <TouchableOpacity
+            onPress={() => buyPremium()}
+            style={{
+              backgroundColor: Colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 30,
+              paddingHorizontal: vw(2),
+              flexDirection: 'row',
+              borderRadius: 10,
+              elevation: 5,
+              marginTop: vh(6),
+              marginLeft: vw(4),
+            }}>
+            <View style={{width: 20, height: 20, marginRight: vw(2)}}>
+              <Image
+                source={Images.premium}
+                style={{height: '100%', width: '100%'}}
+              />
+            </View>
+            <View style={{}}>
+              <CustomText
+                title={'Buy premium'}
+                isBold
+                style={{fontSize: 12, color: Colors.themeColor}}
+              />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                top: vh(3),
+                left: vw(8),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={Images.premium}
+                style={{height: 20, width: 20, marginRight: vw(1)}}
+              />
+              <CustomText
+                title={'Premium'}
+                isBold
+                style={{fontSize: 12, color: Colors.white}}
+              />
+            </View>
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 30,
+                paddingHorizontal: vw(2),
+                flexDirection: 'row',
+                borderRadius: 10,
+                elevation: 5,
+                marginTop: vh(6),
+                marginLeft: vw(4),
+              }}>
+              <CustomText title={premiumTime} isBold />
+            </View>
+          </View>
+        )}
+      </View>
+      <View style={{marginLeft: vw(4), marginVertical: vh(1)}}>
+        <CustomText
+          title={`Hello,${name ? name : ' User'}`}
+          isBold
+          style={{fontSize: 16, color: Colors.white}}
+        />
+        <CustomText
+          title={'Welcome Back'}
+          isBold
+          style={{fontSize: 14, color: Colors.white}}
+        />
+      </View>
+      <View
+        style={{
+          backgroundColor: Colors.white,
+          height: vh(72),
+          marginLeft: vw(5),
+          borderTopLeftRadius: 20,
+          borderBottomLeftRadius: 20,
+        }}>
+        <View style={{borderTopLeftRadius: 20, paddingVertical: vh(1.4)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Dashboard')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.home} style={{height: 25, width: 25}} />
+            </View>
+            <View style={{width: '80%', justifyContent: 'center'}}>
+              <CustomText title={'Dashboard'} isBold />
+            </View>
+          </TouchableOpacity>
         </View>
-        <View style={{backgroundColor:Colors.white, height:vh(72), marginLeft:vw(5), borderTopLeftRadius:20, borderBottomLeftRadius:20}}>
-            <View style={{borderTopLeftRadius:20, paddingVertical:vh(1.4)}}>
-                <TouchableOpacity onPress={()=>navigation.navigate('Dashboard')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.home} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'80%', justifyContent:'center'}}>
-                        <CustomText title={'Dashboard'} isBold />
-                    </View>
-                </TouchableOpacity>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Category')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.category} style={{height: 25, width: 25}} />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>navigation.navigate('Category')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.category} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'80%', justifyContent:'center'}}>
-                        <CustomText title={'Category'} isBold />
-                    </View>
-                </TouchableOpacity>
+            <View style={{width: '80%', justifyContent: 'center'}}>
+              <CustomText title={'Category'} isBold />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity  onPress={()=>navigation.navigate('Profile')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.user} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'80%', justifyContent:'center'}}>
-                        <CustomText title={'Profile'} isBold />
-                    </View>
-                </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Profile')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.user} style={{height: 25, width: 25}} />
             </View>
-            {/* <View style={{paddingVertical:vh(0.6)}}>
+            <View style={{width: '80%', justifyContent: 'center'}}>
+              <CustomText title={'Profile'} isBold />
+            </View>
+          </TouchableOpacity>
+        </View>
+        {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity  onPress={()=>navigation.navigate('EditProfile',{data:props?.user})} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.user} style={{height:25, width:25}} />
@@ -172,72 +300,118 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             </View> */}
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity  onPress={()=>navigation.navigate('ViewGoal')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.goal} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'80%', justifyContent:'center'}}>
-                        <CustomText title={'My Goals'} isBold />
-                    </View>
-                </TouchableOpacity>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ViewGoal')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.goal} style={{height: 25, width: 25}} />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>navigation.navigate('ShowHistory')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.history} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'80%', justifyContent:'center'}}>
-                        <CustomText title={'Monthly History'} isBold />
-                    </View>
-                </TouchableOpacity>
+            <View style={{width: '80%', justifyContent: 'center'}}>
+              <CustomText title={'My Goals'} isBold />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>checkPremium('Bank')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.bank} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'60%', justifyContent:'center'}}>
-                        <CustomText title={'Bank Account'} isBold />
-                    </View>
-                    {!isPremium && (
-                        <View style={{width:'20%', alignItems:'center'}}>
-                            <Image source={Images.lock} style={{height:25,width:25}} />
-                        </View>
-                    )}
-                </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ShowHistory')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.history} style={{height: 25, width: 25}} />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>checkPremium('Credit')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.credit_card} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'60%', justifyContent:'center'}}>
-                        <CustomText title={'Credit Card'} isBold />
-                    </View>
-                    {!isPremium && (
-                        <View style={{width:'20%', alignItems:'center'}}>
-                            <Image source={Images.lock} style={{height:25,width:25}} />
-                        </View>
-                    )}
-                </TouchableOpacity>
+            <View style={{width: '80%', justifyContent: 'center'}}>
+              <CustomText title={'Monthly History'} isBold />
             </View>
-            <View style={{paddingVertical:vh(0.6)}}>
-                <TouchableOpacity onPress={()=>checkPremium('Invest')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                    <View style={{width:'20%', alignItems:'center'}}>
-                        <Image source={Images.investment} style={{height:25, width:25}} />
-                    </View>
-                    <View style={{width:'60%', justifyContent:'center'}}>
-                        <CustomText title={'Invest Account'} isBold />
-                    </View>
-                    {!isPremium && (
-                        <View style={{width:'20%', alignItems:'center'}}>
-                            <Image source={Images.lock} style={{height:25,width:25}} />
-                        </View>
-                    )}
-                </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => checkPremium('Bank')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image source={Images.bank} style={{height: 25, width: 25}} />
             </View>
-            {/* <View style={{paddingVertical:vh(0.6)}}>
+            <View style={{width: '60%', justifyContent: 'center'}}>
+              <CustomText title={'Bank Account'} isBold />
+            </View>
+            {!isPremium && (
+              <View style={{width: '20%', alignItems: 'center'}}>
+                <Image source={Images.lock} style={{height: 25, width: 25}} />
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => checkPremium('Credit')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image
+                source={Images.credit_card}
+                style={{height: 25, width: 25}}
+              />
+            </View>
+            <View style={{width: '60%', justifyContent: 'center'}}>
+              <CustomText title={'Credit Card'} isBold />
+            </View>
+            {!isPremium && (
+              <View style={{width: '20%', alignItems: 'center'}}>
+                <Image source={Images.lock} style={{height: 25, width: 25}} />
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingVertical: vh(0.6)}}>
+          <TouchableOpacity
+            onPress={() => checkPremium('Invest')}
+            style={{
+              flexDirection: 'row',
+              borderBottomWidth: 2,
+              paddingBottom: vh(1),
+              borderBottomColor: Colors.borderColor,
+              width: '100%',
+            }}>
+            <View style={{width: '20%', alignItems: 'center'}}>
+              <Image
+                source={Images.investment}
+                style={{height: 25, width: 25}}
+              />
+            </View>
+            <View style={{width: '60%', justifyContent: 'center'}}>
+              <CustomText title={'Invest Account'} isBold />
+            </View>
+            {!isPremium && (
+              <View style={{width: '20%', alignItems: 'center'}}>
+                <Image source={Images.lock} style={{height: 25, width: 25}} />
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+        {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity onPress={()=>checkPremium('Details')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.account} style={{height:25, width:25}} />
@@ -247,19 +421,21 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             </View> */}
-            {isPremium && (
-                <View style={{paddingVertical:vh(0.6)}}>
-                    <TouchableOpacity onPress={()=>navigation.navigate('Premium')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
-                        <View style={{width:'20%', alignItems:'center'}}>
-                            <Image source={Images.premium} style={{height:25, width:25}} />
-                        </View>
-                        <View style={{width:'60%', justifyContent:'center'}}>
-                            <CustomText title={'Premium'} isBold />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            )}
-            {/* <View style={{paddingVertical:vh(0.6)}}>
+        {isPremium && (
+          <View style={styles.premiumContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Premium')}
+              style={styles.premiumContent}>
+              <View style={styles.premiumImgView}>
+                <Image source={Images.premium} style={styles.premiumIcn} />
+              </View>
+              <View style={styles.premiumImgTxt}>
+                <CustomText title={'Premium'} isBold />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity onPress={()=>navigation.navigate('CustomBill')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.pdf} style={{height:25, width:25}} />
@@ -269,7 +445,7 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             </View> */}
-            {/* <View style={{paddingVertical:vh(0.6)}}>
+        {/* <View style={{paddingVertical:vh(0.6)}}>
                 <TouchableOpacity onPress={()=>navigation.navigate('Privacy')} style={{flexDirection:'row', borderBottomWidth:2, paddingBottom:vh(1), borderBottomColor:Colors.borderColor,width:'100%'}}>
                     <View style={{width:'20%', alignItems:'center'}}>
                         <Image source={Images.privacy} style={{height:25, width:25}} />
@@ -279,90 +455,104 @@ const DrawerContainer = (props) => {
                     </View>
                 </TouchableOpacity>
             </View> */}
-        </View>
-        <View style={{flexDirection:'row', marginTop:vh(3), justifyContent:'center', alignItems:'center'}}>
-            <CustomText title={`${'\u00A9'}2022 Expense Inc. All rights reserved`} isBold style={{fontSize:12, color:Colors.white}} />
-            {/* <TouchableOpacity onPress={()=>Linking.openURL('https://in.linkedin.com/in/arpan-govila-b865031a4')}>
-                <Image source={Images.linkedin} style={{height:40,width:40}} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Image source={Images.youtube} style={{height:40,width:40}} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>Linking.openURL('https://www.facebook.com/arpan.govila.7/')}>
-                <Image source={Images.facebook} style={{height:40,width:40}} />
-            </TouchableOpacity> */}
+      </View>
+      <View style={styles.copyrightContainer}>
+        <CustomText
+          title={`${'\u00A9'}2022 Expense Inc. All rights reserved`}
+          isBold
+          style={styles.copyrightTxt}
+        />
       </View>
     </DrawerContentScrollView>
   );
 };
 
 const mapStateToProps = state => ({
-    user: state.userData,
-    premiumData: state.premium,
-    themeMode: state.theme
-  })
+  user: state.userData,
+  premiumData: state.premium,
+  themeMode: state.theme,
+});
 
-export default connect (mapStateToProps, null)(DrawerContainer);
+export default connect(mapStateToProps, null)(DrawerContainer);
 
-const Styles = StyleSheet.create({
-    container: {
-        flex:1,
-        backgroundColor:Colors.themeColor,
-        width:width/1.5,
-        height:'100%'
-    },
-    userView: {
-      borderRadius: 20,
-      backgroundColor: Colors.white,
-      // ...GlobalStyle.shadow,
-      width: '100%',
-      flexDirection: 'row',
-      padding: 10,
-      marginBottom: 20,
-      elevation: 6,
-    },
-    imageView: {
-      borderWidth: 2,
-      borderColor: Colors.gray,
-      width:vw(18),
-      height:vh(9),
-      borderRadius: 120,
-    },
-    userImage: {
-      resizeMode: 'contain',
-      width: '100%',
-      height: '100%',
-      borderRadius:120
-    },
-    list: {
-      marginTop: 10,
-      paddingHorizontal: 10,
-      height: '100%',
-    },
-    userName: {
-      color: Colors.black,
-    },
-    userEmail: {
-      // ...GlobalStyle.textGraySmall
-    },
-    rowView: {
-      width: '100%',
-      // backgroundColor:'red',
-      alignItems: 'center',
-      flexDirection: 'row',
-      paddingHorizontal: 10,
-      marginTop: -10,
-    },
-    icons: {
-      width: 25,
-      height: 25,
-      justifyContent: 'center',
-    },
-    itemView: {
-      width: '100%',
-    },
-    item: {
-      // ...GlobalStyle.textBlackHeading,
-    },
-  });
-  
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.themeColor,
+    width: width / 1.5,
+    height: '100%',
+  },
+  userView: {
+    borderRadius: 20,
+    backgroundColor: Colors.white,
+    // ...GlobalStyle.shadow,
+    width: '100%',
+    flexDirection: 'row',
+    padding: 10,
+    marginBottom: 20,
+    elevation: 6,
+  },
+  imageView: {
+    borderWidth: 2,
+    borderColor: Colors.gray,
+    width: vw(18),
+    height: vh(9),
+    borderRadius: 120,
+  },
+  userImage: {
+    resizeMode: 'contain',
+    width: '100%',
+    height: '100%',
+    borderRadius: 120,
+  },
+  list: {
+    marginTop: 10,
+    paddingHorizontal: 10,
+    height: '100%',
+  },
+  userName: {
+    color: Colors.black,
+  },
+  userEmail: {
+    // ...GlobalStyle.textGraySmall
+  },
+  rowView: {
+    width: '100%',
+    // backgroundColor:'red',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    marginTop: -10,
+  },
+  icons: {
+    width: 25,
+    height: 25,
+    justifyContent: 'center',
+  },
+  itemView: {
+    width: '100%',
+  },
+  item: {
+    // ...GlobalStyle.textBlackHeading,
+  },
+  premiumContainer: {
+    paddingVertical: vh(0.6),
+  },
+  premiumContent: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    paddingBottom: vh(1),
+    borderBottomColor: Colors.borderColor,
+    width: '100%',
+  },
+  premiumImgView: {width: '20%', alignItems: 'center'},
+  premiumIcn: {height: 25, width: 25},
+  premiumImgTxt: {width: '60%', justifyContent: 'center'},
+  copyrightContainer: {
+    flexDirection: 'row',
+    marginTop: vh(3),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  copyrightTxt: {fontSize: 12, color: Colors.white},
+});

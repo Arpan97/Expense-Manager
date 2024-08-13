@@ -1,30 +1,51 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
-import React, { useEffect } from 'react';
+import {View, StyleSheet, Image} from 'react-native';
+import React from 'react';
 import {
   widthPercentageToDP as vw,
   heightPercentageToDP as vh,
 } from 'react-native-responsive-screen';
 import Colors from '../../utils/color';
-import moment from 'moment'
+import moment from 'moment';
 import CustomText from '../CustomText';
 import Images from '../../utils/images';
 
 export default function AccordianList(props) {
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.containerView}>
         <View style={styles.calendarView}>
-          <CustomText style={styles.dateTxt} title={`${moment(props?.expenseDate).format('DD')}`} isBold />
-          <CustomText style={styles.dateTxt} title={`${moment(props?.expenseDate).format('MMM')}`} isBold />
+          <CustomText
+            style={styles.dateTxt}
+            title={`${moment(props?.expenseDate).format('DD')}`}
+            isBold
+          />
+          <CustomText
+            style={styles.dateTxt}
+            title={`${moment(props?.expenseDate).format('MMM')}`}
+            isBold
+          />
         </View>
         <View style={styles.detailView}>
           <View style={styles.punchinTime}>
             <CustomText title={props?.account} isBold />
-            <CustomText title={props?.category} style={{fontSize:13}} />
+            <CustomText title={props?.category} style={{fontSize: 13}} />
           </View>
           <View style={styles.punchinTime}>
-            <Image source={props?.expenseType == 'Income' ? Images.increase : Images.decrease} style={{height:20, width:20}} />
-            <CustomText title={props?.expenseType == 'Income' ? `${'\u20B9'}${props?.incomeAmount}`: `${'\u20B9'}${props?.expenseAmount}`} />
+            <Image
+              source={
+                props?.expenseType == 'Income'
+                  ? Images.increase
+                  : Images.decrease
+              }
+              style={{height: 20, width: 20}}
+            />
+            <CustomText
+              title={
+                props?.expenseType == 'Income'
+                  ? `${'\u20B9'}${props?.incomeAmount}`
+                  : `${'\u20B9'}${props?.expenseAmount}`
+              }
+            />
           </View>
         </View>
       </View>
@@ -33,10 +54,6 @@ export default function AccordianList(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // backgroundColor: 'blue'
-  },
   containerView: {
     borderRadius: 8,
     flexDirection: 'row',
@@ -78,8 +95,8 @@ const styles = StyleSheet.create({
   },
   punchinTime: {
     marginHorizontal: 20,
-    justifyContent:'center',
-    alignItems:'center',
-    width:'35%'
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '35%',
   },
 });

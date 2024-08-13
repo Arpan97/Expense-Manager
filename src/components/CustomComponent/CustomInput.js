@@ -1,16 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {StyleSheet, View, TextInput, Image} from 'react-native';
 import React from 'react';
 import Images from '../../utils/images';
 import Textstyles from '../../utils/text';
 import {connect} from 'react-redux';
-import {useMemo, useState, useEffect} from 'react';
+import {useMemo, useState} from 'react';
 import Colors from '../../utils/color';
 import {
   widthPercentageToDP as vw,
@@ -22,9 +15,9 @@ const CustomInput = props => {
   const styles = getStyle(nightMode, props);
 
   useMemo(() => {
-    if (props?.themeMode == false) {
+    if (props?.themeMode === false) {
       setNightMode(false);
-    } else if (props?.themeMode == true) {
+    } else if (props?.themeMode === true) {
       setNightMode(true);
     }
   }, [props?.themeMode, nightMode]);
@@ -32,7 +25,7 @@ const CustomInput = props => {
     <View style={styles.container}>
       <View style={styles.input_view}>
         <TextInput
-          style={[props?.style,Textstyles.medium, styles.input_field]}
+          style={[props?.style, Textstyles.medium, styles.input_field]}
           placeholder={props?.placeholder}
           value={props?.value}
           onChangeText={props?.onChangeText}
@@ -43,16 +36,15 @@ const CustomInput = props => {
           numberOfLines={props?.numberOfLines}
         />
       </View>
-          {props?.error == true ? (
-            <View style={styles.icn_view}>
-              <Image source={Images.warning} style={styles.icn} />
-            </View>
-          ) :
-          props?.error == false ? (
-            <View style={styles.icn_view}>
-              <Image source={Images.success} style={styles.icn} />
-            </View>
-          ) : null}
+      {props?.error === true ? (
+        <View style={styles.icn_view}>
+          <Image source={Images.warning} style={styles.icn} />
+        </View>
+      ) : props?.error === false ? (
+        <View style={styles.icn_view}>
+          <Image source={Images.success} style={styles.icn} />
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -79,7 +71,7 @@ const getStyle = (nightMode, props) =>
       borderColor: props?.error == true ? Colors.red : Colors.borderColor,
       color: Colors.black,
       fontSize: 12,
-      elevation: props?.error == true ? 0 : 2
+      elevation: props?.error == true ? 0 : 2,
     },
     icn_view: {
       position: 'absolute',
